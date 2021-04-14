@@ -16,13 +16,11 @@ public class Machine {
         this.installationDate = 0;
     }
 
-    public Machine(int id, int size, int penalityByDay, int deliveryDate, int installationDate) {
+    public Machine(int id, int size, int penalityByDay) {
         this();
         this.id = id;
         this.size = size;
         this.penalityByDay = penalityByDay;
-        this.deliveryDate = deliveryDate;
-        this.installationDate = installationDate;
     }
 
     @Override
