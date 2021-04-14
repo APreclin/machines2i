@@ -2,7 +2,7 @@ package solution.tournee;
 
 import java.util.LinkedList;
 
-import instance.reseau.Request;
+import solution.Request;
 
 public abstract class Round {
 
