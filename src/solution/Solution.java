@@ -2,7 +2,7 @@ package solution;
 
 import java.util.LinkedList;
 
-import instance.reseau.Tournee;
+import solution.tournee.Round;
 
 public class Solution {
     private Instance instance;
@@ -40,8 +40,8 @@ public class Solution {
         return instance;
     }
 
-    public LinkedList<Tournee> getTournees() {
-        return tournees;
+    public LinkedList<Round> getRounds() {
+        return rounds;
     }
 
     @Override
@@ -51,6 +51,5 @@ public class Solution {
                 + rounds + ", technicianDistance=" + technicianDistance + ", totalCost=" + totalCost
                 + ", truckDistance=" + truckDistance + "]";
     }
-
 
 }

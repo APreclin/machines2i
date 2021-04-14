@@ -15,4 +15,10 @@ public class Machine {
         this.deliveryDate = 0;
         this.installationDate = 0;
     }
+
+    @Override
+    public String toString() {
+        return "Machine [id=" + id + "deliveryDate=" + deliveryDate + ", installationDate=" + installationDate
+                + ", penalityByDay=" + penalityByDay + ", size=" + size + "]";
+    }
 }

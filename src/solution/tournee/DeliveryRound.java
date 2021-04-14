@@ -9,4 +9,10 @@ public class DeliveryRound extends Round {
         super();
         this.charge = 0;
     }
+
+    @Override
+    public String toString() {
+        return "DeliveryRound [" + super.toString() + "charge=" + charge + "]";
+    }
+
 }
