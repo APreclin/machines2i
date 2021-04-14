@@ -4,25 +4,23 @@ public class Machine {
 
     private int id;
     private int size;
-    private int penalityByDay;
+    private int penaltyByDay;
     private int deliveryDate;
     private int installationDate;
 
     public Machine() {
         this.id = 0;
         this.size = 0;
-        this.penalityByDay = 0;
+        this.penaltyByDay = 0;
         this.deliveryDate = 0;
         this.installationDate = 0;
     }
 
-    public Machine(int id, int size, int penalityByDay, int deliveryDate, int installationDate) {
+    public Machine(int id, int size, int penaltyByDay) {
         this();
         this.id = id;
         this.size = size;
-        this.penalityByDay = penalityByDay;
-        this.deliveryDate = deliveryDate;
-        this.installationDate = installationDate;
+        this.penaltyByDay = penaltyByDay;
     }
 
     @Override
@@ -53,7 +51,7 @@ public class Machine {
         str += "----- Machine -----\n\n";
         str += "ID : " + id + "\n";
         str += "Size : " + size + "\n";
-        str += "Penality by day : " + penalityByDay + "\n";
+        str += "Penalty by day : " + penaltyByDay + "\n";
         str += "Delivery date : " + deliveryDate + "\n";
         str += "Installation date : " + installationDate + "\n";
         str += "-------------------\n\n";
