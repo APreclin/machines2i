@@ -15,4 +15,11 @@ public class Truck {
         this.dayCost = 0;
         this.cost = 0;
     }
+
+    @Override
+    public String toString() {
+        return "Truck [capacity=" + capacity + ", cost=" + cost + ", dayCost=" + dayCost + ", distanceCost="
+                + distanceCost + ", maxDistance=" + maxDistance + "]";
+    }
+
 }

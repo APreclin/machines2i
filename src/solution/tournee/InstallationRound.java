@@ -9,4 +9,10 @@ public class InstallationRound extends Round {
         super();
         this.nbRequests = 0;
     }
+
+    @Override
+    public String toString() {
+        return "InstallationRound [" + super.toString() + "nbRequests=" + nbRequests + "]";
+    }
+
 }

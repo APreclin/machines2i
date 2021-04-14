@@ -1,4 +1,4 @@
-package solution;
+package instance.reseau;
 
 public class Request {
 
@@ -14,4 +14,11 @@ public class Request {
         this.lastDay = -1;
         this.nbMachines = 0;
     }
+
+    @Override
+    public String toString() {
+        return "Request [id=" + id + ",firstDay=" + firstDay + ",  lastDay=" + lastDay + ", nbMachines=" + nbMachines
+                + "]";
+    }
+
 }

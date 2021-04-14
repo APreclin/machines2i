@@ -11,4 +11,9 @@ public class Location {
         this.x = 0;
         this.y = 0;
     }
+
+    @Override
+    public String toString() {
+        return "Location [id=" + id + ", x=" + x + ", y=" + y + "]";
+    }
 }

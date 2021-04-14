@@ -17,4 +17,11 @@ public class Technician {
         this.maxRequests = 0;
         this.installation = new HashMap<Integer, Boolean>();
     }
+
+    @Override
+    public String toString() {
+        return "Technician [id=" + id + ",home=" + home + ",  installation=" + installation + ", maxDistance="
+                + maxDistance + ", maxRequests=" + maxRequests + "]";
+    }
+
 }
