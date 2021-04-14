@@ -19,10 +19,10 @@ public class Technician {
         this.installation = new HashMap<Integer, Boolean>();
     }
 
-    public Technician(int id, int maxDistance, int maxRequests) {
+    public Technician(int id, Location location, int maxDistance, int maxRequests) {
         this();
         this.id = id;
-        // TODO: Récupérer la location du technicien
+        this.home = location;
         this.maxDistance = maxDistance;
         this.maxRequests = maxRequests;
         // TODO: Récupérer le tableau de capacité du technicien
