@@ -16,13 +16,12 @@ public class Truck {
         this.cost = 0;
     }
 
-    public Truck(int capacity, int maxDistance, int distanceCost, int dayCost, int cost) {
+    public Truck(int capacity, int maxDistance, int distanceCost, int dayCost) {
         this();
         this.capacity = capacity;
         this.maxDistance = maxDistance;
         this.distanceCost = distanceCost;
         this.dayCost = dayCost;
-        this.cost = cost;
     }
 
     @Override
