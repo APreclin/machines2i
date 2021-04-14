@@ -1,4 +1,4 @@
-package instance.reseau;
+package solution.tournee;
 
 public class InstallationRound extends Round {
 
