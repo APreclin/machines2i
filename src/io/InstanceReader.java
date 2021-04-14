@@ -147,7 +147,7 @@ public class InstanceReader {
         line = line.replace("TRUCK_COST = ", "");
         int cost = Integer.parseInt(line);
 
-        Truck truck = new Truck(capacity, maxDistance, distanceCost, dayCost);
+        Truck truck = new Truck(capacity, maxDistance, distanceCost, dayCost, cost);
 
         return truck;
     }
