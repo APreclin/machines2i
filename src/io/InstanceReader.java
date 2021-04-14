@@ -6,12 +6,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JFileChooser;
 
 import instance.Instance;
+import instance.reseau.Location;
 import instance.reseau.Machine;
 import instance.reseau.Truck;
 import io.exception.FileExistException;
@@ -29,6 +31,7 @@ public class InstanceReader {
      * Le fichier contenant l'instance.
      */
     private File instanceFile;
+    private LinkedHashMap<Integer, Location> locations;
 
     public InstanceReader() throws ReaderException {
         JFileChooser chooser = new JFileChooser();
@@ -57,8 +60,8 @@ public class InstanceReader {
             int technicianDayCost = readTechnicianDayCost(br);
             int technicianCost = readTechnicianCost(br);
             List<Machine> machines = readMachines(br);
-            System.out.println(machines);
-            System.out.println(truck);
+            LinkedHashMap<Integer, Location> locations = readLocations(br);
+            this.locations = locations;
         } catch (FileNotFoundException ex) {
             throw new FileExistException(instanceFile.getName());
         } catch (IOException ex) {
@@ -179,6 +182,39 @@ public class InstanceReader {
         }
 
         return machines;
+    }
+
+    private LinkedHashMap<Integer, Location> readLocations(BufferedReader br) throws IOException {
+        LinkedHashMap<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
+        String line = br.readLine();
+        while (!line.contains("LOCATIONS = "))
+            line = br.readLine();
+
+        line = line.replace("LOCATIONS = ", "");
+        int locationsLength = Integer.parseInt(line);
+
+        for (int i = 0; i < locationsLength; i++) {
+            line = br.readLine();
+            Scanner scanner = new Scanner(line);
+            List<Integer> locationsData = new ArrayList<>();
+            while (scanner.hasNextInt())
+                locationsData.add(scanner.nextInt());
+
+            int id = locationsData.get(0);
+            int x = locationsData.get(1);
+            int y = locationsData.get(2);
+
+            Location location = new Location(id, x, y);
+            locations.put(id, location);
+
+            scanner.close();
+        }
+
+        return locations;
+    }
+
+    private Location getLocation(int id) {
+        return this.locations.get(id);
     }
 
     public static void main(String[] args) {
