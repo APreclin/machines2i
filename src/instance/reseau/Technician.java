@@ -1,6 +1,7 @@
 package instance.reseau;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Technician {
 
@@ -18,10 +19,52 @@ public class Technician {
         this.installation = new HashMap<Integer, Boolean>();
     }
 
+    public Technician(int id, int maxDistance, int maxRequests) {
+        this();
+        this.id = id;
+        // TODO: Récupérer la location du technicien
+        this.maxDistance = maxDistance;
+        this.maxRequests = maxRequests;
+        // TODO: Récupérer le tableau de capacité du technicien
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Technician other = (Technician) obj;
+        if (id != other.id)
+            return false;
+        return true;
+    }
+
     @Override
     public String toString() {
-        return "Technician [id=" + id + ",home=" + home + ",  installation=" + installation + ", maxDistance="
-                + maxDistance + ", maxRequests=" + maxRequests + "]";
+        String str = "";
+        str += "----- Technician -----\n\n";
+        str += "ID : " + id + "\n";
+        str += home.toString();
+        str += "Maximum distance : " + maxDistance + "\n";
+        str += "Maximum requests : " + maxRequests + "\n";
+        str += "Installation possible : \n[";
+        for (Map.Entry<Integer, Boolean> set : installation.entrySet()) {
+            str += set.getKey() + " - " + set.getValue() + "\n";
+        }
+        str += "]";
+        str += "----------------------\n\n";
+        return str;
     }
 
 }
