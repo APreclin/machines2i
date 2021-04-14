@@ -1,0 +1,24 @@
+package solution.tournee;
+
+import java.util.LinkedList;
+
+import instance.reseau.Request;
+
+public abstract class Round {
+
+    private LinkedList<Request> requests;
+    private int totalCost;
+    private int date;
+
+    public Round() {
+
+        this.requests = new LinkedList<>();
+        this.totalCost = 0;
+        this.date = -1;
+    }
+
+    @Override
+    public String toString() {
+        return "Round [date=" + date + ", requests=" + requests + ", totalCost=" + totalCost + "]";
+    }
+}
