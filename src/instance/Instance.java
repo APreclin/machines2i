@@ -4,9 +4,9 @@ import java.util.LinkedList;
 
 import instance.reseau.Location;
 import instance.reseau.Machine;
+import instance.reseau.Request;
 import instance.reseau.Technician;
 import instance.reseau.Truck;
-import solution.Request;
 
 public class Instance {
     private String dataset;

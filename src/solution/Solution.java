@@ -2,6 +2,7 @@ package solution;
 
 import java.util.LinkedList;
 
+import instance.Instance;
 import solution.tournee.Round;
 
 public class Solution {
