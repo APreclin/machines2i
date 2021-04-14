@@ -32,6 +32,7 @@ public class InstanceReader {
      */
     private File instanceFile;
     private LinkedHashMap<Integer, Location> locations;
+    private LinkedHashMap<Integer, Machine> machines;
 
     public InstanceReader() throws ReaderException {
         JFileChooser chooser = new JFileChooser();
@@ -59,7 +60,8 @@ public class InstanceReader {
             int technicianDistanceCost = readTechnicianDistanceCost(br);
             int technicianDayCost = readTechnicianDayCost(br);
             int technicianCost = readTechnicianCost(br);
-            List<Machine> machines = readMachines(br);
+            LinkedHashMap<Integer, Machine> machines = readMachines(br);
+            this.machines = machines;
             LinkedHashMap<Integer, Location> locations = readLocations(br);
             this.locations = locations;
         } catch (FileNotFoundException ex) {
@@ -155,8 +157,8 @@ public class InstanceReader {
         return truck;
     }
 
-    private List<Machine> readMachines(BufferedReader br) throws IOException {
-        List<Machine> machines = new ArrayList<>();
+    private LinkedHashMap<Integer, Machine> readMachines(BufferedReader br) throws IOException {
+        LinkedHashMap<Integer, Machine> machines = new LinkedHashMap<Integer, Machine>();
         String line = br.readLine();
         while (!line.contains("MACHINES = "))
             line = br.readLine();
@@ -176,7 +178,7 @@ public class InstanceReader {
             int penaltyByDay = machinesData.get(2);
 
             Machine machine = new Machine(id, size, penaltyByDay);
-            machines.add(machine);
+            machines.put(id, machine);
 
             scanner.close();
         }
@@ -215,6 +217,10 @@ public class InstanceReader {
 
     private Location getLocation(int id) {
         return this.locations.get(id);
+    }
+
+    private Machine getMachine(int id) {
+        return this.machines.get(id);
     }
 
     public static void main(String[] args) {
