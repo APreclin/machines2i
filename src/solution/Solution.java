@@ -2,7 +2,9 @@ package solution;
 
 import java.util.LinkedList;
 
-import instance.reseau.Tournee;
+import org.graalvm.compiler.java.GraphBuilderPhase.Instance;
+
+import solution.tournee.*;
 
 public class Solution {
     private Instance instance;
@@ -40,8 +42,8 @@ public class Solution {
         return instance;
     }
 
-    public LinkedList<Tournee> getTournees() {
-        return tournees;
+    public LinkedList<Tournee> getRounds() {
+        return rounds;
     }
 
     @Override
