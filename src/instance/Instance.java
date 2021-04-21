@@ -154,16 +154,24 @@ public class Instance {
         str += "----- Instance -----\n\n";
         str += "Dataset : " + dataset + "\n";
         str += "Name : " + name + "\n";
-        str += "Days : " + days + "\n";
+        str += "Days : " + days + "\n\n";
         str += truck.toString();
         str += "Technician Cost : " + technicianCost + "\n";
         str += "Technician Day Cost : " + technicianDayCost + "\n";
-        str += "Technician Distance Cost : " + technicianDistanceCost + "\n";
-        str += "Machines : \n[";
+        str += "Technician Distance Cost : " + technicianDistanceCost + "\n\n";
+        str += "Liste des machines : \n\n";
         for (Map.Entry<Integer, Machine> set : this.machines.entrySet())
-            str += set.getKey() + " - " + set.getValue() + "\n";
-        str += "]";
-        str += "----------------------\n\n";
+            str += set.getValue() + "\n";
+        str += "Liste des locations : \n\n";
+        for (Map.Entry<Integer, Location> set : this.locations.entrySet())
+            str += set.getValue() + "\n";
+        str += "Liste des requests : \n\n";
+        for (Map.Entry<Integer, Request> set : this.requests.entrySet())
+            str += set.getValue() + "\n";
+        str += "Liste des technicians : \n\n";
+        for (Map.Entry<Integer, Technician> set : this.technicians.entrySet())
+            str += set.getValue() + "\n";
+        str += "------------------------\n\n";
         return str;
     }
 }

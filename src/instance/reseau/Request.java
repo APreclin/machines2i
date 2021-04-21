@@ -78,14 +78,14 @@ public class Request {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Request -----\n\n";
+        str += "----- Request n°" + id + " -----\n\n";
         str += "ID : " + id + "\n";
-        str += location.toString();
-        str += machine.toString();
+        str += "Location n°" + this.location.getId() + "\n";
+        str += "Machine n°" + this.machine.getId() + "\n";
         str += "Nb machines :" + nbMachines + "\n";
         str += "First Day : " + firstDay + "\n";
-        str += "Last Day : " + lastDay + "\n";
-        str += "-------------------\n\n";
+        str += "Last Day : " + lastDay + "\n\n";
+        str += "-----------------------\n";
         return str;
     }
 

@@ -34,11 +34,11 @@ public class Location {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Location -----\n\n";
+        str += "----- Location n°" + id + " -----\n\n";
         str += "ID = " + id + "\n";
         str += "X = " + x + "\n";
-        str += "Y = " + y + "\n";
-        str += "--------------------\n\n";
+        str += "Y = " + y + "\n\n";
+        str += "------------------------\n";
         return str;
     }
 

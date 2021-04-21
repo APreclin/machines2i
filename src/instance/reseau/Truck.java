@@ -53,7 +53,7 @@ public class Truck {
         str += "Max distance : " + maxDistance + "\n";
         str += "Distance cost : " + distanceCost + "\n";
         str += "Day cost : " + dayCost + "\n";
-        str += "Cost : " + cost + "\n";
+        str += "Cost : " + cost + "\n\n";
         str += "-----------------\n\n";
         return str;
     }

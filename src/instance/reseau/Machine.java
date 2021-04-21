@@ -68,13 +68,13 @@ public class Machine {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Machine -----\n\n";
+        str += "----- Machine n°" + id + " -----\n\n";
         str += "ID : " + id + "\n";
         str += "Size : " + size + "\n";
         str += "Penalty by day : " + penaltyByDay + "\n";
         str += "Delivery date : " + deliveryDate + "\n";
-        str += "Installation date : " + installationDate + "\n";
-        str += "-------------------\n\n";
+        str += "Installation date : " + installationDate + "\n\n";
+        str += "-----------------------\n";
         return str;
     }
 }

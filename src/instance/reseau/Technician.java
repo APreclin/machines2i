@@ -74,17 +74,15 @@ public class Technician {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Technician -----\n\n";
+        str += "----- Technician n°" + id + "-----\n\n";
         str += "ID : " + id + "\n";
-        str += home.toString();
+        str += "Location n°" + id + "\n";
         str += "Maximum distance : " + maxDistance + "\n";
-        str += "Maximum requests : " + maxRequests + "\n";
-        str += "Installation possible : \n[";
-        for (Map.Entry<Integer, Boolean> set : abilities.entrySet()) {
-            str += set.getKey() + " - " + set.getValue() + "\n";
-        }
-        str += "]";
-        str += "----------------------\n\n";
+        str += "Maximum requests : " + maxRequests + "\n\n";
+        str += "Installation possible : \n\n";
+        for (Map.Entry<Integer, Boolean> set : abilities.entrySet())
+            str += "\t Machine n°" + set.getKey() + " - " + set.getValue() + "\n";
+        str += "\n-------------------------\n";
         return str;
     }
 
