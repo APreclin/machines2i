@@ -72,6 +72,8 @@ public class InstanceReader {
             Instance instance = new Instance(dataset, name, days, technicianDistanceCost, technicianDayCost,
                     technicianCost, truck);
 
+            // TODO: A voir si on change ici : les LinkedHashMap ne servent à rien dans
+            // l'instance reader
             for (Location location : locations.values())
                 instance.addLocation(location);
 
@@ -236,7 +238,7 @@ public class InstanceReader {
 
     private LinkedHashMap<Integer, Technician> readTechnicians(BufferedReader br) throws IOException {
         LinkedHashMap<Integer, Technician> technicians = new LinkedHashMap<Integer, Technician>();
-        LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<Integer, Boolean>();
+
         String line = br.readLine();
         while (!line.contains("TECHNICIANS = "))
             line = br.readLine();
@@ -245,11 +247,14 @@ public class InstanceReader {
         int techniciansLength = Integer.parseInt(line);
 
         for (int i = 0; i < techniciansLength; i++) {
+
             line = br.readLine();
             Scanner scanner = new Scanner(line);
             List<Integer> techniciansData = new ArrayList<>();
             while (scanner.hasNextInt())
                 techniciansData.add(scanner.nextInt());
+
+            LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<Integer, Boolean>();
 
             int id = techniciansData.get(0);
             int idLocation = techniciansData.get(1);
@@ -316,7 +321,7 @@ public class InstanceReader {
         try {
             InstanceReader reader = new InstanceReader();
             Instance instance = reader.readInstance();
-            // System.out.println(instance);
+            System.out.println(instance);
         } catch (ReaderException ex) {
             System.out.println(ex.getMessage());
         }
