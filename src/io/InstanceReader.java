@@ -16,6 +16,7 @@ import instance.Instance;
 import instance.reseau.Location;
 import instance.reseau.Machine;
 import instance.reseau.Request;
+import instance.reseau.Technician;
 import instance.reseau.Truck;
 import io.exception.FileExistException;
 import io.exception.FormatFileException;
@@ -218,6 +219,37 @@ public class InstanceReader {
         }
 
         return locations;
+    }
+
+    private LinkedHashMap<Integer, Technician> readTechnicians(BufferedReader br) throws IOException {
+        LinkedHashMap<Integer, Technician> technicians = new LinkedHashMap<Integer, Technician>();
+        String line = br.readLine();
+        while (!line.contains("TECHNICIANS = "))
+            line = br.readLine();
+
+        line = line.replace("TECHNICIANS = ", "");
+        int techniciansLength = Integer.parseInt(line);
+
+        for (int i = 0; i < techniciansLength; i++) {
+            line = br.readLine();
+            Scanner scanner = new Scanner(line);
+            List<Integer> techniciansData = new ArrayList<>();
+            while (scanner.hasNextInt())
+                techniciansData.add(scanner.nextInt());
+
+            int id = techniciansData.get(0);
+            int idLocation = techniciansData.get(1);
+            Location location = getLocation(idLocation);
+            int maxDistance = techniciansData.get(2);
+            int maxRequests = techniciansData.get(3);
+
+            Technician technician = new Technician(id, location, maxDistance, maxRequests);
+            technicians.put(id, technician);
+
+            scanner.close();
+        }
+
+        return technicians;
     }
 
     private Location getLocation(int id) {
