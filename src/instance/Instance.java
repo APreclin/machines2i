@@ -1,5 +1,7 @@
 package instance;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import instance.reseau.Location;
@@ -15,10 +17,10 @@ public class Instance {
     private int technicianDistanceCost;
     private int technicianDayCost;
     private int technicianCost;
-    private LinkedList<Technician> technicians;
-    private LinkedList<Location> locations;
-    private LinkedList<Machine> machines;
-    private LinkedList<Request> requests;
+    private HashMap<Integer, Technician> technicians;
+    private LinkedHashMap<Integer, Location> locations;
+    private LinkedHashMap<Integer, Machine> machines;
+    private LinkedHashMap<Integer, Request> requests;
     private Truck truck;
 
     public Instance() {
@@ -28,10 +30,10 @@ public class Instance {
         this.technicianDistanceCost = 0;
         this.technicianDayCost = 0;
         this.technicianCost = 0;
-        this.technicians = new LinkedList<Technician>();
-        this.locations = new LinkedList<Location>();
-        this.machines = new LinkedList<Machine>();
-        this.requests = new LinkedList<Request>();
+        this.technicians = new HashMap<Integer, Technician>();
+        this.locations = new LinkedHashMap<Integer, Location>();
+        this.machines = new LinkedHashMap<Integer, Machine>();
+        this.requests = new LinkedHashMap<Integer, Request>();
         this.truck = new Truck();
     }
 
@@ -59,24 +61,41 @@ public class Instance {
         return technicianCost;
     }
 
-    public LinkedList<Technician> getTechnicians() {
-        return new LinkedList<Technician>(technicians);
+    public HashMap<Integer, Technician> getTechnicians() {
+        return new HashMap<Integer, Technician>(technicians);
     }
 
-    public LinkedList<Location> getLocations() {
-        return new LinkedList<Location>(locations);
+    public LinkedHashMap<Integer, Location> getLocations() {
+        return new LinkedHashMap<Integer, Location>(locations);
     }
 
-    public LinkedList<Machine> getMachines() {
-        return new LinkedList<Machine>(machines);
+    public LinkedHashMap<Integer, Machine> getMachines() {
+        return new LinkedHashMap<Integer, Machine>(machines);
     }
 
-    public LinkedList<Request> getRequests() {
-        return new LinkedList<Request>(requests);
+    public LinkedHashMap<Integer, Request> getRequests() {
+        LinkedHashMap<Integer, Request> clientsTemp = new LinkedHashMap<Integer, Request>(requests);
+        return clientsTemp;
     }
 
     public Truck getTruck() {
         return truck;
+    }
+
+    public Location getDepot() {
+        if (locations != null)
+            return locations.get(1);
+        else
+            return null;
+
+    }
+
+    public HashMap<Integer, Technician> getTechnicians(Machine machine) {
+        HashMap<Integer, Technician> retour = new HashMap<Integer, Technician>();
+        for (Technician tech: technicians.values()) {
+            //TODO : vérifier que c'est le bon type de machine et ajouter si oui
+        }
+        return retour;
     }
 
     @Override
