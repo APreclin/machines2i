@@ -23,6 +23,26 @@ public class Machine {
         this.penaltyByDay = penaltyByDay;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getPenaltyByDay() {
+        return penaltyByDay;
+    }
+
+    public int getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public int getInstallationDate() {
+        return installationDate;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

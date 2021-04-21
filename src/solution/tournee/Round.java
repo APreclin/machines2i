@@ -22,6 +22,18 @@ public abstract class Round {
         this.date = date;
     }
 
+    public LinkedList<Request> getRequests() {
+        return requests;
+    }
+
+    public int getTotalCost() {
+        return totalCost;
+    }
+
+    public int getDate() {
+        return date;
+    }
+
     @Override
     public String toString() {
         String str = "";

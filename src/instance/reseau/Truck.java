@@ -25,6 +25,26 @@ public class Truck {
         this.cost = cost;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public int getMaxDistance() {
+        return maxDistance;
+    }
+
+    public int getDistanceCost() {
+        return distanceCost;
+    }
+
+    public int getDayCost() {
+        return dayCost;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
     @Override
     public String toString() {
         String str = "";

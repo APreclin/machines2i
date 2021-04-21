@@ -18,6 +18,10 @@ public class DeliveryRound extends Round {
         super(requests, date);
     }
 
+    public int getCurrentCharge() {
+        return currentCharge;
+    }
+
     @Override
     public String toString() {
         String str = "";

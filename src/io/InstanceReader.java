@@ -69,7 +69,7 @@ public class InstanceReader {
             this.locations = locations;
             LinkedHashMap<Integer, Request> requests = readRequests(br);
             this.requests = requests;
-            System.out.println(requests);
+            ;
         } catch (FileNotFoundException ex) {
             throw new FileExistException(instanceFile.getName());
         } catch (IOException ex) {
@@ -223,6 +223,7 @@ public class InstanceReader {
 
     private LinkedHashMap<Integer, Technician> readTechnicians(BufferedReader br) throws IOException {
         LinkedHashMap<Integer, Technician> technicians = new LinkedHashMap<Integer, Technician>();
+        LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<Integer, Boolean>();
         String line = br.readLine();
         while (!line.contains("TECHNICIANS = "))
             line = br.readLine();
@@ -243,7 +244,13 @@ public class InstanceReader {
             int maxDistance = techniciansData.get(2);
             int maxRequests = techniciansData.get(3);
 
-            Technician technician = new Technician(id, location, maxDistance, maxRequests);
+            int idMachine = 1;
+            for (int j = 4; j < techniciansData.size(); j++) {
+                Boolean ability = techniciansData.get(j) == 1 ? abilities.put(idMachine++, true)
+                        : abilities.put(idMachine++, false);
+            }
+
+            Technician technician = new Technician(id, location, maxDistance, maxRequests, abilities);
             technicians.put(id, technician);
 
             scanner.close();

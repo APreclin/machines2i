@@ -1,6 +1,6 @@
 package instance.reseau;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Technician {
@@ -9,23 +9,48 @@ public class Technician {
     private Location home;
     private int maxDistance;
     private int maxRequests;
-    private HashMap<Integer, Boolean> installation;
+    private LinkedHashMap<Integer, Boolean> abilities;
 
     public Technician() {
         this.id = 0;
         this.home = new Location();
         this.maxDistance = 0;
         this.maxRequests = 0;
-        this.installation = new HashMap<Integer, Boolean>();
+        this.abilities = new LinkedHashMap<Integer, Boolean>();
     }
 
-    public Technician(int id, Location location, int maxDistance, int maxRequests) {
+    public Technician(int id, Location location, int maxDistance, int maxRequests,
+            LinkedHashMap<Integer, Boolean> abilities) {
         this();
         this.id = id;
         this.home = location;
         this.maxDistance = maxDistance;
         this.maxRequests = maxRequests;
-        // TODO: Récupérer le tableau de capacité du technicien
+        this.abilities = abilities;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Location getHome() {
+        return home;
+    }
+
+    public int getMaxDistance() {
+        return maxDistance;
+    }
+
+    public int getMaxRequests() {
+        return maxRequests;
+    }
+
+    public LinkedHashMap<Integer, Boolean> getAbilities() {
+        return abilities;
+    }
+
+    public void setAbilities(LinkedHashMap<Integer, Boolean> abilities) {
+        this.abilities = abilities;
     }
 
     @Override
@@ -59,7 +84,7 @@ public class Technician {
         str += "Maximum distance : " + maxDistance + "\n";
         str += "Maximum requests : " + maxRequests + "\n";
         str += "Installation possible : \n[";
-        for (Map.Entry<Integer, Boolean> set : installation.entrySet()) {
+        for (Map.Entry<Integer, Boolean> set : abilities.entrySet()) {
             str += set.getKey() + " - " + set.getValue() + "\n";
         }
         str += "]";

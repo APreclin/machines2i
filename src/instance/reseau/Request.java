@@ -29,6 +29,30 @@ public class Request {
         this.nbMachines = nbMachines;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Machine getMachine() {
+        return machine;
+    }
+
+    public int getFirstDay() {
+        return firstDay;
+    }
+
+    public int getLastDay() {
+        return lastDay;
+    }
+
+    public int getNbMachines() {
+        return nbMachines;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

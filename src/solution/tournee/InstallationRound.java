@@ -19,6 +19,10 @@ public class InstallationRound extends Round {
         this.nbRequests = nbRequests;
     }
 
+    public int getNbRequests() {
+        return nbRequests;
+    }
+
     @Override
     public String toString() {
         String str = "";
