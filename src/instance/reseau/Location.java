@@ -1,10 +1,13 @@
 package instance.reseau;
 
+import java.util.HashMap;
+
 public class Location {
 
     private int id;
     private int x;
     private int y;
+    private HashMap<Location, Road> roadsStartingBy;
 
     public Location() {
         this.id = 0;
@@ -62,5 +65,29 @@ public class Location {
         if (id != other.id)
             return false;
         return true;
+    }
+
+    public int getDistanceTo(Location destination) {
+        if (destination == null)
+            return Integer.MAX_VALUE;
+        Road tempRoad = new Road(this, destination);
+        if (roadsStartingBy.containsValue(tempRoad)) {
+            return tempRoad.getDistance();
+        }
+        else
+            return Integer.MAX_VALUE;
+    }
+
+    public boolean addRoad(Location destination) {
+        if (destination == null)
+            return false;
+        Road RoadTemp = roadsStartingBy.put(destination, new Road(this, destination));
+        if (RoadTemp == null)
+            return true;
+        else {
+            roadsStartingBy.put(destination, RoadTemp);
+            return false;
+        }
+            
     }
 }

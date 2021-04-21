@@ -3,6 +3,8 @@ package instance.reseau;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import solution.tournee.InstallationRound;
+
 public class Technician {
 
     private int id;
@@ -10,6 +12,8 @@ public class Technician {
     private int maxDistance;
     private int maxRequests;
     private LinkedHashMap<Integer, Boolean> abilities;
+    private InstallationRound lastInstallationRound;
+    private int nbConsecutiveInstallationRounds;
 
     public Technician() {
         this.id = 0;
@@ -17,6 +21,8 @@ public class Technician {
         this.maxDistance = 0;
         this.maxRequests = 0;
         this.abilities = new LinkedHashMap<Integer, Boolean>();
+        this.lastInstallationRound = new InstallationRound();
+        this.nbConsecutiveInstallationRounds = 0;
     }
 
     public Technician(int id, Location location, int maxDistance, int maxRequests,
@@ -69,6 +75,29 @@ public class Technician {
         if (id != other.id)
             return false;
         return true;
+    }
+        
+
+    public boolean addInstallationRound(InstallationRound ir) {
+        if (!ir.follows(lastInstallationRound)) {
+            this.nbConsecutiveInstallationRounds = 0;
+            this.lastInstallationRound = ir;
+            return true;
+        } else if (nbConsecutiveInstallationRounds < 5) {
+            this.nbConsecutiveInstallationRounds += 1;
+            this.lastInstallationRound = ir;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public boolean checkMachineAbility(int machineId) {
+        // Vérifie que le technicien est capable d'installer la machine indiquée par son ID
+        if (this.abilities.containsKey(machineId))
+            return this.abilities.get(machineId);
+        else
+            return false;
     }
 
     @Override

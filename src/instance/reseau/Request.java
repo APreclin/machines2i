@@ -3,20 +3,28 @@ package instance.reseau;
 public class Request {
 
     private int id;
-    private Location location;
-    private Machine machine;
     private int firstDay;
     private int lastDay;
+    private Machine machine;
     private int nbMachines;
+    private Location location;
 
     public Request() {
-
         this.id = 0;
         this.location = new Location();
         this.machine = new Machine();
         this.firstDay = -1;
         this.lastDay = -1;
+        this.machine = new Machine();
         this.nbMachines = 0;
+        this.location = new Location();
+    }
+
+    public Integer getDistanceTo(Request request) {
+        if (request != null)
+            return this.location.getDistanceTo(request.getLocation());
+        else
+            return Integer.MAX_VALUE;
     }
 
     public Request(int id, Location location, int firstDay, int lastDay, Machine machine, int nbMachines) {

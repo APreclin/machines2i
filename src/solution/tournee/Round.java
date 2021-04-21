@@ -6,17 +6,19 @@ import instance.reseau.Request;
 
 public abstract class Round {
 
-    private LinkedList<Request> requests;
-    private int totalCost;
-    private int date;
+    protected LinkedList<Request> requests;
+    protected int totalCost;
+    protected int date;
 
-    public Round() {
-        this.requests = new LinkedList<Request>();
-        this.totalCost = 0;
-        this.date = -1;
+    public abstract boolean addRequest(Request request);
+
+    protected Round() {
+        requests = new LinkedList<Request>();
+        totalCost = 0;
+        date = -1;
     }
 
-    public Round(LinkedList<Request> requests, int date) {
+    protected Round(LinkedList<Request> requests, int date) {
         this();
         this.requests = requests;
         this.date = date;
@@ -34,6 +36,13 @@ public abstract class Round {
         return date;
     }
 
+    public boolean follows(Round otherRound) {
+        if (this.date - otherRound.getDate() == 1)
+            return true;
+        else
+            return false;
+    }
+    
     @Override
     public String toString() {
         String str = "";
@@ -45,4 +54,5 @@ public abstract class Round {
         str += "-----------------\n\n";
         return str;
     }
+
 }

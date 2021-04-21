@@ -166,6 +166,14 @@ public class Instance {
         return false;
     }
 
+    public Technician getTechnician(Machine machine) {
+        Technician retour = new Technician();
+        for (Technician tech: technicians.values()) {
+            //TODO : vérifier que c'est le bon type de machine et renovyer le premier technicien qui est bon
+        }
+        return retour;
+    }
+
     @Override
     public String toString() {
         String str = "";
