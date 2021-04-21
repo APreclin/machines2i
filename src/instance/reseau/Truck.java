@@ -16,10 +16,46 @@ public class Truck {
         this.cost = 0;
     }
 
+    public Truck(int capacity, int maxDistance, int distanceCost, int dayCost, int cost) {
+        this();
+        this.capacity = capacity;
+        this.maxDistance = maxDistance;
+        this.distanceCost = distanceCost;
+        this.dayCost = dayCost;
+        this.cost = cost;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public int getMaxDistance() {
+        return maxDistance;
+    }
+
+    public int getDistanceCost() {
+        return distanceCost;
+    }
+
+    public int getDayCost() {
+        return dayCost;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
     @Override
     public String toString() {
-        return "Truck [capacity=" + capacity + ", cost=" + cost + ", dayCost=" + dayCost + ", distanceCost="
-                + distanceCost + ", maxDistance=" + maxDistance + "]";
+        String str = "";
+        str += "----- Truck -----\n\n";
+        str += "Capacity : " + capacity + "\n";
+        str += "Max distance : " + maxDistance + "\n";
+        str += "Distance cost : " + distanceCost + "\n";
+        str += "Day cost : " + dayCost + "\n";
+        str += "Cost : " + cost + "\n\n";
+        str += "-----------------\n\n";
+        return str;
     }
 
 }
