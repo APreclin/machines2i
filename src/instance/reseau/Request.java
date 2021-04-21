@@ -19,11 +19,11 @@ public class Request {
         this.nbMachines = 0;
     }
 
-    public Request(int id, int firstDay, int lastDay, int nbMachines) {
+    public Request(int id, Location location, int firstDay, int lastDay, Machine machine, int nbMachines) {
         this();
         this.id = id;
-        // TODO: Récupérer la localisation de la requête
-        // TODO: Récupérer la machine de la requête
+        this.location = location;
+        this.machine = machine;
         this.firstDay = firstDay;
         this.lastDay = lastDay;
         this.nbMachines = nbMachines;

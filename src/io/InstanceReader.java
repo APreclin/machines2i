@@ -15,6 +15,7 @@ import javax.swing.JFileChooser;
 import instance.Instance;
 import instance.reseau.Location;
 import instance.reseau.Machine;
+import instance.reseau.Request;
 import instance.reseau.Truck;
 import io.exception.FileExistException;
 import io.exception.FormatFileException;
@@ -33,6 +34,7 @@ public class InstanceReader {
     private File instanceFile;
     private LinkedHashMap<Integer, Location> locations;
     private LinkedHashMap<Integer, Machine> machines;
+    private LinkedHashMap<Integer, Request> requests;
 
     public InstanceReader() throws ReaderException {
         JFileChooser chooser = new JFileChooser();
@@ -64,6 +66,9 @@ public class InstanceReader {
             this.machines = machines;
             LinkedHashMap<Integer, Location> locations = readLocations(br);
             this.locations = locations;
+            LinkedHashMap<Integer, Request> requests = readRequests(br);
+            this.requests = requests;
+            System.out.println(requests);
         } catch (FileNotFoundException ex) {
             throw new FileExistException(instanceFile.getName());
         } catch (IOException ex) {
@@ -221,6 +226,38 @@ public class InstanceReader {
 
     private Machine getMachine(int id) {
         return this.machines.get(id);
+    }
+
+    private LinkedHashMap<Integer, Request> readRequests(BufferedReader br) throws IOException {
+        LinkedHashMap<Integer, Request> requests = new LinkedHashMap<Integer, Request>();
+        String line = br.readLine();
+        while (!line.contains("REQUESTS ="))
+            line = br.readLine();
+
+        line = line.replace("REQUESTS = ", "");
+        int requestsLength = Integer.parseInt(line);
+
+        for (int i = 0; i < requestsLength; i++) {
+            line = br.readLine();
+            Scanner scanner = new Scanner(line);
+            List<Integer> requestsData = new ArrayList<>();
+            while (scanner.hasNext())
+                requestsData.add(scanner.nextInt());
+
+            int id = requestsData.get(0);
+            Location requestLocation = getLocation(requestsData.get(1));
+            int firstDay = requestsData.get(2);
+            int lastDay = requestsData.get(3);
+            Machine machine = getMachine(requestsData.get(4));
+            int nbMachines = requestsData.get(5);
+
+            Request request = new Request(id, requestLocation, firstDay, lastDay, machine, nbMachines);
+            requests.put(id, request);
+
+            scanner.close();
+        }
+
+        return requests;
     }
 
     public static void main(String[] args) {
