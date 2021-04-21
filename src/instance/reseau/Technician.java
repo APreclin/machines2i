@@ -46,11 +46,7 @@ public class Technician {
     }
 
     public LinkedHashMap<Integer, Boolean> getAbilities() {
-        return abilities;
-    }
-
-    public void setAbilities(LinkedHashMap<Integer, Boolean> abilities) {
-        this.abilities = abilities;
+        return new LinkedHashMap<Integer, Boolean>(abilities);
     }
 
     @Override

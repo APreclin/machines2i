@@ -35,7 +35,6 @@ public class InstanceReader {
     private File instanceFile;
     private LinkedHashMap<Integer, Location> locations;
     private LinkedHashMap<Integer, Machine> machines;
-    private LinkedHashMap<Integer, Request> requests;
 
     public InstanceReader() throws ReaderException {
         JFileChooser chooser = new JFileChooser();
@@ -68,15 +67,29 @@ public class InstanceReader {
             LinkedHashMap<Integer, Location> locations = readLocations(br);
             this.locations = locations;
             LinkedHashMap<Integer, Request> requests = readRequests(br);
-            this.requests = requests;
-            ;
+            LinkedHashMap<Integer, Technician> technicians = readTechnicians(br);
+
+            Instance instance = new Instance(dataset, name, days, technicianDistanceCost, technicianDayCost,
+                    technicianCost, truck);
+
+            for (Location location : locations.values())
+                instance.addLocation(location);
+
+            for (Machine machine : machines.values())
+                instance.addMachine(machine);
+
+            for (Request request : requests.values())
+                instance.addRequest(request);
+
+            for (Technician technician : technicians.values())
+                instance.addTechnician(technician);
+
+            return instance;
         } catch (FileNotFoundException ex) {
             throw new FileExistException(instanceFile.getName());
         } catch (IOException ex) {
             throw new ReaderException("IO exception", ex.getMessage());
         }
-
-        return null;
     }
 
     private String readDataset(BufferedReader br) throws IOException {
@@ -246,8 +259,8 @@ public class InstanceReader {
 
             int idMachine = 1;
             for (int j = 4; j < techniciansData.size(); j++) {
-                Boolean ability = techniciansData.get(j) == 1 ? abilities.put(idMachine++, true)
-                        : abilities.put(idMachine++, false);
+                Boolean ability = techniciansData.get(j) == 1;
+                abilities.put(idMachine++, ability);
             }
 
             Technician technician = new Technician(id, location, maxDistance, maxRequests, abilities);
@@ -303,6 +316,7 @@ public class InstanceReader {
         try {
             InstanceReader reader = new InstanceReader();
             Instance instance = reader.readInstance();
+            // System.out.println(instance);
         } catch (ReaderException ex) {
             System.out.println(ex.getMessage());
         }

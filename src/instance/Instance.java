@@ -1,6 +1,6 @@
 package instance;
 
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 
 import instance.reseau.Location;
 import instance.reseau.Machine;
@@ -15,10 +15,10 @@ public class Instance {
     private int technicianDistanceCost;
     private int technicianDayCost;
     private int technicianCost;
-    private LinkedList<Technician> technicians;
-    private LinkedList<Location> locations;
-    private LinkedList<Machine> machines;
-    private LinkedList<Request> requests;
+    private LinkedHashMap<Integer, Technician> technicians;
+    private LinkedHashMap<Integer, Location> locations;
+    private LinkedHashMap<Integer, Machine> machines;
+    private LinkedHashMap<Integer, Request> requests;
     private Truck truck;
 
     public Instance() {
@@ -28,11 +28,27 @@ public class Instance {
         this.technicianDistanceCost = 0;
         this.technicianDayCost = 0;
         this.technicianCost = 0;
-        this.technicians = new LinkedList<Technician>();
-        this.locations = new LinkedList<Location>();
-        this.machines = new LinkedList<Machine>();
-        this.requests = new LinkedList<Request>();
+        this.technicians = new LinkedHashMap<Integer, Technician>();
+        this.locations = new LinkedHashMap<Integer, Location>();
+        this.machines = new LinkedHashMap<Integer, Machine>();
+        this.requests = new LinkedHashMap<Integer, Request>();
         this.truck = new Truck();
+    }
+
+    public Instance(String dataset, String name, int days, int technicianDistanceCost, int technicianDayCost,
+            int technicianCost, Truck truck) {
+        this();
+        this.dataset = dataset;
+        this.name = name;
+        this.days = days;
+        this.technicianDistanceCost = technicianDistanceCost;
+        this.technicianDayCost = technicianDayCost;
+        this.technicianCost = technicianCost;
+        this.technicians = new LinkedHashMap<Integer, Technician>();
+        this.locations = new LinkedHashMap<Integer, Location>();
+        this.machines = new LinkedHashMap<Integer, Machine>();
+        this.requests = new LinkedHashMap<Integer, Request>();
+        this.truck = truck;
     }
 
     public String getDataset() {
@@ -59,24 +75,76 @@ public class Instance {
         return technicianCost;
     }
 
-    public LinkedList<Technician> getTechnicians() {
-        return new LinkedList<Technician>(technicians);
+    public LinkedHashMap<Integer, Technician> getTechnicians() {
+        return new LinkedHashMap<Integer, Technician>(technicians);
     }
 
-    public LinkedList<Location> getLocations() {
-        return new LinkedList<Location>(locations);
+    public LinkedHashMap<Integer, Location> getLocations() {
+        return new LinkedHashMap<Integer, Location>(locations);
     }
 
-    public LinkedList<Machine> getMachines() {
-        return new LinkedList<Machine>(machines);
+    public LinkedHashMap<Integer, Machine> getMachines() {
+        return new LinkedHashMap<Integer, Machine>(machines);
     }
 
-    public LinkedList<Request> getRequests() {
-        return new LinkedList<Request>(requests);
+    public LinkedHashMap<Integer, Request> getRequests() {
+        return new LinkedHashMap<Integer, Request>(requests);
     }
 
     public Truck getTruck() {
         return truck;
+    }
+
+    public boolean addLocation(Location location) {
+        if (location == null)
+            return false;
+
+        int id = location.getId();
+        Location tempLocation = this.locations.put(id, location);
+        if (tempLocation == null)
+            return true;
+
+        this.locations.put(id, tempLocation);
+        return false;
+    }
+
+    public boolean addMachine(Machine machine) {
+        if (machine == null)
+            return false;
+
+        int id = machine.getId();
+        Machine tempMachine = this.machines.put(id, machine);
+        if (tempMachine == null)
+            return true;
+
+        this.machines.put(id, tempMachine);
+        return false;
+    }
+
+    public boolean addRequest(Request request) {
+        if (request == null)
+            return false;
+
+        int id = request.getId();
+        Request tempRequest = this.requests.put(id, request);
+        if (tempRequest == null)
+            return true;
+
+        this.requests.put(id, tempRequest);
+        return false;
+    }
+
+    public boolean addTechnician(Technician technician) {
+        if (technician == null)
+            return false;
+
+        int id = technician.getId();
+        Technician tempTechnician = this.technicians.put(id, technician);
+        if (tempTechnician == null)
+            return true;
+
+        this.technicians.put(id, tempTechnician);
+        return false;
     }
 
     @Override
