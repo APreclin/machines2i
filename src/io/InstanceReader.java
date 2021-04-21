@@ -33,8 +33,8 @@ public class InstanceReader {
      * Le fichier contenant l'instance.
      */
     private File instanceFile;
-    private LinkedHashMap<Integer, Location> locations;
-    private LinkedHashMap<Integer, Machine> machines;
+    private List<Location> locations;
+    private List<Machine> machines;
 
     public InstanceReader() throws ReaderException {
         JFileChooser chooser = new JFileChooser();
@@ -62,28 +62,26 @@ public class InstanceReader {
             int technicianDistanceCost = readTechnicianDistanceCost(br);
             int technicianDayCost = readTechnicianDayCost(br);
             int technicianCost = readTechnicianCost(br);
-            LinkedHashMap<Integer, Machine> machines = readMachines(br);
+            List<Machine> machines = readMachines(br);
             this.machines = machines;
-            LinkedHashMap<Integer, Location> locations = readLocations(br);
+            List<Location> locations = readLocations(br);
             this.locations = locations;
-            LinkedHashMap<Integer, Request> requests = readRequests(br);
-            LinkedHashMap<Integer, Technician> technicians = readTechnicians(br);
+            List<Request> requests = readRequests(br);
+            List<Technician> technicians = readTechnicians(br);
 
             Instance instance = new Instance(dataset, name, days, technicianDistanceCost, technicianDayCost,
                     technicianCost, truck);
 
-            // TODO: A voir si on change ici : les LinkedHashMap ne servent à rien dans
-            // l'instance reader
-            for (Location location : locations.values())
+            for (Location location : locations)
                 instance.addLocation(location);
 
-            for (Machine machine : machines.values())
+            for (Machine machine : machines)
                 instance.addMachine(machine);
 
-            for (Request request : requests.values())
+            for (Request request : requests)
                 instance.addRequest(request);
 
-            for (Technician technician : technicians.values())
+            for (Technician technician : technicians)
                 instance.addTechnician(technician);
 
             return instance;
@@ -178,8 +176,8 @@ public class InstanceReader {
         return truck;
     }
 
-    private LinkedHashMap<Integer, Machine> readMachines(BufferedReader br) throws IOException {
-        LinkedHashMap<Integer, Machine> machines = new LinkedHashMap<Integer, Machine>();
+    private List<Machine> readMachines(BufferedReader br) throws IOException {
+        List<Machine> machines = new ArrayList<Machine>();
         String line = br.readLine();
         while (!line.contains("MACHINES = "))
             line = br.readLine();
@@ -199,7 +197,7 @@ public class InstanceReader {
             int penaltyByDay = machinesData.get(2);
 
             Machine machine = new Machine(id, size, penaltyByDay);
-            machines.put(id, machine);
+            machines.add(machine);
 
             scanner.close();
         }
@@ -207,8 +205,8 @@ public class InstanceReader {
         return machines;
     }
 
-    private LinkedHashMap<Integer, Location> readLocations(BufferedReader br) throws IOException {
-        LinkedHashMap<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
+    private List<Location> readLocations(BufferedReader br) throws IOException {
+        List<Location> locations = new ArrayList<Location>();
         String line = br.readLine();
         while (!line.contains("LOCATIONS = "))
             line = br.readLine();
@@ -228,7 +226,7 @@ public class InstanceReader {
             int y = locationsData.get(2);
 
             Location location = new Location(id, x, y);
-            locations.put(id, location);
+            locations.add(location);
 
             scanner.close();
         }
@@ -236,8 +234,8 @@ public class InstanceReader {
         return locations;
     }
 
-    private LinkedHashMap<Integer, Technician> readTechnicians(BufferedReader br) throws IOException {
-        LinkedHashMap<Integer, Technician> technicians = new LinkedHashMap<Integer, Technician>();
+    private List<Technician> readTechnicians(BufferedReader br) throws IOException {
+        List<Technician> technicians = new ArrayList<Technician>();
 
         String line = br.readLine();
         while (!line.contains("TECHNICIANS = "))
@@ -269,7 +267,7 @@ public class InstanceReader {
             }
 
             Technician technician = new Technician(id, location, maxDistance, maxRequests, abilities);
-            technicians.put(id, technician);
+            technicians.add(technician);
 
             scanner.close();
         }
@@ -285,8 +283,8 @@ public class InstanceReader {
         return this.machines.get(id);
     }
 
-    private LinkedHashMap<Integer, Request> readRequests(BufferedReader br) throws IOException {
-        LinkedHashMap<Integer, Request> requests = new LinkedHashMap<Integer, Request>();
+    private List<Request> readRequests(BufferedReader br) throws IOException {
+        List<Request> requests = new ArrayList<Request>();
         String line = br.readLine();
         while (!line.contains("REQUESTS ="))
             line = br.readLine();
@@ -309,7 +307,7 @@ public class InstanceReader {
             int nbMachines = requestsData.get(5);
 
             Request request = new Request(id, requestLocation, firstDay, lastDay, machine, nbMachines);
-            requests.put(id, request);
+            requests.add(request);
 
             scanner.close();
         }
