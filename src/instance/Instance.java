@@ -1,6 +1,7 @@
 package instance;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import instance.reseau.Location;
 import instance.reseau.Machine;
@@ -149,9 +150,20 @@ public class Instance {
 
     @Override
     public String toString() {
-        return "Instance [dataset=" + dataset + ", days=" + days + ", locations=" + locations + ", machines=" + machines
-                + ", name=" + name + ", requests=" + requests + ", technicianCost=" + technicianCost
-                + ", technicianDayCost=" + technicianDayCost + ", technicianDistanceCost=" + technicianDistanceCost
-                + ", technicians=" + technicians + ", truck=" + truck + "]";
+        String str = "";
+        str += "----- Instance -----\n\n";
+        str += "Dataset : " + dataset + "\n";
+        str += "Name : " + name + "\n";
+        str += "Days : " + days + "\n";
+        str += truck.toString();
+        str += "Technician Cost : " + technicianCost + "\n";
+        str += "Technician Day Cost : " + technicianDayCost + "\n";
+        str += "Technician Distance Cost : " + technicianDistanceCost + "\n";
+        str += "Machines : \n[";
+        for (Map.Entry<Integer, Machine> set : this.machines.entrySet())
+            str += set.getKey() + " - " + set.getValue() + "\n";
+        str += "]";
+        str += "----------------------\n\n";
+        return str;
     }
 }
