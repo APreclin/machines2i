@@ -67,17 +67,29 @@ public class Location {
         return true;
     }
 
+    /**
+     * Get distance between this location and destination
+     * 
+     * @param destination
+     * @return the distance between this location and destination passed in
+     *         parameter
+     */
     public int getDistanceTo(Location destination) {
         if (destination == null)
             return Integer.MAX_VALUE;
         Road tempRoad = new Road(this, destination);
         if (roadsStartingBy.containsValue(tempRoad)) {
             return tempRoad.getDistance();
-        }
-        else
+        } else
             return Integer.MAX_VALUE;
     }
 
+    /**
+     * Add road between this location and destination if not already created
+     * 
+     * @param destination
+     * @return whether the road has been created or not
+     */
     public boolean addRoad(Location destination) {
         if (destination == null)
             return false;
@@ -88,6 +100,6 @@ public class Location {
             roadsStartingBy.put(destination, RoadTemp);
             return false;
         }
-            
+
     }
 }
