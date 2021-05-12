@@ -36,13 +36,19 @@ public abstract class Round {
         return date;
     }
 
+    /**
+     * Check if the date of this round follows the date of otherRound
+     * 
+     * @param otherRound
+     * @return whether the date of this round follows the date of otherRound or not
+     */
     public boolean follows(Round otherRound) {
         if (this.date - otherRound.getDate() == 1)
             return true;
         else
             return false;
     }
-    
+
     @Override
     public String toString() {
         String str = "";
