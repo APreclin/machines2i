@@ -121,6 +121,12 @@ public class Instance {
         return techniciansList;
     }
 
+    /**
+     * Add Location if not already in locations HashMap
+     * 
+     * @param location the location we want to add
+     * @return wheter the location has been added or not to our locations HashMap
+     */
     public boolean addLocation(Location location) {
         if (location == null)
             return false;
@@ -134,6 +140,12 @@ public class Instance {
         return false;
     }
 
+    /**
+     * Add Machine if not already in machines HashMap
+     * 
+     * @param machine the machine we want to add
+     * @return wheter the machine has been added or not to our machines HashMap
+     */
     public boolean addMachine(Machine machine) {
         if (machine == null)
             return false;
@@ -147,6 +159,12 @@ public class Instance {
         return false;
     }
 
+    /**
+     * Add Request if not already in requests HashMap
+     * 
+     * @param machine the request we want to add
+     * @return wheter the request has been added or not to our requests HashMap
+     */
     public boolean addRequest(Request request) {
         if (request == null)
             return false;
@@ -160,6 +178,13 @@ public class Instance {
         return false;
     }
 
+    /**
+     * Add Technician if not already in technicians HashMap
+     * 
+     * @param technician the technician we want to add
+     * @return wheter the technician has been added or not to our technicians
+     *         HashMap
+     */
     public boolean addTechnician(Technician technician) {
         if (technician == null)
             return false;
