@@ -19,8 +19,12 @@ public class Road {
         return destination;
     }
 
+    /**
+     * Calculate distance between origin and destination
+     */
     private void distanceCalculation() {
-        distance = (int) Math.round(Math.sqrt((Math.pow(destination.getX() - origin.getX(), 2) + Math.pow(destination.getY() - origin.getY(), 2))));
+        distance = (int) Math.round(Math.sqrt(
+                (Math.pow(destination.getX() - origin.getX(), 2) + Math.pow(destination.getY() - origin.getY(), 2))));
     }
 
     public int getDistance() {
@@ -28,6 +32,6 @@ public class Road {
     }
 
     public static void main(String[] args) {
-        //TODO: test unitaire road
+        // TODO: test unitaire road
     }
 }
