@@ -35,6 +35,9 @@ public class InstanceReader {
     private File instanceFile;
     private LinkedHashMap<Integer, Location> locations;
     private LinkedHashMap<Integer, Machine> machines;
+    private int distanceCost;
+    private int dayCost;
+    private int cost;
 
     public InstanceReader() throws ReaderException {
         JFileChooser chooser = new JFileChooser();
@@ -51,6 +54,12 @@ public class InstanceReader {
         this.instanceFile = file;
     }
 
+    /**
+     * Read file loaded
+     * 
+     * @return the instance read
+     * @throws ReaderException when data is missing or in the wrong format
+     */
     public Instance readInstance() throws ReaderException {
         try {
             FileReader f = new FileReader(this.instanceFile.getAbsolutePath());
@@ -59,9 +68,9 @@ public class InstanceReader {
             String name = readName(br);
             int days = readDays(br);
             Truck truck = readTruck(br);
-            int technicianDistanceCost = readTechnicianDistanceCost(br);
-            int technicianDayCost = readTechnicianDayCost(br);
-            int technicianCost = readTechnicianCost(br);
+            this.distanceCost = readTechnicianDistanceCost(br);
+            this.dayCost = readTechnicianDayCost(br);
+            this.cost = readTechnicianCost(br);
             LinkedHashMap<Integer, Machine> machines = readMachines(br);
             this.machines = machines;
             LinkedHashMap<Integer, Location> locations = readLocations(br);
@@ -69,8 +78,7 @@ public class InstanceReader {
             LinkedHashMap<Integer, Request> requests = readRequests(br);
             LinkedHashMap<Integer, Technician> technicians = readTechnicians(br);
 
-            Instance instance = new Instance(dataset, name, days, technicianDistanceCost, technicianDayCost,
-                    technicianCost, truck);
+            Instance instance = new Instance(dataset, name, days, distanceCost, dayCost, cost, truck);
 
             // TODO: A voir si on change ici : les LinkedHashMap ne servent à rien dans
             // l'instance reader
@@ -94,6 +102,13 @@ public class InstanceReader {
         }
     }
 
+    /**
+     * Read dataset line
+     * 
+     * @param br
+     * @return the dataset of the instance
+     * @throws IOException
+     */
     private String readDataset(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("DATASET = "))
@@ -103,6 +118,13 @@ public class InstanceReader {
         return line;
     }
 
+    /**
+     * Read name line
+     * 
+     * @param br
+     * @return the name of the instance
+     * @throws IOException
+     */
     private String readName(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("NAME = "))
@@ -112,6 +134,13 @@ public class InstanceReader {
         return line;
     }
 
+    /**
+     * Read days line
+     * 
+     * @param br
+     * @return the number of days of the instance
+     * @throws IOException
+     */
     private int readDays(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("DAYS = "))
@@ -121,6 +150,13 @@ public class InstanceReader {
         return Integer.parseInt(line);
     }
 
+    /**
+     * Read techniciansDistanceCost line
+     * 
+     * @param br
+     * @return the techniciansDistanceCost
+     * @throws IOException
+     */
     private int readTechnicianDistanceCost(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("TECHNICIAN_DISTANCE_COST = "))
@@ -130,6 +166,13 @@ public class InstanceReader {
         return Integer.parseInt(line);
     }
 
+    /**
+     * Read technicianDayCost line
+     * 
+     * @param br
+     * @return the technicianDayCost
+     * @throws IOException
+     */
     private int readTechnicianDayCost(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("TECHNICIAN_DAY_COST = "))
@@ -139,6 +182,13 @@ public class InstanceReader {
         return Integer.parseInt(line);
     }
 
+    /**
+     * Read technicianCost
+     * 
+     * @param br
+     * @return the technicianCost
+     * @throws IOException
+     */
     private int readTechnicianCost(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("TECHNICIAN_COST = "))
@@ -148,6 +198,13 @@ public class InstanceReader {
         return Integer.parseInt(line);
     }
 
+    /**
+     * Read the truck
+     * 
+     * @param br
+     * @return
+     * @throws IOException
+     */
     private Truck readTruck(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("TRUCK_CAPACITY = "))
@@ -268,7 +325,8 @@ public class InstanceReader {
                 abilities.put(idMachine++, ability);
             }
 
-            Technician technician = new Technician(id, location, maxDistance, maxRequests, abilities);
+            Technician technician = new Technician(id, location, maxDistance, maxRequests, distanceCost, dayCost, cost,
+                    abilities);
             technicians.put(id, technician);
 
             scanner.close();

@@ -11,6 +11,9 @@ public class Technician {
     private Location home;
     private int maxDistance;
     private int maxRequests;
+    private int distanceCost;
+    private int dayCost;
+    private int cost;
     private LinkedHashMap<Integer, Boolean> abilities;
     private InstallationRound lastInstallationRound;
     private int nbConsecutiveInstallationRounds;
@@ -20,18 +23,24 @@ public class Technician {
         this.home = new Location();
         this.maxDistance = 0;
         this.maxRequests = 0;
+        this.distanceCost = 0;
+        this.dayCost = 0;
+        this.cost = 0;
         this.abilities = new LinkedHashMap<Integer, Boolean>();
         this.lastInstallationRound = new InstallationRound();
         this.nbConsecutiveInstallationRounds = 0;
     }
 
-    public Technician(int id, Location location, int maxDistance, int maxRequests,
-            LinkedHashMap<Integer, Boolean> abilities) {
+    public Technician(int id, Location location, int maxDistance, int maxRequests, int distanceCost, int dayCost,
+            int cost, LinkedHashMap<Integer, Boolean> abilities) {
         this();
         this.id = id;
         this.home = location;
         this.maxDistance = maxDistance;
         this.maxRequests = maxRequests;
+        this.distanceCost = distanceCost;
+        this.dayCost = dayCost;
+        this.cost = cost;
         this.abilities = abilities;
     }
 
@@ -77,12 +86,6 @@ public class Technician {
         return true;
     }
 
-    /**
-     * Add
-     * 
-     * @param ir
-     * @return wether
-     */
     public boolean addInstallationRound(InstallationRound ir) {
         if (!ir.follows(lastInstallationRound)) {
             this.nbConsecutiveInstallationRounds = 0;
@@ -119,7 +122,10 @@ public class Technician {
         str += "ID : " + id + "\n";
         str += "Location n°" + id + "\n";
         str += "Maximum distance : " + maxDistance + "\n";
-        str += "Maximum requests : " + maxRequests + "\n\n";
+        str += "Maximum requests : " + maxRequests + "\n";
+        str += "Distance cost : " + distanceCost + "\n";
+        str += "Day cost : " + dayCost + "\n";
+        str += "Cost : " + cost + "\n\n";
         str += "Installation possible : \n\n";
         for (Map.Entry<Integer, Boolean> set : abilities.entrySet())
             str += "\t Machine n°" + set.getKey() + " - " + set.getValue() + "\n";
