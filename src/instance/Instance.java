@@ -108,7 +108,7 @@ public class Instance {
     /**
      * Get Technicians able to install the machine passed in parameter
      * 
-     * @param machine the machine we want to be installed
+     * @param machine the machine we want to install
      * @return a HashMap of Technician able to install 'machine'
      */
     public HashMap<Integer, Technician> getTechnicians(Machine machine) {
@@ -125,7 +125,7 @@ public class Instance {
      * Add Location if not already in locations HashMap
      * 
      * @param location the location we want to add
-     * @return wheter the location has been added or not to our locations HashMap
+     * @return whether the location has been added or not to our locations HashMap
      */
     public boolean addLocation(Location location) {
         if (location == null)
@@ -182,7 +182,7 @@ public class Instance {
      * Add Technician if not already in technicians HashMap
      * 
      * @param technician the technician we want to add
-     * @return wheter the technician has been added or not to our technicians
+     * @return whether the technician has been added or not to our technicians
      *         HashMap
      */
     public boolean addTechnician(Technician technician) {
@@ -201,7 +201,7 @@ public class Instance {
     /**
      * Get the first Technician able to install the machine passed in parameter
      * 
-     * @param machine the machine we want to be installed
+     * @param machine the machine we want to install
      * @return the first Technician able to install 'machine'
      */
     public Technician getTechnician(Machine machine) {

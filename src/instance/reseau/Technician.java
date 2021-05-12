@@ -76,8 +76,13 @@ public class Technician {
             return false;
         return true;
     }
-        
 
+    /**
+     * Add
+     * 
+     * @param ir
+     * @return wether
+     */
     public boolean addInstallationRound(InstallationRound ir) {
         if (!ir.follows(lastInstallationRound)) {
             this.nbConsecutiveInstallationRounds = 0;
@@ -87,13 +92,20 @@ public class Technician {
             this.nbConsecutiveInstallationRounds += 1;
             this.lastInstallationRound = ir;
             return true;
-        }
-        else
+        } else
             return false;
     }
 
+    /**
+     * Check if this Technician is able to install the machine passed in parameter
+     * 
+     * @param machineId the id of the machine we want to install
+     * @return wheter this Technician can install or not the machine passed in
+     *         parameter
+     */
     public boolean checkMachineAbility(int machineId) {
-        // Vérifie que le technicien est capable d'installer la machine indiquée par son ID
+        // Vérifie que le technicien est capable d'installer la machine indiquée par son
+        // ID
         if (this.abilities.containsKey(machineId))
             return this.abilities.get(machineId);
         else
