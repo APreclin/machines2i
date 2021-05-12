@@ -202,7 +202,7 @@ public class InstanceReader {
      * Read the truck
      * 
      * @param br
-     * @return
+     * @return a new instance of Truck
      * @throws IOException
      */
     private Truck readTruck(BufferedReader br) throws IOException {
@@ -235,6 +235,13 @@ public class InstanceReader {
         return truck;
     }
 
+    /**
+     * Read all the Machine
+     * 
+     * @param br
+     * @return a HashMap of Machine
+     * @throws IOException
+     */
     private LinkedHashMap<Integer, Machine> readMachines(BufferedReader br) throws IOException {
         LinkedHashMap<Integer, Machine> machines = new LinkedHashMap<Integer, Machine>();
         String line = br.readLine();
@@ -264,6 +271,13 @@ public class InstanceReader {
         return machines;
     }
 
+    /**
+     * Read all the Location
+     * 
+     * @param br
+     * @return a HashMap of Location
+     * @throws IOException
+     */
     private LinkedHashMap<Integer, Location> readLocations(BufferedReader br) throws IOException {
         LinkedHashMap<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
         String line = br.readLine();
@@ -293,6 +307,13 @@ public class InstanceReader {
         return locations;
     }
 
+    /**
+     * Read all the Technician
+     * 
+     * @param br
+     * @return a HashMap of Technician
+     * @throws IOException
+     */
     private LinkedHashMap<Integer, Technician> readTechnicians(BufferedReader br) throws IOException {
         LinkedHashMap<Integer, Technician> technicians = new LinkedHashMap<Integer, Technician>();
 
@@ -335,14 +356,33 @@ public class InstanceReader {
         return technicians;
     }
 
+    /**
+     * Get Location with an id
+     * 
+     * @param id
+     * @return Location which has id as key
+     */
     private Location getLocation(int id) {
         return this.locations.get(id);
     }
 
+    /**
+     * Get Machine with an id
+     * 
+     * @param id
+     * @return Machine which has id as key
+     */
     private Machine getMachine(int id) {
         return this.machines.get(id);
     }
 
+    /**
+     * Read all the Request
+     * 
+     * @param br
+     * @return a HashMap of Request
+     * @throws IOException
+     */
     private LinkedHashMap<Integer, Request> readRequests(BufferedReader br) throws IOException {
         LinkedHashMap<Integer, Request> requests = new LinkedHashMap<Integer, Request>();
         String line = br.readLine();
