@@ -1,6 +1,7 @@
 package instance.reseau;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import solution.tournee.InstallationRound;
@@ -15,7 +16,7 @@ public class Technician {
     private int dayCost;
     private int cost;
     private LinkedHashMap<Integer, Boolean> abilities;
-    private InstallationRound lastInstallationRound;
+    private LinkedList<InstallationRound> installationRounds; // ensemble des tournées réalisées ordonnées dans le sens descendant des dates de tournée
     private int nbConsecutiveInstallationRounds;
 
     public Technician() {
@@ -27,7 +28,7 @@ public class Technician {
         this.dayCost = 0;
         this.cost = 0;
         this.abilities = new LinkedHashMap<Integer, Boolean>();
-        this.lastInstallationRound = new InstallationRound();
+        this.installationRounds = new LinkedList<>();
         this.nbConsecutiveInstallationRounds = 0;
     }
 
@@ -42,6 +43,8 @@ public class Technician {
         this.dayCost = dayCost;
         this.cost = cost;
         this.abilities = abilities;
+        this.installationRounds = new LinkedList<>();
+        this.nbConsecutiveInstallationRounds = 0;
     }
 
     public int getId() {
@@ -62,6 +65,10 @@ public class Technician {
 
     public LinkedHashMap<Integer, Boolean> getAbilities() {
         return new LinkedHashMap<Integer, Boolean>(abilities);
+    }
+
+    public LinkedList<InstallationRound> getInstallationRounds() {
+        return installationRounds;
     }
 
     @Override
@@ -86,17 +93,37 @@ public class Technician {
         return true;
     }
 
-    public boolean addInstallationRound(InstallationRound ir) {
-        if (!ir.follows(lastInstallationRound)) {
-            this.nbConsecutiveInstallationRounds = 0;
-            this.lastInstallationRound = ir;
-            return true;
-        } else if (nbConsecutiveInstallationRounds < 5) {
-            this.nbConsecutiveInstallationRounds += 1;
-            this.lastInstallationRound = ir;
-            return true;
-        } else
+    public boolean addInstallationRound(InstallationRound installationRoundGiven) {
+        // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
+        InstallationRound lastRound = installationRounds.getLast();
+
+        if (installationRoundGiven.getDateDiff(lastRound) <= 0)
+            // Si la tournée a lieu le même jour que la tournée actuelle ou un jour passé
             return false;
+
+        if (this.nbConsecutiveInstallationRounds >= 5) {
+            // Le nombre max de jours de travail d'affilé est atteint
+            if (installationRoundGiven.getDateDiff(lastRound) >= 2) {
+                // 2 jours de repos => on peut ajouter la tournée
+                this.installationRounds.push(installationRoundGiven);
+                this.nbConsecutiveInstallationRounds = 0;
+                return true;
+            }
+            else
+                // il n'y a pas 2 jours de repos, il ne peut donc pas enchainer
+                return false;
+        }
+        else {
+            // nombre maximum de jours de travail consécutifs pas atteint
+            if (installationRoundGiven.follows(lastRound))
+                // Si la nouvelle tournée suit la précédente, il faut incrémenter le compteur
+                this.nbConsecutiveInstallationRounds++;
+            else
+                // Si la nouvelle tournée ne suit pas, on remet le compteur à zéro
+                this.nbConsecutiveInstallationRounds = 0;
+            this.installationRounds.push(installationRoundGiven);
+            return true;
+        }
     }
 
     /**
@@ -131,6 +158,11 @@ public class Technician {
             str += "\t Machine n°" + set.getKey() + " - " + set.getValue() + "\n";
         str += "\n-------------------------\n";
         return str;
+    }
+
+    public static void main(String[] args) {
+        Location maison1 = new Location(0,10);
+        Technician techos = new Technician(1, );
     }
 
 }

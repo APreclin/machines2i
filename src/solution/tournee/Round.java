@@ -42,6 +42,10 @@ public abstract class Round {
         else
             return false;
     }
+
+    public int getDateDiff(Round otherRound) {
+        return this.date - otherRound.getDate();
+    }
     
     @Override
     public String toString() {

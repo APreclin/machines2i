@@ -37,6 +37,7 @@ public class InstallationRound extends Round {
             if (requests.isEmpty()) {
                 if (this.checkMachineComp(request)
                 && technician.addInstallationRound(this)) {
+                    request.setInstallationDate(this.date);
                     this.requests.push(request);
                     this.coveredDistance += this.technician.getHome().getDistanceTo(request.getLocation());
                     return true;
@@ -49,6 +50,7 @@ public class InstallationRound extends Round {
                 && (this.coveredDistance + this.getLastRequest().getDistanceTo(request) <= this.technician.getMaxDistance())
                 && this.checkMachineComp(request)
                 && technician.addInstallationRound(this)) {
+                    request.setInstallationDate(this.date);
                     this.requests.push(request);
                     this.coveredDistance += this.getLastRequest().getDistanceTo(request);
                     return true;
