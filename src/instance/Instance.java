@@ -2,7 +2,6 @@ package instance;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 import instance.reseau.Location;
@@ -106,14 +105,22 @@ public class Instance {
 
     }
 
+    /**
+     * Get Technicians able to install the machine passed in parameter
+     * 
+     * @param machine the machine we want to be installed
+     * @return a HashMap of Technician able to install 'machine'
+     */
     public HashMap<Integer, Technician> getTechnicians(Machine machine) {
-        HashMap<Integer, Technician> retour = new HashMap<Integer, Technician>();
-        for (Technician tech: technicians.values()) {
-            //TODO : vérifier que c'est le bon type de machine et ajouter si oui
+        HashMap<Integer, Technician> techniciansList = new HashMap<Integer, Technician>();
+        for (Technician tech : technicians.values()) {
+            if (tech.checkMachineAbility(machine.getId()))
+                techniciansList.put(tech.getId(), tech);
         }
-        return retour;
+
+        return techniciansList;
     }
-    
+
     public boolean addLocation(Location location) {
         if (location == null)
             return false;
@@ -166,12 +173,19 @@ public class Instance {
         return false;
     }
 
+    /**
+     * Get the first Technician able to install the machine passed in parameter
+     * 
+     * @param machine the machine we want to be installed
+     * @return the first Technician able to install 'machine'
+     */
     public Technician getTechnician(Machine machine) {
-        Technician retour = new Technician();
-        for (Technician tech: technicians.values()) {
-            //TODO : vérifier que c'est le bon type de machine et renovyer le premier technicien qui est bon
+        for (Technician tech : technicians.values()) {
+            if (tech.checkMachineAbility(machine.getId()))
+                return tech;
         }
-        return retour;
+
+        return new Technician();
     }
 
     @Override
