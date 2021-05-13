@@ -27,6 +27,7 @@ public class SolutionTriviale implements Solveur {
 
     public static void main(String[] args) {
         //TODO: test unitaire solutionTriviale
+        
     }
 
 

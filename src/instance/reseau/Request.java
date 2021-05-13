@@ -22,6 +22,8 @@ public class Request {
         this.machine = new Machine();
         this.nbMachines = 0;
         this.location = new Location();
+        this.deliveryDate = -1;
+        this.installationDate = -1;
     }
 
     public Integer getDistanceTo(Request request) {
@@ -39,6 +41,8 @@ public class Request {
         this.firstDay = firstDay;
         this.lastDay = lastDay;
         this.nbMachines = nbMachines;
+        this.deliveryDate = -1;
+        this.installationDate = -1;
     }
 
     public int getId() {
@@ -63,6 +67,22 @@ public class Request {
 
     public int getNbMachines() {
         return nbMachines;
+    }
+
+    public int getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(int deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    public int getInstallationDate() {
+        return installationDate;
+    }
+
+    public void setInstallationDate(int installationDate) {
+        this.installationDate = installationDate;
     }
 
     @Override
