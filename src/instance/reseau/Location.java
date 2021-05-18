@@ -115,7 +115,10 @@ public class Location {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Location n°" + id + " -----\n\n";
+        if (id != 0)
+            str += "----- Location n°" + id + " -----\n\n";
+        else
+            str += "---- Depôt ---- \n\n";
         str += "ID = " + id + "\n";
         str += "X = " + x + "\n";
         str += "Y = " + y + "\n\n";
