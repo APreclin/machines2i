@@ -54,8 +54,14 @@ public class Truck {
         str += "Distance cost : " + distanceCost + "\n";
         str += "Day cost : " + dayCost + "\n";
         str += "Cost : " + cost + "\n\n";
-        str += "-----------------\n\n";
+        str += "-----------------\n";
         return str;
     }
 
+    public static void main(String[] args) {
+
+        // Création d'un camion simple
+        Truck t = new Truck(20, 50, 5, 10, 10);
+        System.out.println(t.toString());
+    }
 }

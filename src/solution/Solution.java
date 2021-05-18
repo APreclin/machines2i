@@ -3,7 +3,9 @@ package solution;
 import java.util.LinkedList;
 
 import instance.Instance;
+import instance.reseau.Machine;
 import instance.reseau.Request;
+import instance.reseau.Technician;
 import solution.tournee.DeliveryRound;
 import solution.tournee.InstallationRound;
 import solution.tournee.Round;
@@ -38,60 +40,6 @@ public class Solution {
         totalCost = 0;
     }
 
-    // **************   TRAITEMENTS   ******************//
-
-    //*****  AJOUTS DANS LES TOURNEES *******/
-
-    public void addRequestNewDeliveryRound (Request RequestToAdd) {
-        DeliveryRound tourneeTemp = new DeliveryRound(instance);
-        tourneeTemp.addRequest(RequestToAdd);
-        if (deliveryRounds == null) {
-            deliveryRounds = new LinkedList<DeliveryRound>();
-        }
-        deliveryRounds.push(tourneeTemp);        
-        totalCost += tourneeTemp.getTotalCost();
-    }
-
-    public void addRequestNewInstallationRound (Request RequestToAdd) {
-        InstallationRound tourneeTemp = new InstallationRound(instance.getTechnician(RequestToAdd.getMachine()));
-        tourneeTemp.addRequest(RequestToAdd);
-        if (installationRounds == null) {
-            installationRounds = new LinkedList<InstallationRound>();
-        }
-        installationRounds.push(tourneeTemp);        
-        totalCost += tourneeTemp.getTotalCost();
-    }
-
-    public boolean addRequestExistingDeliveryRound (Request RequestToAdd) {
-        if (deliveryRounds == null)
-            return false;
-        for (Round t : deliveryRounds) {
-            int ancienCout = t.getTotalCost();
-            if (t.addRequest(RequestToAdd)) {
-                totalCost += t.getTotalCost() - ancienCout;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean addRequestExistingInstallationRound (Request RequestToAdd) {
-        if (installationRounds == null)
-            return false;
-        for (InstallationRound t : installationRounds) {
-            int ancienCout = t.getTotalCost();
-            if (t.addRequest(RequestToAdd)) {
-                totalCost += t.getTotalCost() - ancienCout;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    //*****  FIN AJOUTS DANS LES TOURNEES *******/
-
-    // ************** FIN TRAITEMENTS ******************//
-
     public Integer getTotalCost() {
         return this.totalCost;
     }
@@ -106,6 +54,87 @@ public class Solution {
 
     public LinkedList<InstallationRound> getInstallationRounds() {
         return installationRounds;
+    }
+
+    /**
+     * Adds requestToAdd to a new DeliveryRound. The new DeliveryRound is added to
+     * the deliveryRounds list
+     * 
+     * @param requestToAdd
+     */
+    public void addRequestNewDeliveryRound(Request requestToAdd) {
+        DeliveryRound roundTemp = new DeliveryRound(instance);
+        roundTemp.addRequest(requestToAdd);
+
+        if (deliveryRounds == null) {
+            deliveryRounds = new LinkedList<DeliveryRound>();
+        }
+
+        deliveryRounds.push(roundTemp);
+        totalCost += roundTemp.getTotalCost();
+    }
+
+    /**
+     * Adds requestToAdd to a new InstallationRound. The new InstallationRound is
+     * added to the installationRounds list
+     * 
+     * @param requestToAdd
+     */
+    public void addRequestNewInstallationRound(Request requestToAdd) {
+        Machine machine = requestToAdd.getMachine();
+        Technician technician = instance.getTechnician(machine);
+        InstallationRound roundTemp = new InstallationRound(technician);
+        roundTemp.addRequest(requestToAdd);
+
+        if (installationRounds == null) {
+            installationRounds = new LinkedList<InstallationRound>();
+        }
+
+        installationRounds.push(roundTemp);
+        totalCost += roundTemp.getTotalCost();
+    }
+
+    /**
+     * Adds requestToAdd to an existing DeliveryRound if deliveryRounds is not null
+     * 
+     * @param requestToAdd
+     * @return whether the requestToAdd was added or not
+     */
+    public boolean addRequestExistingDeliveryRound(Request requestToAdd) {
+        if (deliveryRounds == null)
+            return false;
+
+        for (Round t : deliveryRounds) {
+            int ancienCout = t.getTotalCost();
+            if (t.addRequest(requestToAdd)) {
+                totalCost += t.getTotalCost() - ancienCout;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Adds requestToAdd to an existing InstallationRound if installationRounds is
+     * not null
+     * 
+     * @param requestToAdd
+     * @return whether the requestToAdd was added or not
+     */
+    public boolean addRequestExistingInstallationRound(Request requestToAdd) {
+        if (installationRounds == null)
+            return false;
+
+        for (InstallationRound t : installationRounds) {
+            int ancienCout = t.getTotalCost();
+            if (t.addRequest(requestToAdd)) {
+                totalCost += t.getTotalCost() - ancienCout;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

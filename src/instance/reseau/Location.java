@@ -13,7 +13,7 @@ public class Location {
         this.id = 0;
         this.x = 0;
         this.y = 0;
-        this.roadsStartingBy = new HashMap<>();
+        this.roadsStartingBy = new HashMap<Location, Road>();
     }
 
     public Location(int id, int x, int y) {
@@ -35,15 +35,44 @@ public class Location {
         return y;
     }
 
-    @Override
-    public String toString() {
-        String str = "";
-        str += "----- Location n°" + id + " -----\n\n";
-        str += "ID = " + id + "\n";
-        str += "X = " + x + "\n";
-        str += "Y = " + y + "\n\n";
-        str += "------------------------\n";
-        return str;
+    public HashMap<Location, Road> getRoadsStartingBy() {
+        return roadsStartingBy;
+    }
+
+    /**
+     * Get distance between this location and destination
+     * 
+     * @param destination
+     * @return the distance between this location and destination passed in
+     *         parameter
+     */
+    public int getDistanceTo(Location destination) {
+        if (destination == null)
+            return Integer.MAX_VALUE;
+
+        int x = destination.getX() - this.getX();
+        int y = destination.getY() - this.getY();
+
+        return (int) Math.round(Math.sqrt((Math.pow(x, 2) + Math.pow(y, 2))));
+    }
+
+    /**
+     * Add road between this location and destination if not already created
+     * 
+     * @param destination
+     * @return whether the road has been created or not
+     */
+    public boolean addRoad(Location destination) {
+        if (destination == null)
+            return false;
+
+        Road RoadTemp = roadsStartingBy.put(destination, new Road(this, destination));
+
+        if (RoadTemp == null)
+            return true;
+
+        roadsStartingBy.put(destination, RoadTemp);
+        return false;
     }
 
     @Override
@@ -68,51 +97,32 @@ public class Location {
         return true;
     }
 
-    /**
-     * Get distance between this location and destination
-     * 
-     * @param destination
-     * @return the distance between this location and destination passed in
-     *         parameter
-     */
-    public int getDistanceTo(Location destination) {
-        if (destination == null)
-            return Integer.MAX_VALUE;
-        Road tempRoad = new Road(this, destination);
-        if (roadsStartingBy.containsValue(tempRoad)) {
-            return tempRoad.getDistance();
-        } else
-            return Integer.MAX_VALUE;
-    }
-
-    /**
-     * Add road between this location and destination if not already created
-     * 
-     * @param destination
-     * @return whether the road has been created or not
-     */
-    public boolean addRoad(Location destination) {
-        if (destination == null)
-            return false;
-        Road RoadTemp = roadsStartingBy.put(destination, new Road(this, destination));
-        if (RoadTemp == null)
-            return true;
-        else {
-            roadsStartingBy.put(destination, RoadTemp);
-            return false;
-        }
-
+    @Override
+    public String toString() {
+        String str = "";
+        if (id != 0)
+            str += "----- Location n°" + id + " -----\n\n";
+        else
+            str += "---- Depôt ---- \n\n";
+        str += "ID = " + id + "\n";
+        str += "X = " + x + "\n";
+        str += "Y = " + y + "\n\n";
+        str += "------------------------\n";
+        return str;
     }
 
     public static void main(String[] args) {
-        Location l1 = new Location(0, 0, 0);
-        Location l2 = new Location(1, 0, 10);
-        Location l3 = new Location(1, 0, 10);
-        Road r1 = new Road(l1, l2);
-        Road r2 = new Road(l2, l3);
-        l1.addRoad(l2);
-        l2.addRoad(l3);
-        System.out.println("Distance l1-> l2 : " + l1.getDistanceTo(l2));  
-        System.out.println("Distance l2-> l3 : " + l2.getDistanceTo(l3));  
+
+        // Création d'une location
+        Location loc1 = new Location(1, 4, 5);
+        System.out.println(loc1.toString());
+
+        // Test de la fonction getDistance
+        Location loc2 = new Location(2, 5, 5);
+        System.out.println(loc1.getDistanceTo(loc2));
+
+        // Test de l'ajout de route
+        System.out.println(loc1.addRoad(loc2));
+        System.out.println(loc1.getRoadsStartingBy().toString());
     }
 }

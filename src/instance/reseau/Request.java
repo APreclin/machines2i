@@ -118,11 +118,26 @@ public class Request {
         str += "ID : " + id + "\n";
         str += "Location n°" + this.location.getId() + "\n";
         str += "Machine n°" + this.machine.getId() + "\n";
-        str += "Nb machines :" + nbMachines + "\n";
+        str += "Nb machines : " + nbMachines + "\n";
         str += "First Day : " + firstDay + "\n";
         str += "Last Day : " + lastDay + "\n\n";
         str += "-----------------------\n";
         return str;
+    }
+
+    // TODO : nullPointerException ici
+    public static void main(String[] args) {
+
+        // Création d'une requête simple
+        Location l = new Location(1, 2, 3);
+        Machine m = new Machine(1, 10, 20);
+        Request r = new Request(1, l, 1, 3, m, 2);
+        System.out.println(r.toString());
+
+        // Test de la fonction getDistanceTo
+        Location l2 = new Location(2, 3, 3);
+        Request r2 = new Request(2, l2, 1, 3, m, 4);
+        System.out.println(r.getDistanceTo(r2));
     }
 
 }
