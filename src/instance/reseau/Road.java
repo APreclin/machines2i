@@ -23,8 +23,10 @@ public class Road {
      * Calculate distance between origin and destination
      */
     private void distanceCalculation() {
-        distance = (int) Math.round(Math.sqrt(
-                (Math.pow(destination.getX() - origin.getX(), 2) + Math.pow(destination.getY() - origin.getY(), 2))));
+        int x = destination.getX() - origin.getX();
+        int y = destination.getY() - origin.getY();
+
+        distance = (int) Math.round(Math.sqrt((Math.pow(x, 2) + Math.pow(y, 2))));
     }
 
     public int getDistance() {
