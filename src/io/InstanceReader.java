@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -35,11 +36,13 @@ public class InstanceReader {
     private File instanceFile;
     private LinkedHashMap<Integer, Location> locations;
     private LinkedHashMap<Integer, Machine> machines;
-    private int distanceCost;
-    private int dayCost;
-    private int cost;
+    private HashMap<String, Integer> costs;
 
     public InstanceReader() throws ReaderException {
+        this.locations = new LinkedHashMap<Integer, Location>();
+        this.machines = new LinkedHashMap<Integer, Machine>();
+        this.costs = new HashMap<String, Integer>();
+
         JFileChooser chooser = new JFileChooser();
         File workingDirectory = new File(System.getProperty("user.dir"));
         chooser.setCurrentDirectory(workingDirectory);
@@ -68,9 +71,12 @@ public class InstanceReader {
             String name = readName(br);
             int days = readDays(br);
             Truck truck = readTruck(br);
-            this.distanceCost = readTechnicianDistanceCost(br);
-            this.dayCost = readTechnicianDayCost(br);
-            this.cost = readTechnicianCost(br);
+            int distanceCost = readTechnicianDistanceCost(br);
+            this.costs.put("distanceCost", distanceCost);
+            int dayCost = readTechnicianDayCost(br);
+            this.costs.put("dayCost", distanceCost);
+            int cost = readTechnicianCost(br);
+            this.costs.put("cost", distanceCost);
             LinkedHashMap<Integer, Machine> machines = readMachines(br);
             this.machines = machines;
             LinkedHashMap<Integer, Location> locations = readLocations(br);
@@ -346,8 +352,7 @@ public class InstanceReader {
                 abilities.put(idMachine++, ability);
             }
 
-            Technician technician = new Technician(id, location, maxDistance, maxRequests, distanceCost, dayCost, cost,
-                    abilities);
+            Technician technician = new Technician(id, location, maxDistance, maxRequests, costs, abilities);
             technicians.put(id, technician);
 
             scanner.close();
