@@ -13,6 +13,7 @@ public class Location {
         this.id = 0;
         this.x = 0;
         this.y = 0;
+        this.roadsStartingBy = new HashMap<Location, Road>();
     }
 
     public Location(int id, int x, int y) {
@@ -49,12 +50,10 @@ public class Location {
         if (destination == null)
             return Integer.MAX_VALUE;
 
-        Road tempRoad = new Road(this, destination);
+        int x = destination.getX() - this.getX();
+        int y = destination.getY() - this.getY();
 
-        if (roadsStartingBy.containsValue(tempRoad))
-            return tempRoad.getDistance();
-
-        return Integer.MAX_VALUE;
+        return (int) Math.round(Math.sqrt((Math.pow(x, 2) + Math.pow(y, 2))));
     }
 
     /**
@@ -98,7 +97,6 @@ public class Location {
         return true;
     }
 
-    // TODO: Il y a un nullPointerException ici
     public static void main(String[] args) {
 
         // Création d'une location
