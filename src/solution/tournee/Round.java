@@ -45,8 +45,8 @@ public abstract class Round {
     public boolean follows(Round otherRound) {
         if (getDateDiff(otherRound) == 1)
             return true;
-        else
-            return false;
+
+        return false;
     }
 
     /**
