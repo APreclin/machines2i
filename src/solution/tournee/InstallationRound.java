@@ -1,5 +1,6 @@
 package solution.tournee;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import instance.reseau.Location;
@@ -21,12 +22,14 @@ public class InstallationRound extends Round {
     public InstallationRound(Technician technician) {
         super();
         this.technician = technician;
-        nbRequests = 0;
+        this.nbRequests = 0;
+        this.coveredDistance = 0;
     }
 
     public InstallationRound(LinkedList<Request> requests, int date, int nbRequests) {
         super(requests, date);
         this.nbRequests = nbRequests;
+        this.coveredDistance = 0;
     }
 
     public int getNbRequests() {
@@ -113,15 +116,25 @@ public class InstallationRound extends Round {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Installation Round -----\n\n";
+        str += "\n----- Installation Round -----\n\n";
+        str += technician + "\n";
         str += "Nb requests : " + nbRequests + "\n";
+        str += "Covered distance : " + coveredDistance + "\n\n";
         str += super.toString();
         str += "------------------------------\n\n";
         return str;
     }
 
     public static void main(String[] args) {
-        // TODO: test unitaire installationRound
+
+        // Création d'une installation round simple
+        Location home = new Location(1, 2, 0);
+        LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<Integer, Boolean>();
+        abilities.put(1, true);
+        abilities.put(2, false);
+        Technician t = new Technician(1, home, 20, 4, 5, 50, 10, abilities);
+        InstallationRound ir = new InstallationRound(t);
+        System.out.println(ir.toString());
     }
 
 }
