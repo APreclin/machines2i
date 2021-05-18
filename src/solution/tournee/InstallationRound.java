@@ -1,8 +1,11 @@
 package solution.tournee;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import instance.reseau.Location;
+import instance.reseau.Machine;
 import instance.reseau.Request;
 import instance.reseau.Technician;
 
@@ -21,12 +24,15 @@ public class InstallationRound extends Round {
     public InstallationRound(Technician technician) {
         super();
         this.technician = technician;
-        nbRequests = 0;
+        this.totalCost = technician.getDayCost();
+        this.nbRequests = 0;
+        this.coveredDistance = 0;
     }
 
     public InstallationRound(LinkedList<Request> requests, int date, int nbRequests) {
         super(requests, date);
         this.nbRequests = nbRequests;
+        this.coveredDistance = 0;
     }
 
     public int getNbRequests() {
@@ -89,6 +95,14 @@ public class InstallationRound extends Round {
         return true;
     }
 
+    /*
+     * private void doAddRequest(Request request) { int distanceCost =
+     * this.requests.getLast().getDistanceTo(request); this.requests.push(request);
+     * request.setInstallationDate(this.date); // maj de la date au niveau de la
+     * requete this.totalCost += distanceCost; //ajout du cout en fonction de la
+     * distance }
+     */
+
     /**
      * Check if the technician is able to install the machine specified in the
      * request
@@ -113,15 +127,38 @@ public class InstallationRound extends Round {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Installation Round -----\n\n";
+        str += "\n----- Installation Round -----\n\n";
+        str += technician + "\n";
         str += "Nb requests : " + nbRequests + "\n";
+        str += "Covered distance : " + coveredDistance + "\n\n";
         str += super.toString();
         str += "------------------------------\n\n";
         return str;
     }
 
     public static void main(String[] args) {
-        // TODO: test unitaire installationRound
+
+        // Création d'une installation round simple
+        Location home = new Location(1, 2, 0);
+
+        LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<Integer, Boolean>();
+        abilities.put(1, false);
+        abilities.put(2, true);
+
+        HashMap<String, Integer> costs = new HashMap<String, Integer>();
+        costs.put("distanceCost", 20);
+        costs.put("dayCost", 10);
+        costs.put("cost", 5);
+
+        Technician t = new Technician(1, home, 20, 4, costs, abilities);
+        InstallationRound ir = new InstallationRound(t);
+        // System.out.println(ir.toString());
+
+        // Le technicien ne sait pas installer cette machine (false)
+        Location l1 = new Location(1, 1, 1);
+        Machine m1 = new Machine(1, 10, 20);
+        Request r1 = new Request(1, l1, 1, 3, m1, 1);
+        System.out.println(ir.addRequest(r1));
     }
 
 }

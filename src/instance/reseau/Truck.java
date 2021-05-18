@@ -16,12 +16,13 @@ public class Truck {
         this.cost = 0;
     }
 
-    public Truck(int capacity, int maxDistance, int distanceCost, int dayCost) {
+    public Truck(int capacity, int maxDistance, int distanceCost, int dayCost, int cost) {
         this();
         this.capacity = capacity;
         this.maxDistance = maxDistance;
         this.distanceCost = distanceCost;
         this.dayCost = dayCost;
+        this.cost = cost;
     }
 
     public int getCapacity() {
@@ -60,7 +61,7 @@ public class Truck {
     public static void main(String[] args) {
 
         // Création d'un camion simple
-        Truck t = new Truck(20, 50, 5, 10);
+        Truck t = new Truck(20, 50, 5, 10, 10);
         System.out.println(t.toString());
     }
 }

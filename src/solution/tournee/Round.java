@@ -43,10 +43,7 @@ public abstract class Round {
      * @return whether the date of this round follows the date of otherRound or not
      */
     public boolean follows(Round otherRound) {
-        if (getDateDiff(otherRound) == 1)
-            return true;
-
-        return false;
+        return getDateDiff(otherRound) == 1;
     }
 
     /**

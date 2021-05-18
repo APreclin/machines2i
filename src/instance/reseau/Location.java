@@ -17,10 +17,10 @@ public class Location {
     }
 
     public Location(int id, int x, int y) {
-        this();
         this.id = id;
         this.x = x;
         this.y = y;
+        this.roadsStartingBy = new HashMap<>();
     }
 
     public int getId() {
@@ -97,6 +97,20 @@ public class Location {
         return true;
     }
 
+    @Override
+    public String toString() {
+        String str = "";
+        if (id != 0)
+            str += "----- Location n°" + id + " -----\n\n";
+        else
+            str += "---- Depôt ---- \n\n";
+        str += "ID = " + id + "\n";
+        str += "X = " + x + "\n";
+        str += "Y = " + y + "\n\n";
+        str += "------------------------\n";
+        return str;
+    }
+
     public static void main(String[] args) {
 
         // Création d'une location
@@ -110,19 +124,5 @@ public class Location {
         // Test de l'ajout de route
         System.out.println(loc1.addRoad(loc2));
         System.out.println(loc1.getRoadsStartingBy().toString());
-    }
-
-    @Override
-    public String toString() {
-        String str = "";
-        if (id != 0)
-            str += "----- Location n°" + id + " -----\n\n";
-        else
-            str += "---- Depôt ---- \n\n";
-        str += "ID = " + id + "\n";
-        str += "X = " + x + "\n";
-        str += "Y = " + y + "\n\n";
-        str += "------------------------\n";
-        return str;
     }
 }

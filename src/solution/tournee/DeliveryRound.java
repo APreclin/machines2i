@@ -128,7 +128,7 @@ public class DeliveryRound extends Round {
 
         // Création d'une delivery round simple
         Location depot = new Location(0, 0, 0);
-        Truck truck = new Truck(20, 50, 5, 100);
+        Truck truck = new Truck(20, 50, 5, 100, 10);
         DeliveryRound dr = new DeliveryRound(truck, depot);
         // System.out.println(dr.toString());
 

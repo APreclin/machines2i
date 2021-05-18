@@ -26,13 +26,6 @@ public class Request {
         this.installationDate = -1;
     }
 
-    public Integer getDistanceTo(Request request) {
-        if (request != null)
-            return this.location.getDistanceTo(request.getLocation());
-        else
-            return Integer.MAX_VALUE;
-    }
-
     public Request(int id, Location location, int firstDay, int lastDay, Machine machine, int nbMachines) {
         this();
         this.id = id;
@@ -84,6 +77,17 @@ public class Request {
     public void setInstallationDate(int installationDate) {
         this.installationDate = installationDate;
     }
+
+    // DEBUT TRAITEMENTS
+
+    public Integer getDistanceTo(Request request) {
+        if (request != null)
+            return this.location.getDistanceTo(request.getLocation());
+        else
+            return Integer.MAX_VALUE;
+    }
+
+    // FIN TRAITEMENTS
 
     @Override
     public int hashCode() {
