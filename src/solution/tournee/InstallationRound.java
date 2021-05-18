@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import instance.reseau.Location;
+import instance.reseau.Machine;
 import instance.reseau.Request;
 import instance.reseau.Technician;
 
@@ -100,12 +101,12 @@ public class InstallationRound extends Round {
     }
 
     /*
-    private void doAddRequest(Request request) {
-        int distanceCost = this.requests.getLast().getDistanceTo(request);
-        this.requests.push(request);
-        request.setInstallationDate(this.date);     // maj de la date au niveau de la requete
-        this.totalCost += distanceCost;       //ajout du cout en fonction de la distance
-    }*/
+     * private void doAddRequest(Request request) { int distanceCost =
+     * this.requests.getLast().getDistanceTo(request); this.requests.push(request);
+     * request.setInstallationDate(this.date); // maj de la date au niveau de la
+     * requete this.totalCost += distanceCost; //ajout du cout en fonction de la
+     * distance }
+     */
 
     /**
      * Check if the technician is able to install the machine specified in the
@@ -144,17 +145,25 @@ public class InstallationRound extends Round {
         //TODO : finir test unitaire installationRound
         // Création d'une installation round simple
         Location home = new Location(1, 2, 0);
-        LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<Integer, Boolean>();
-        abilities.put(1, true);
-        abilities.put(2, false);
 
-        HashMap<String, Integer> couts = new HashMap<>();
-        couts.put("distanceCost", 2);
-        couts.put("dayCost", 50);
-        couts.put("cost", 30);
-        Technician t = new Technician(1, home, 20, 4, couts, abilities);
+        LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<Integer, Boolean>();
+        abilities.put(1, false);
+        abilities.put(2, true);
+
+        HashMap<String, Integer> costs = new HashMap<String, Integer>();
+        costs.put("distanceCost", 20);
+        costs.put("dayCost", 10);
+        costs.put("cost", 5);
+
+        Technician t = new Technician(1, home, 20, 4, costs, abilities);
         InstallationRound ir = new InstallationRound(t, 5);
-        System.out.println(ir.toString());
+        // System.out.println(ir.toString());
+
+        // Le technicien ne sait pas installer cette machine (false)
+        Location l1 = new Location(1, 1, 1);
+        Machine m1 = new Machine(1, 10, 20);
+        Request r1 = new Request(1, l1, 1, 3, m1, 1);
+        System.out.println(ir.addRequest(r1));
     }
 
 }

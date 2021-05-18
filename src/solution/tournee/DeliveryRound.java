@@ -9,7 +9,6 @@ import instance.reseau.Request;
 import instance.reseau.Truck;
 
 public class DeliveryRound extends Round {
-
     private Truck truck;
     private Location depot;
     private int currentCharge;
@@ -46,43 +45,69 @@ public class DeliveryRound extends Round {
         return currentCharge;
     }
 
+    /**
+     * Check if it is possible to add request to the list of requests. Check if the
+     * capacity of the truck is respected. Check if the max distance of the truck is
+     * respected.
+     * 
+     * @param request
+     * @return whether the request was add or not to the list of requests
+     */
     @Override
     public boolean addRequest(Request request) {
         // Ajouter le cout de la tournée
-        if ((request.getMachine().getSize() * request.getNbMachines() + this.currentCharge) <= this.truck
-                .getCapacity()) {
-            if (this.currentDistance == 0) {
-                if (this.depot.getDistanceTo(request.getLocation()) + returnToDepot(request.getLocation()) <= this.truck
-                        .getMaxDistance()) {
-                    this.requests.add(request);
-                    this.currentCharge += request.getMachine().getSize() * request.getNbMachines();
-                    this.currentDistance += this.depot.getDistanceTo(request.getLocation())
-                            + returnToDepot(request.getLocation());
-                    request.setDeliveryDate(this.date);
-                    this.totalCost = this.currentDistance;
-                    return true;
-                } else
-                    return false;
-            } else {
-                if ((this.requests.getLast().getLocation().getDistanceTo(request.getLocation()) + this.currentDistance
-                        - returnToDepot(requests.getLast().getLocation())
-                        + returnToDepot(request.getLocation()) <= this.truck.getMaxDistance())) {
-                    this.currentCharge += request.getMachine().getSize() * request.getNbMachines();
-                    this.currentDistance += this.requests.getLast().getLocation().getDistanceTo(request.getLocation())
-                            - returnToDepot(requests.getLast().getLocation()) + returnToDepot(request.getLocation());
-                    request.setDeliveryDate(this.date);
-                    this.requests.add(request);
-                    this.totalCost = this.currentDistance;
-                    return true;
-                } else
-                    return false;
-            }
-        } else
+        int nbMachines = request.getNbMachines();
+        int machineSize = request.getMachine().getSize();
+        int requestSize = machineSize * nbMachines;
+        int totalSize = requestSize + this.currentCharge;
+        int truckCapacity = this.truck.getCapacity();
+
+        if (totalSize > truckCapacity)
             return false;
+
+        Location requestLocation = request.getLocation();
+        int requestLocationToDepot = returnToDepot(requestLocation);
+        int truckMaxDistance = this.truck.getMaxDistance();
+
+        if (this.currentDistance == 0) {
+            int locationToDepotRoundTrip = requestLocationToDepot * 2;
+
+            if (locationToDepotRoundTrip > truckMaxDistance)
+                return false;
+
+            this.requests.add(request);
+            this.currentCharge += requestSize;
+            this.currentDistance += locationToDepotRoundTrip;
+            request.setDeliveryDate(this.date);
+            this.totalCost = this.currentDistance;
+
+            return true;
+        }
+
+        Location lastLocation = this.requests.getLast().getLocation();
+        int lastLocationToRequestLocation = lastLocation.getDistanceTo(requestLocation);
+        int lastLocationToDepot = returnToDepot(lastLocation);
+        int newDistance = lastLocationToRequestLocation - lastLocationToDepot + requestLocationToDepot;
+
+        if (newDistance + this.currentDistance > truckMaxDistance)
+            return false;
+
+        this.currentCharge += requestSize;
+        this.currentDistance += newDistance;
+        request.setDeliveryDate(this.date);
+        this.requests.add(request);
+        this.totalCost = this.currentDistance;
+
+        return true;
     }
 
+    /**
+     * Distance between location and the depot
+     * 
+     * @param location
+     * @return the distance between location and the depot
+     */
     public int returnToDepot(Location location) {
-
         return location.getDistanceTo(this.depot);
     }
 
@@ -103,7 +128,7 @@ public class DeliveryRound extends Round {
 
         // Création d'une delivery round simple
         Location depot = new Location(0, 0, 0);
-        Truck truck = new Truck(20, 50, 5, 100);
+        Truck truck = new Truck(20, 50, 5, 100, 10);
         DeliveryRound dr = new DeliveryRound(truck, depot);
         // System.out.println(dr.toString());
 
