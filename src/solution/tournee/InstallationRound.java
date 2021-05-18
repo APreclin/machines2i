@@ -1,5 +1,6 @@
 package solution.tournee;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
@@ -13,23 +14,12 @@ public class InstallationRound extends Round {
     private Technician technician;
     private Integer coveredDistance;
 
-    public InstallationRound() {
+    public InstallationRound(Technician technician, int date) {
         super();
+        this.technician = new Technician();
+        this.setTechnician(technician);
+        this.date = date;
         this.nbRequests = 0;
-        this.coveredDistance = 0;
-    }
-
-    public InstallationRound(Technician technician) {
-        super();
-        this.technician = technician;
-        this.totalCost = technician.getDayCost();
-        this.nbRequests = 0;
-        this.coveredDistance = 0;
-    }
-
-    public InstallationRound(LinkedList<Request> requests, int date, int nbRequests) {
-        super(requests, date);
-        this.nbRequests = nbRequests;
         this.coveredDistance = 0;
     }
 
@@ -42,6 +32,21 @@ public class InstallationRound extends Round {
             return requests.getLast();
 
         return null;
+    }
+
+    public boolean setTechnician(Technician technician) {
+        if (this.technician == null) {
+            if (technician.addInstallationRound(this)) {
+                this.technician = technician;
+                this.totalCost = technician.getDayCost();
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else 
+            return false;      
     }
 
     /**
@@ -79,6 +84,7 @@ public class InstallationRound extends Round {
         int techMaxDistance = this.technician.getMaxDistance();
         int techMaxRequests = this.technician.getMaxRequests();
         int distToLastRequest = this.getLastRequest().getDistanceTo(request);
+       
 
         boolean isDistanceRespected = this.coveredDistance + distToLastRequest <= techMaxDistance;
         boolean isNbRequestsRespected = this.nbRequests < techMaxRequests;
@@ -93,12 +99,13 @@ public class InstallationRound extends Round {
         return true;
     }
 
+    /*
     private void doAddRequest(Request request) {
         int distanceCost = this.requests.getLast().getDistanceTo(request);
         this.requests.push(request);
         request.setInstallationDate(this.date);     // maj de la date au niveau de la requete
         this.totalCost += distanceCost;       //ajout du cout en fonction de la distance
-    }
+    }*/
 
     /**
      * Check if the technician is able to install the machine specified in the
@@ -134,14 +141,19 @@ public class InstallationRound extends Round {
     }
 
     public static void main(String[] args) {
-
+        //TODO : finir test unitaire installationRound
         // Création d'une installation round simple
         Location home = new Location(1, 2, 0);
         LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<Integer, Boolean>();
         abilities.put(1, true);
         abilities.put(2, false);
-        Technician t = new Technician(1, home, 20, 4, 5, 50, 10, abilities);
-        InstallationRound ir = new InstallationRound(t);
+
+        HashMap<String, Integer> couts = new HashMap<>();
+        couts.put("distanceCost", 2);
+        couts.put("dayCost", 50);
+        couts.put("cost", 30);
+        Technician t = new Technician(1, home, 20, 4, couts, abilities);
+        InstallationRound ir = new InstallationRound(t, 5);
         System.out.println(ir.toString());
     }
 
