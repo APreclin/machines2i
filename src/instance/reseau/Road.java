@@ -19,18 +19,16 @@ public class Road {
         return destination;
     }
 
+    public int getDistance() {
+        return distance;
+    }
+
     /**
      * Calculate distance between origin and destination
      */
     private void distanceCalculation() {
-        int x = destination.getX() - origin.getX();
-        int y = destination.getY() - origin.getY();
 
-        distance = (int) Math.round(Math.sqrt((Math.pow(x, 2) + Math.pow(y, 2))));
-    }
-
-    public int getDistance() {
-        return distance;
+        this.distance = this.origin.getDistanceTo(this.destination);
     }
 
     @Override

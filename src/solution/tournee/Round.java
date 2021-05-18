@@ -68,7 +68,8 @@ public abstract class Round {
         for (Request r : requests) {
             str += r.toString();
         }
-        str += "-----------------\n\n";
+        str += "Total Cost : " + totalCost + "\n\n";
+        str += "-----------------\n";
         return str;
     }
 
