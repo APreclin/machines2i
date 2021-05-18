@@ -58,4 +58,10 @@ public class Truck {
         return str;
     }
 
+    public static void main(String[] args) {
+
+        // Création d'un camion simple
+        Truck t = new Truck(20, 50, 5, 10, 10);
+        System.out.println(t.toString());
+    }
 }

@@ -77,4 +77,11 @@ public class Machine {
         str += "-----------------------\n";
         return str;
     }
+
+    public static void main(String[] args) {
+
+        // Création d'une machine simple
+        Machine m = new Machine(1, 12, 30);
+        System.out.println(m.toString());
+    }
 }
