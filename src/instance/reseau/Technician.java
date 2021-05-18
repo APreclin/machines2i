@@ -1,5 +1,6 @@
 package instance.reseau;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -32,19 +33,16 @@ public class Technician {
         this.nbConsecutiveInstallationRounds = 0;
     }
 
-    public Technician(int id, Location location, int maxDistance, int maxRequests, int distanceCost, int dayCost,
-            int cost, LinkedHashMap<Integer, Boolean> abilities) {
+    public Technician(int id, Location location, int maxDistance, int maxRequests, HashMap<String, Integer> costs, LinkedHashMap<Integer, Boolean> abilities) {
         this();
         this.id = id;
         this.home = location;
         this.maxDistance = maxDistance;
         this.maxRequests = maxRequests;
-        this.distanceCost = distanceCost;
-        this.dayCost = dayCost;
-        this.cost = cost;
+        this.distanceCost = costs.get("distanceCost");
+        this.dayCost = costs.get("dayCost");
+        this.cost = costs.get("cost");
         this.abilities = abilities;
-        this.installationRounds = new LinkedList<>();
-        this.nbConsecutiveInstallationRounds = 0;
     }
 
     public int getId() {
@@ -69,6 +67,18 @@ public class Technician {
 
     public LinkedList<InstallationRound> getInstallationRounds() {
         return installationRounds;
+    }
+
+    public int getDistanceCost() {
+        return distanceCost;
+    }
+
+    public int getDayCost() {
+        return dayCost;
+    }
+
+    public int getCost() {
+        return cost;
     }
 
     @Override
@@ -106,6 +116,7 @@ public class Technician {
             if (installationRoundGiven.getDateDiff(lastRound) >= 2) {
                 // 2 jours de repos => on peut ajouter la tournée
                 this.installationRounds.push(installationRoundGiven);
+                installationRoundGiven.getRequests();
                 this.nbConsecutiveInstallationRounds = 0;
                 return true;
             }
@@ -124,6 +135,33 @@ public class Technician {
             this.installationRounds.push(installationRoundGiven);
             return true;
         }
+    }
+
+    public boolean removeInstallationRound(InstallationRound installationRoundGiven) {
+        if (installationRoundGiven == null)
+            return false;
+        if (this.installationRounds.contains(installationRoundGiven)) {
+            this.installationRounds.remove(installationRoundGiven);
+            this.nbConsecutiveInstallationRounds = this.calcNbConsecutiveRounds(); // mise à jour du nombre de tournées consécutives
+            return true;    
+        }
+        return false;   // la tournée n'etait pas contenue
+    }
+
+    public int calcNbConsecutiveRounds() {
+        // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
+        InstallationRound lastRound = installationRounds.getLast();
+        int lastIndex = installationRounds.indexOf(lastRound);
+        int nbConsRounds = 0;
+
+        for (int i = 1; i < 6; i++) {
+            InstallationRound previousRound = installationRounds.get(lastIndex-i);
+            if (lastRound.follows(previousRound))
+                nbConsRounds += 1;
+            else
+                nbConsRounds = 0;
+        }
+        return nbConsRounds;
     }
 
     /**
@@ -161,8 +199,26 @@ public class Technician {
     }
 
     public static void main(String[] args) {
-        Location maison1 = new Location(0,10);
-        Technician techos = new Technician(1, );
+        Location maison1 = new Location(0, 0, 0);
+        Location client1 = new Location(1, 0, 50);
+        Location client2 = new Location(1, 50, 50);
+        Machine m1 = new Machine(0, 5, 2);
+        Request r1 = new Request(0, client1, 2, 7, m1, 1);
+        Request r2 = new Request(1, client2, 5, 10, m1, 1);
+        
+        LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<>();
+        abilities.put(0, true);
+        abilities.put(1, false);
+
+        HashMap<String, Integer> couts = new HashMap<>();
+        couts.put("distanceCost", 2);
+        couts.put("dayCost", 50);
+        couts.put("cost", 30);
+        Technician tech1 = new Technician(0, maison1, 90, 2, couts, abilities);
+        InstallationRound i1 = new InstallationRound(tech1);
+        tech1.addInstallationRound(i1);
+        tech1.removeInstallationRound(i1);
+
     }
 
 }

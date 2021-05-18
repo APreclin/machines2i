@@ -13,13 +13,14 @@ public class Location {
         this.id = 0;
         this.x = 0;
         this.y = 0;
+        this.roadsStartingBy = new HashMap<>();
     }
 
     public Location(int id, int x, int y) {
-        this();
         this.id = id;
         this.x = x;
         this.y = y;
+        this.roadsStartingBy = new HashMap<>();
     }
 
     public int getId() {
@@ -101,5 +102,17 @@ public class Location {
             return false;
         }
 
+    }
+
+    public static void main(String[] args) {
+        Location l1 = new Location(0, 0, 0);
+        Location l2 = new Location(1, 0, 10);
+        Location l3 = new Location(1, 0, 10);
+        Road r1 = new Road(l1, l2);
+        Road r2 = new Road(l2, l3);
+        l1.addRoad(l2);
+        l2.addRoad(l3);
+        System.out.println("Distance l1-> l2 : " + l1.getDistanceTo(l2));  
+        System.out.println("Distance l2-> l3 : " + l2.getDistanceTo(l3));  
     }
 }

@@ -20,6 +20,7 @@ public class InstallationRound extends Round {
     public InstallationRound(Technician technician) {
         super();
         this.technician = technician;
+        this.totalCost = technician.getDayCost();
         nbRequests = 0;
     }
 
@@ -37,8 +38,7 @@ public class InstallationRound extends Round {
             if (requests.isEmpty()) {
                 if (this.checkMachineComp(request)
                 && technician.addInstallationRound(this)) {
-                    request.setInstallationDate(this.date);
-                    this.requests.push(request);
+                    doAddRequest(request);
                     this.coveredDistance += this.technician.getHome().getDistanceTo(request.getLocation());
                     return true;
                 }
@@ -50,8 +50,7 @@ public class InstallationRound extends Round {
                 && (this.coveredDistance + this.getLastRequest().getDistanceTo(request) <= this.technician.getMaxDistance())
                 && this.checkMachineComp(request)
                 && technician.addInstallationRound(this)) {
-                    request.setInstallationDate(this.date);
-                    this.requests.push(request);
+                    doAddRequest(request);
                     this.coveredDistance += this.getLastRequest().getDistanceTo(request);
                     return true;
                 }
@@ -60,6 +59,13 @@ public class InstallationRound extends Round {
                 }
         }
         return false;
+    }
+
+    private void doAddRequest(Request request) {
+        int distanceCost = this.requests.getLast().getDistanceTo(request);
+        this.requests.push(request);
+        request.setInstallationDate(this.date);     // maj de la date au niveau de la requete
+        this.totalCost += distanceCost;       //ajout du cout en fonction de la distance
     }
 
     private boolean checkMachineComp(Request request) {

@@ -40,7 +40,6 @@ public class DeliveryRound extends Round {
 
     @Override
     public boolean addRequest(Request request) {
-        // TODO: vérifier la charge du camion
         // Ajouter le cout de la tournée
         if ((request.getMachine().getSize() * request.getNbMachines() + this.currentCharge) <= this.truck
                 .getCapacity()) {
