@@ -29,7 +29,7 @@ public class SolutionWriter {
     public void rightSolution() {
         try {
 
-            File file = new File("solution_" + instance.getName() + ".txt");
+            File file = new File(instance.getName() + "_sol.txt");
 
             if (!file.exists()) {
                 file.createNewFile();
@@ -47,6 +47,7 @@ public class SolutionWriter {
             bw.write("NUMBER_OF_TECHNICIANS_USED = " + solution.getNbTechniciansUsed());
             bw.write("IDLE_MACHINE_COSTS = " + solution.getIdleMachineCosts());
             bw.write("TOTAL_COST = " + solution.getTotalCost());
+            // Ajouter les jours
             bw.close();
 
         } catch (IOException e) {
