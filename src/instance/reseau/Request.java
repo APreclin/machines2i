@@ -81,10 +81,10 @@ public class Request {
     // DEBUT TRAITEMENTS
 
     public Integer getDistanceTo(Request request) {
-        if (request != null)
-            return this.location.getDistanceTo(request.getLocation());
-        else
+        if (request == null)
             return Integer.MAX_VALUE;
+
+        return this.location.getDistanceTo(request.getLocation());
     }
 
     // FIN TRAITEMENTS

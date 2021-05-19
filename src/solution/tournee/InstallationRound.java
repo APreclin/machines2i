@@ -29,10 +29,10 @@ public class InstallationRound extends Round {
     }
 
     private Request getLastRequest() {
-        if (requests != null)
-            return requests.getLast();
+        if (requests == null)
+            return null;
 
-        return null;
+        return requests.getLast();
     }
 
     public boolean setTechnician(Technician technician) {

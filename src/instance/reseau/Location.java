@@ -66,12 +66,13 @@ public class Location {
         if (destination == null)
             return false;
 
-        Road RoadTemp = roadsStartingBy.put(destination, new Road(this, destination));
+        Road tempRoad = roadsStartingBy.put(destination, new Road(this, destination));
 
-        if (RoadTemp == null)
+        if (tempRoad == null)
             return true;
 
-        roadsStartingBy.put(destination, RoadTemp);
+        roadsStartingBy.put(destination, tempRoad);
+
         return false;
     }
 
