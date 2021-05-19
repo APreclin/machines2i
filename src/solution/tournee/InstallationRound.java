@@ -61,7 +61,7 @@ public class InstallationRound extends Round {
      */
     @Override
     public boolean addRequest(Request request) {
-        if (request == null)
+        if (request == null || technician == null)
             return false;
 
         boolean checkMachineComp = this.checkMachineComp(request);
