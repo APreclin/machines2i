@@ -11,21 +11,14 @@ import instance.reseau.Technician;
 
 public class InstallationRound extends Round {
 
-    private int nbRequests;
     private Technician technician;
     private Integer coveredDistance;
 
     public InstallationRound(Technician technician, int date) {
         super();
-        this.technician = new Technician();
         this.setTechnician(technician);
         this.date = date;
-        this.nbRequests = 0;
         this.coveredDistance = 0;
-    }
-
-    public int getNbRequests() {
-        return nbRequests;
     }
 
     private Request getLastRequest() {
@@ -37,14 +30,9 @@ public class InstallationRound extends Round {
 
     public boolean setTechnician(Technician technician) {
         if (this.technician == null) {
-            if (technician.addInstallationRound(this)) {
                 this.technician = technician;
                 this.totalCost = technician.getDayCost();
                 return true;
-            }
-            else {
-                return false;
-            }
         }
         else 
             return false;      
@@ -65,10 +53,9 @@ public class InstallationRound extends Round {
             return false;
 
         boolean checkMachineComp = this.checkMachineComp(request);
-        boolean isRoundAdded = technician.addInstallationRound(this);
 
         if (requests.isEmpty()) {
-            if (!checkMachineComp || !isRoundAdded)
+            if (!checkMachineComp)
                 return false;
 
             Location techHome = this.technician.getHome();
@@ -88,9 +75,9 @@ public class InstallationRound extends Round {
        
 
         boolean isDistanceRespected = this.coveredDistance + distToLastRequest <= techMaxDistance;
-        boolean isNbRequestsRespected = this.nbRequests < techMaxRequests;
+        boolean isNbRequestsRespected = this.requests.size() < techMaxRequests;
 
-        if (!isNbRequestsRespected || !isDistanceRespected || !checkMachineComp || !isRoundAdded)
+        if (!isNbRequestsRespected || !isDistanceRespected || !checkMachineComp)
             return false;
 
         request.setInstallationDate(this.date);
@@ -117,7 +104,7 @@ public class InstallationRound extends Round {
      *         the request
      */
     private boolean checkMachineComp(Request request) {
-        if (request == null || request.getMachine() == null || this.technician.getId() == 0)
+        if (request == null || request.getMachine() == null)
             return false;
 
         int machineId = request.getMachine().getId();
@@ -134,7 +121,6 @@ public class InstallationRound extends Round {
         String str = "";
         str += "\n----- Installation Round -----\n\n";
         str += technician + "\n";
-        str += "Nb requests : " + nbRequests + "\n";
         str += "Covered distance : " + coveredDistance + "\n\n";
         str += super.toString();
         str += "------------------------------\n\n";
@@ -142,7 +128,7 @@ public class InstallationRound extends Round {
     }
 
     public static void main(String[] args) {
-        //TODO : finir test unitaire installationRound
+        //TODO : finir test unitaire installationRound : vérifier les couts
         // Création d'une installation round simple
         Location home = new Location(1, 2, 0);
 
@@ -164,6 +150,8 @@ public class InstallationRound extends Round {
         Machine m1 = new Machine(1, 10, 20);
         Request r1 = new Request(1, l1, 1, 3, m1, 1);
         System.out.println(ir.addRequest(r1));
+
+
     }
 
 }

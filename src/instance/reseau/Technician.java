@@ -200,46 +200,60 @@ public class Technician {
         str += "\nInstallation possible : \n\n";
         for (Map.Entry<Integer, Boolean> set : abilities.entrySet())
             str += "\t Machine n°" + set.getKey() + " - " + set.getValue() + "\n";
+        /*
         if (!installationRounds.isEmpty())
             str += "Tournées d'installation : \n";
         for (InstallationRound ir : installationRounds)
             str += ir.toString();
+        */
         str += "\nNb consecutive installation round : " + nbConsecutiveInstallationRounds + "\n";
         str += "\n-------------------------\n";
         return str;
     }
 
     public static void main(String[] args) {
-        Location maison1 = new Location(0, 0, 0);
-        Location client1 = new Location(1, 0, 50);
-        Location client2 = new Location(1, 50, 50);
-        Machine m1 = new Machine(0, 5, 2);
-        Request r1 = new Request(0, client1, 2, 7, m1, 1);
-        Request r2 = new Request(1, client2, 5, 10, m1, 1);
+        Location maison1 = new Location(1, 0, 0);
+        Location client1 = new Location(2, 0, 50);
+        Location client2 = new Location(2, 50, 50);
+        Machine m1 = new Machine(1, 5, 2);
+        Machine m2 = new Machine(2, 5, 2);
+        Request r1 = new Request(1, client1, 2, 7, m1, 1);
+        Request r2 = new Request(2, client2, 5, 10, m2, 1);
+        Request r3 = new Request(2, client2, 6, 10, m1, 1);
 
         LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<>();
-        abilities.put(0, true);
-        abilities.put(1, false);
+        abilities.put(1, true);
+        abilities.put(2, false);
 
         HashMap<String, Integer> couts = new HashMap<>();
         couts.put("distanceCost", 2);
         couts.put("dayCost", 50);
         couts.put("cost", 30);
-        Technician tech1 = new Technician(0, maison1, 90, 2, couts, abilities);
+        Technician tech1 = new Technician(1, maison1, 90, 2, couts, abilities);
 
         InstallationRound i1 = new InstallationRound(tech1, 5);
         tech1.addInstallationRound(i1);
-        System.out.println("sans requêtes : " + tech1);
+        System.out.println("tournée sans requêtes : " + i1);
         tech1.removeInstallationRound(i1);
 
         InstallationRound i2 = new InstallationRound(tech1, 5);
+        tech1.addInstallationRound(i2);
         i2.addRequest(r1);
-        System.out.println("avec r1 : " + tech1);
+        System.out.println("tournée avec requête faisable : " + i2);
         tech1.removeInstallationRound(i2);
 
-        i1.addRequest(r2);
-        System.out.println("avec r2 : " + tech1);
-        tech1.removeInstallationRound(i1);
+        InstallationRound i3 = new InstallationRound(tech1, 5);
+        tech1.addInstallationRound(i3);
+        i3.addRequest(r2);
+        System.out.println("tournée avec requête infaisable par le technicien : " + i3);
+        tech1.removeInstallationRound(i3);
+
+        InstallationRound i4 = new InstallationRound(tech1, 5);
+        tech1.addInstallationRound(i4);
+        i3.addRequest(r3);
+        System.out.println("tournée avec requête sur un mauvais jour : " + i4);
+        tech1.removeInstallationRound(i4);
+
 
     }
 

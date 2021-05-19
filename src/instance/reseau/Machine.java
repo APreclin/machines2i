@@ -5,6 +5,7 @@ public class Machine {
     private int id;
     private int size;
     private int penaltyByDay;
+//TODO : supprimer deliverydate et installationdate car pas dans le modèle objet
     private int deliveryDate;
     private int installationDate;
 
