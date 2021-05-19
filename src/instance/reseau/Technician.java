@@ -105,6 +105,10 @@ public class Technician {
 
     public boolean addInstallationRound(InstallationRound installationRoundGiven) {
         // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
+        if (installationRounds.isEmpty()) {
+            this.installationRounds.push(installationRoundGiven);
+            return true;
+        }
         InstallationRound lastRound = installationRounds.getLast();
 
         if (installationRoundGiven.getDateDiff(lastRound) <= 0)
@@ -116,7 +120,6 @@ public class Technician {
             if (installationRoundGiven.getDateDiff(lastRound) >= 2) {
                 // 2 jours de repos => on peut ajouter la tournée
                 this.installationRounds.push(installationRoundGiven);
-                installationRoundGiven.getRequests();
                 this.nbConsecutiveInstallationRounds = 0;
                 return true;
             }
@@ -150,6 +153,8 @@ public class Technician {
 
     public int calcNbConsecutiveRounds() {
         // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
+        if (installationRounds.size() == 0)
+            return 0;
         InstallationRound lastRound = installationRounds.getLast();
         int lastIndex = installationRounds.indexOf(lastRound);
         int nbConsRounds = 0;
@@ -215,8 +220,19 @@ public class Technician {
         couts.put("dayCost", 50);
         couts.put("cost", 30);
         Technician tech1 = new Technician(0, maison1, 90, 2, couts, abilities);
-        InstallationRound i1 = new InstallationRound(tech1);
+        
+        InstallationRound i1 = new InstallationRound(tech1, 5);
         tech1.addInstallationRound(i1);
+        System.out.println("sans requêtes : " + tech1);
+        tech1.removeInstallationRound(i1);
+
+        InstallationRound i2 = new InstallationRound(tech1, 5);
+        i2.addRequest(r1);
+        System.out.println("avec r1 : " + tech1);
+        tech1.removeInstallationRound(i2);
+
+        i1.addRequest(r2);
+        System.out.println("avec r2 : " + tech1);
         tech1.removeInstallationRound(i1);
 
     }

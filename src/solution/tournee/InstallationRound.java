@@ -15,23 +15,12 @@ public class InstallationRound extends Round {
     private Technician technician;
     private Integer coveredDistance;
 
-    public InstallationRound() {
+    public InstallationRound(Technician technician, int date) {
         super();
+        this.technician = new Technician();
+        this.setTechnician(technician);
+        this.date = date;
         this.nbRequests = 0;
-        this.coveredDistance = 0;
-    }
-
-    public InstallationRound(Technician technician) {
-        super();
-        this.technician = technician;
-        this.totalCost = technician.getDayCost();
-        this.nbRequests = 0;
-        this.coveredDistance = 0;
-    }
-
-    public InstallationRound(LinkedList<Request> requests, int date, int nbRequests) {
-        super(requests, date);
-        this.nbRequests = nbRequests;
         this.coveredDistance = 0;
     }
 
@@ -46,6 +35,21 @@ public class InstallationRound extends Round {
         return requests.getLast();
     }
 
+    public boolean setTechnician(Technician technician) {
+        if (this.technician == null) {
+            if (technician.addInstallationRound(this)) {
+                this.technician = technician;
+                this.totalCost = technician.getDayCost();
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else 
+            return false;      
+    }
+
     /**
      * Check if it is possible to add request to the list of requests. Check if the
      * technician is able to install the machine specified in the request. Check if
@@ -57,7 +61,7 @@ public class InstallationRound extends Round {
      */
     @Override
     public boolean addRequest(Request request) {
-        if (request == null)
+        if (request == null || technician == null)
             return false;
 
         boolean checkMachineComp = this.checkMachineComp(request);
@@ -81,6 +85,7 @@ public class InstallationRound extends Round {
         int techMaxDistance = this.technician.getMaxDistance();
         int techMaxRequests = this.technician.getMaxRequests();
         int distToLastRequest = this.getLastRequest().getDistanceTo(request);
+       
 
         boolean isDistanceRespected = this.coveredDistance + distToLastRequest <= techMaxDistance;
         boolean isNbRequestsRespected = this.nbRequests < techMaxRequests;
@@ -137,7 +142,7 @@ public class InstallationRound extends Round {
     }
 
     public static void main(String[] args) {
-
+        //TODO : finir test unitaire installationRound
         // Création d'une installation round simple
         Location home = new Location(1, 2, 0);
 
@@ -151,7 +156,7 @@ public class InstallationRound extends Round {
         costs.put("cost", 5);
 
         Technician t = new Technician(1, home, 20, 4, costs, abilities);
-        InstallationRound ir = new InstallationRound(t);
+        InstallationRound ir = new InstallationRound(t, 5);
         // System.out.println(ir.toString());
 
         // Le technicien ne sait pas installer cette machine (false)

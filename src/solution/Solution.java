@@ -83,7 +83,7 @@ public class Solution {
     public void addRequestNewInstallationRound(Request requestToAdd) {
         Machine machine = requestToAdd.getMachine();
         Technician technician = instance.getTechnician(machine);
-        InstallationRound tempRound = new InstallationRound(technician);
+        InstallationRound tempRound = new InstallationRound(technician, requestToAdd.getFirstDay());
         tempRound.addRequest(requestToAdd);
 
         if (installationRounds == null) {
