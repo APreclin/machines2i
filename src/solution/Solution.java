@@ -63,15 +63,15 @@ public class Solution {
      * @param requestToAdd
      */
     public void addRequestNewDeliveryRound(Request requestToAdd) {
-        DeliveryRound roundTemp = new DeliveryRound(instance);
-        roundTemp.addRequest(requestToAdd);
+        DeliveryRound tempRound = new DeliveryRound(instance);
+        tempRound.addRequest(requestToAdd);
 
         if (deliveryRounds == null) {
             deliveryRounds = new LinkedList<DeliveryRound>();
         }
 
-        deliveryRounds.push(roundTemp);
-        totalCost += roundTemp.getTotalCost();
+        deliveryRounds.push(tempRound);
+        totalCost += tempRound.getTotalCost();
     }
 
     /**
@@ -83,15 +83,15 @@ public class Solution {
     public void addRequestNewInstallationRound(Request requestToAdd) {
         Machine machine = requestToAdd.getMachine();
         Technician technician = instance.getTechnician(machine);
-        InstallationRound roundTemp = new InstallationRound(technician);
-        roundTemp.addRequest(requestToAdd);
+        InstallationRound tempRound = new InstallationRound(technician);
+        tempRound.addRequest(requestToAdd);
 
         if (installationRounds == null) {
             installationRounds = new LinkedList<InstallationRound>();
         }
 
-        installationRounds.push(roundTemp);
-        totalCost += roundTemp.getTotalCost();
+        installationRounds.push(tempRound);
+        totalCost += tempRound.getTotalCost();
     }
 
     /**
