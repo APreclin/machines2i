@@ -1,7 +1,5 @@
 package solution.solveur;
 
-import java.util.LinkedHashMap;
-
 import instance.Instance;
 import instance.reseau.Request;
 import solution.Solution;
@@ -26,9 +24,8 @@ public class SolutionTriviale implements Solveur {
     }
 
     public static void main(String[] args) {
-        //TODO: test unitaire solutionTriviale
-        
-    }
+        // TODO: test unitaire solutionTriviale
 
+    }
 
 }

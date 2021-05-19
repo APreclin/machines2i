@@ -98,10 +98,10 @@ public class Instance {
     }
 
     public Location getDepot() {
-        if (locations != null)
-            return locations.get(1);
-        else
+        if (locations == null)
             return null;
+
+        return locations.get(1);
 
     }
 
@@ -137,6 +137,7 @@ public class Instance {
             return true;
 
         this.locations.put(id, tempLocation);
+
         return false;
     }
 
@@ -152,10 +153,12 @@ public class Instance {
 
         int id = machine.getId();
         Machine tempMachine = this.machines.put(id, machine);
+
         if (tempMachine == null)
             return true;
 
         this.machines.put(id, tempMachine);
+
         return false;
     }
 
@@ -171,10 +174,12 @@ public class Instance {
 
         int id = request.getId();
         Request tempRequest = this.requests.put(id, request);
+
         if (tempRequest == null)
             return true;
 
         this.requests.put(id, tempRequest);
+
         return false;
     }
 
@@ -191,10 +196,12 @@ public class Instance {
 
         int id = technician.getId();
         Technician tempTechnician = this.technicians.put(id, technician);
+
         if (tempTechnician == null)
             return true;
 
         this.technicians.put(id, tempTechnician);
+
         return false;
     }
 
