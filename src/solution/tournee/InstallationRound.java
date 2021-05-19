@@ -1,5 +1,6 @@
 package solution.tournee;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -62,9 +63,7 @@ public class InstallationRound extends Round {
             Location requestLocation = request.getLocation();
             int distToTechHome = techHome.getDistanceTo(requestLocation);
 
-            request.setInstallationDate(this.date);
-            this.requests.push(request);
-            this.coveredDistance += distToTechHome;
+            doAddRequest(request, distToTechHome);
 
             return true;
         }
@@ -80,11 +79,16 @@ public class InstallationRound extends Round {
         if (!isNbRequestsRespected || !isDistanceRespected || !checkMachineComp)
             return false;
 
-        request.setInstallationDate(this.date);
-        this.requests.push(request);
-        this.coveredDistance += distToLastRequest;
+        doAddRequest(request, distToLastRequest);
 
         return true;
+    }
+
+    private void doAddRequest(Request request, int distance) {
+        request.setInstallationDate(this.date);
+        this.requests.push(request);
+        this.coveredDistance += distance;
+        this.totalCost += distance* this.technician.getDistanceCost();
     }
 
     /*
@@ -130,7 +134,7 @@ public class InstallationRound extends Round {
     public static void main(String[] args) {
         //TODO : finir test unitaire installationRound : vérifier les couts
         // Création d'une installation round simple
-        Location home = new Location(1, 2, 0);
+        Location home = new Location(1, 0, 0);
 
         LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<Integer, Boolean>();
         abilities.put(1, false);
@@ -141,16 +145,23 @@ public class InstallationRound extends Round {
         costs.put("dayCost", 10);
         costs.put("cost", 5);
 
-        Technician t = new Technician(1, home, 20, 4, costs, abilities);
+        Technician t = new Technician(1, home, 20, 4, costs, abilities); // id, location, maxDistance, maxRequests, costs, abilities
         InstallationRound ir = new InstallationRound(t, 5);
         // System.out.println(ir.toString());
 
         // Le technicien ne sait pas installer cette machine (false)
-        Location l1 = new Location(1, 1, 1);
-        Machine m1 = new Machine(1, 10, 20);
-        Request r1 = new Request(1, l1, 1, 3, m1, 1);
+        Location l1 = new Location(1, 10, 0); 
+        Machine m1 = new Machine(1, 10, 20); // id, size, penaltyByDay
+        Request r1 = new Request(1, l1, 1, 3, m1, 1); // id, location, firstDay, lastDay, machine, nbMachines
         System.out.println(ir.addRequest(r1));
 
+        /* Vérification des couts :
+        * distance : 20  => cout = 10+20*10=210
+        */
+        Machine m2 = new Machine(2, 10, 20); // id, size, penaltyByDay
+        Request r2 = new Request(1, l1, 1, 3, m2, 1); // id, location, firstDay, lastDay, machine, nbMachines
+        System.out.println("r2 ajoutée (val:true) => " + ir.addRequest(r2));
+        System.out.println("Cout de la tournée d'installation (val:210) => " + ir.getTotalCost());
     }
 
 }

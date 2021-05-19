@@ -13,6 +13,7 @@ public class Truck {
         this.maxDistance = 0;
         this.distanceCost = 0;
         this.dayCost = 0;
+        //TODO : mettre cost dans instance
         this.cost = 0;
     }
 

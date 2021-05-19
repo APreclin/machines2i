@@ -15,6 +15,7 @@ public class Technician {
     private int maxRequests;
     private int distanceCost;
     private int dayCost;
+    //TODO : mettre cost dans instance
     private int cost;
     private LinkedHashMap<Integer, Boolean> abilities;
     private LinkedList<InstallationRound> installationRounds; // ensemble des tournées réalisées ordonnées dans le sens
