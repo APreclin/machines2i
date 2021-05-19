@@ -14,8 +14,7 @@ public class Instance {
     private String dataset;
     private String name;
     private int days;
-    private int technicianDistanceCost;
-    private int technicianDayCost;
+    private int truckCost;
     private int technicianCost;
     private LinkedHashMap<Integer, Technician> technicians;
     private LinkedHashMap<Integer, Location> locations;
@@ -27,8 +26,7 @@ public class Instance {
         this.dataset = "";
         this.name = "";
         this.days = 0;
-        this.technicianDistanceCost = 0;
-        this.technicianDayCost = 0;
+        this.truckCost = 0;
         this.technicianCost = 0;
         this.technicians = new LinkedHashMap<Integer, Technician>();
         this.locations = new LinkedHashMap<Integer, Location>();
@@ -37,14 +35,12 @@ public class Instance {
         this.truck = new Truck();
     }
 
-    public Instance(String dataset, String name, int days, int technicianDistanceCost, int technicianDayCost,
-            int technicianCost, Truck truck) {
+    public Instance(String dataset, String name, int days, int technicianCost, Truck truck, int truckCost) {
         this();
         this.dataset = dataset;
         this.name = name;
         this.days = days;
-        this.technicianDistanceCost = technicianDistanceCost;
-        this.technicianDayCost = technicianDayCost;
+        this.truckCost = truckCost;
         this.technicianCost = technicianCost;
         this.technicians = new LinkedHashMap<Integer, Technician>();
         this.locations = new LinkedHashMap<Integer, Location>();
@@ -65,12 +61,8 @@ public class Instance {
         return days;
     }
 
-    public int getTechnicianDistanceCost() {
-        return technicianDistanceCost;
-    }
-
-    public int getTechnicianDayCost() {
-        return technicianDayCost;
+    public int getTruckCost() {
+        return truckCost;
     }
 
     public int getTechnicianCost() {
@@ -113,6 +105,7 @@ public class Instance {
      */
     public HashMap<Integer, Technician> getTechnicians(Machine machine) {
         HashMap<Integer, Technician> techniciansList = new HashMap<Integer, Technician>();
+
         for (Technician tech : technicians.values()) {
             if (tech.checkMachineAbility(machine.getId()))
                 techniciansList.put(tech.getId(), tech);
@@ -229,8 +222,7 @@ public class Instance {
         str += "Days : " + days + "\n\n";
         str += truck.toString();
         str += "Technician Cost : " + technicianCost + "\n";
-        str += "Technician Day Cost : " + technicianDayCost + "\n";
-        str += "Technician Distance Cost : " + technicianDistanceCost + "\n\n";
+        str += "Truck Cost : " + truckCost + "\n\n";
         str += "Liste des machines : \n\n";
         for (Map.Entry<Integer, Machine> set : this.machines.entrySet())
             str += set.getValue() + "\n";

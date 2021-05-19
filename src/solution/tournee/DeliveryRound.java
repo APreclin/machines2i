@@ -1,7 +1,5 @@
 package solution.tournee;
 
-import java.util.LinkedList;
-
 import instance.Instance;
 import instance.reseau.Location;
 import instance.reseau.Machine;
@@ -16,7 +14,6 @@ public class DeliveryRound extends Round {
 
     public DeliveryRound() {
         super();
-        truck = new Truck();
         depot = new Location();
         this.currentCharge = 0;
         this.currentDistance = 0;
@@ -24,15 +21,16 @@ public class DeliveryRound extends Round {
 
     public DeliveryRound(Truck truck, Location depot) {
         super();
-        this.truck = truck;
+        this.setTruck(truck);
         this.depot = depot;
         this.currentCharge = 0;
         this.currentDistance = 0;
     }
 
-    public DeliveryRound(LinkedList<Request> requests, int date) {
-        super(requests, date);
-    }
+    /*
+     * public DeliveryRound(LinkedList<Request> requests, int date) {
+     * super(requests, date); }
+     */
 
     public DeliveryRound(Instance instanceToCopy) {
         super();
@@ -43,6 +41,15 @@ public class DeliveryRound extends Round {
 
     public int getCurrentCharge() {
         return currentCharge;
+    }
+
+    public boolean setTruck(Truck truck) {
+        if (this.truck == null) {
+            this.truck = truck;
+            this.totalCost = truck.getDayCost();
+            return true;
+        } else
+            return false;
     }
 
     /**
@@ -61,6 +68,7 @@ public class DeliveryRound extends Round {
         int requestSize = machineSize * nbMachines;
         int totalSize = requestSize + this.currentCharge;
         int truckCapacity = this.truck.getCapacity();
+        int truckDistanceCost = this.truck.getDistanceCost();
 
         if (totalSize > truckCapacity)
             return false;
@@ -79,7 +87,7 @@ public class DeliveryRound extends Round {
             this.currentCharge += requestSize;
             this.currentDistance += locationToDepotRoundTrip;
             request.setDeliveryDate(this.date);
-            this.totalCost = this.currentDistance;
+            this.totalCost += this.currentDistance * truckDistanceCost;
 
             return true;
         }
@@ -88,6 +96,7 @@ public class DeliveryRound extends Round {
         int lastLocationToRequestLocation = lastLocation.getDistanceTo(requestLocation);
         int lastLocationToDepot = returnToDepot(lastLocation);
         int newDistance = lastLocationToRequestLocation - lastLocationToDepot + requestLocationToDepot;
+        int lastDistance = this.currentDistance * truckDistanceCost;
 
         if (newDistance + this.currentDistance > truckMaxDistance)
             return false;
@@ -96,7 +105,7 @@ public class DeliveryRound extends Round {
         this.currentDistance += newDistance;
         request.setDeliveryDate(this.date);
         this.requests.add(request);
-        this.totalCost = this.currentDistance;
+        this.totalCost += this.currentDistance * truckDistanceCost - lastDistance;
 
         return true;
     }
@@ -128,7 +137,7 @@ public class DeliveryRound extends Round {
 
         // Création d'une delivery round simple
         Location depot = new Location(0, 0, 0);
-        Truck truck = new Truck(20, 50, 5, 100, 10);
+        Truck truck = new Truck(20, 50, 2, 100);
         DeliveryRound dr = new DeliveryRound(truck, depot);
         // System.out.println(dr.toString());
 
@@ -152,9 +161,9 @@ public class DeliveryRound extends Round {
         // Ajout d'une 2e tournée
         Location l3 = new Location(3, 2, 0);
         Request r4 = new Request(4, l3, 1, 3, m, 1);
-        // System.out.println(dr.addRequest(r3));
-        // System.out.println(dr.addRequest(r4));
-        // System.out.println(dr.toString());
+        System.out.println(dr.addRequest(r3));
+        System.out.println(dr.addRequest(r4));
+        System.out.println(dr.toString());
     }
 
 }

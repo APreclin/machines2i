@@ -1,10 +1,6 @@
 package solution.tournee;
 
-import java.sql.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-
 import instance.reseau.Location;
 import instance.reseau.Machine;
 import instance.reseau.Request;
@@ -31,12 +27,11 @@ public class InstallationRound extends Round {
 
     public boolean setTechnician(Technician technician) {
         if (this.technician == null) {
-                this.technician = technician;
-                this.totalCost = technician.getDayCost();
-                return true;
-        }
-        else 
-            return false;      
+            this.technician = technician;
+            this.totalCost = technician.getDayCost();
+            return true;
+        } else
+            return false;
     }
 
     /**
@@ -71,7 +66,6 @@ public class InstallationRound extends Round {
         int techMaxDistance = this.technician.getMaxDistance();
         int techMaxRequests = this.technician.getMaxRequests();
         int distToLastRequest = this.getLastRequest().getDistanceTo(request);
-       
 
         boolean isDistanceRespected = this.coveredDistance + distToLastRequest <= techMaxDistance;
         boolean isNbRequestsRespected = this.requests.size() < techMaxRequests;
@@ -88,7 +82,7 @@ public class InstallationRound extends Round {
         request.setInstallationDate(this.date);
         this.requests.push(request);
         this.coveredDistance += distance;
-        this.totalCost += distance* this.technician.getDistanceCost();
+        this.totalCost += distance * this.technician.getDistanceCost();
     }
 
     /*
@@ -132,7 +126,7 @@ public class InstallationRound extends Round {
     }
 
     public static void main(String[] args) {
-        //TODO : finir test unitaire installationRound : vérifier les couts
+        // TODO : finir test unitaire installationRound : vérifier les couts
         // Création d'une installation round simple
         Location home = new Location(1, 0, 0);
 
@@ -140,24 +134,19 @@ public class InstallationRound extends Round {
         abilities.put(1, false);
         abilities.put(2, true);
 
-        HashMap<String, Integer> costs = new HashMap<String, Integer>();
-        costs.put("distanceCost", 20);
-        costs.put("dayCost", 10);
-        costs.put("cost", 5);
-
-        Technician t = new Technician(1, home, 20, 4, costs, abilities); // id, location, maxDistance, maxRequests, costs, abilities
+        Technician t = new Technician(1, home, 20, 4, 20, 10, abilities);
         InstallationRound ir = new InstallationRound(t, 5);
         // System.out.println(ir.toString());
 
         // Le technicien ne sait pas installer cette machine (false)
-        Location l1 = new Location(1, 10, 0); 
+        Location l1 = new Location(1, 10, 0);
         Machine m1 = new Machine(1, 10, 20); // id, size, penaltyByDay
         Request r1 = new Request(1, l1, 1, 3, m1, 1); // id, location, firstDay, lastDay, machine, nbMachines
         System.out.println(ir.addRequest(r1));
 
-        /* Vérification des couts :
-        * distance : 20  => cout = 10+20*10=210
-        */
+        /*
+         * Vérification des couts : distance : 20 => cout = 10+20*10=210
+         */
         Machine m2 = new Machine(2, 10, 20); // id, size, penaltyByDay
         Request r2 = new Request(1, l1, 1, 3, m2, 1); // id, location, firstDay, lastDay, machine, nbMachines
         System.out.println("r2 ajoutée (val:true) => " + ir.addRequest(r2));
