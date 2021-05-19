@@ -18,6 +18,7 @@ public class Solution {
     private Integer nbTruckDays;
     private Integer nbTrucksUsed;
     private Integer technicianDistance;
+    private Integer nbTechniciansDays;
     private Integer nbTechniciansUsed;
     private Integer idleMachineCosts;
     private Integer totalCost;
@@ -28,16 +29,45 @@ public class Solution {
         nbTruckDays = 0;
         nbTrucksUsed = 0;
         technicianDistance = 0;
+        nbTechniciansDays = 0;
         nbTechniciansUsed = 0;
         idleMachineCosts = 0;
         totalCost = 0;
+        installationRounds = new LinkedList<InstallationRound>();
+        deliveryRounds = new LinkedList<DeliveryRound>();
     }
 
     public Solution(Instance instanceToCopy) {
+        this();
         instance = instanceToCopy;
-        installationRounds = new LinkedList<InstallationRound>();
-        deliveryRounds = new LinkedList<DeliveryRound>();
-        totalCost = 0;
+    }
+
+    public Integer getTruckDistance() {
+        return truckDistance;
+    }
+
+    public Integer getNbTruckDays() {
+        return nbTruckDays;
+    }
+
+    public Integer getNbTrucksUsed() {
+        return nbTrucksUsed;
+    }
+
+    public Integer getTechnicianDistance() {
+        return technicianDistance;
+    }
+
+    public Integer getNbTechniciansDays() {
+        return nbTechniciansDays;
+    }
+
+    public Integer getNbTechniciansUsed() {
+        return nbTechniciansUsed;
+    }
+
+    public Integer getIdleMachineCosts() {
+        return idleMachineCosts;
     }
 
     public Integer getTotalCost() {
@@ -49,11 +79,11 @@ public class Solution {
     }
 
     public LinkedList<DeliveryRound> getDeliveryRounds() {
-        return deliveryRounds;
+        return new LinkedList<DeliveryRound>(deliveryRounds);
     }
 
     public LinkedList<InstallationRound> getInstallationRounds() {
-        return installationRounds;
+        return new LinkedList<InstallationRound>(installationRounds);
     }
 
     /**
@@ -65,10 +95,6 @@ public class Solution {
     public void addRequestNewDeliveryRound(Request requestToAdd) {
         DeliveryRound tempRound = new DeliveryRound(instance);
         tempRound.addRequest(requestToAdd);
-
-        if (deliveryRounds == null) {
-            deliveryRounds = new LinkedList<DeliveryRound>();
-        }
 
         deliveryRounds.push(tempRound);
         totalCost += tempRound.getTotalCost();
@@ -86,10 +112,6 @@ public class Solution {
         InstallationRound tempRound = new InstallationRound(technician, requestToAdd.getFirstDay());
         tempRound.addRequest(requestToAdd);
 
-        if (installationRounds == null) {
-            installationRounds = new LinkedList<InstallationRound>();
-        }
-
         installationRounds.push(tempRound);
         totalCost += tempRound.getTotalCost();
     }
@@ -101,7 +123,7 @@ public class Solution {
      * @return whether the requestToAdd was added or not
      */
     public boolean addRequestExistingDeliveryRound(Request requestToAdd) {
-        if (deliveryRounds == null)
+        if (deliveryRounds.isEmpty())
             return false;
 
         for (Round t : deliveryRounds) {
@@ -123,7 +145,7 @@ public class Solution {
      * @return whether the requestToAdd was added or not
      */
     public boolean addRequestExistingInstallationRound(Request requestToAdd) {
-        if (installationRounds == null)
+        if (installationRounds.isEmpty())
             return false;
 
         for (InstallationRound t : installationRounds) {
@@ -140,10 +162,10 @@ public class Solution {
     @Override
     public String toString() {
         return "Solution [deliveryRounds=" + deliveryRounds + ", idleMachineCosts=" + idleMachineCosts
-                + ", installationRounds=" + installationRounds + ", instance=" + instance + ", nbTechniciansUsed="
-                + nbTechniciansUsed + ", nbTruckDays=" + nbTruckDays + ", nbTrucksUsed=" + nbTrucksUsed
-                + ", technicianDistance=" + technicianDistance + ", totalCost=" + totalCost + ", truckDistance="
-                + truckDistance + "]";
+                + ", installationRounds=" + installationRounds + ", instance=" + instance + ", nbTechniciansDays="
+                + nbTechniciansDays + ", nbTechniciansUsed=" + nbTechniciansUsed + ", nbTruckDays=" + nbTruckDays
+                + ", nbTrucksUsed=" + nbTrucksUsed + ", technicianDistance=" + technicianDistance + ", totalCost="
+                + totalCost + ", truckDistance=" + truckDistance + "]";
     }
 
 }
