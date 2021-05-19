@@ -17,7 +17,8 @@ public class Technician {
     private int dayCost;
     private int cost;
     private LinkedHashMap<Integer, Boolean> abilities;
-    private LinkedList<InstallationRound> installationRounds; // ensemble des tournées réalisées ordonnées dans le sens descendant des dates de tournée
+    private LinkedList<InstallationRound> installationRounds; // ensemble des tournées réalisées ordonnées dans le sens
+                                                              // descendant des dates de tournée
     private int nbConsecutiveInstallationRounds;
 
     public Technician() {
@@ -33,7 +34,8 @@ public class Technician {
         this.nbConsecutiveInstallationRounds = 0;
     }
 
-    public Technician(int id, Location location, int maxDistance, int maxRequests, HashMap<String, Integer> costs, LinkedHashMap<Integer, Boolean> abilities) {
+    public Technician(int id, Location location, int maxDistance, int maxRequests, HashMap<String, Integer> costs,
+            LinkedHashMap<Integer, Boolean> abilities) {
         this();
         this.id = id;
         this.home = location;
@@ -122,12 +124,10 @@ public class Technician {
                 this.installationRounds.push(installationRoundGiven);
                 this.nbConsecutiveInstallationRounds = 0;
                 return true;
-            }
-            else
+            } else
                 // il n'y a pas 2 jours de repos, il ne peut donc pas enchainer
                 return false;
-        }
-        else {
+        } else {
             // nombre maximum de jours de travail consécutifs pas atteint
             if (installationRoundGiven.follows(lastRound))
                 // Si la nouvelle tournée suit la précédente, il faut incrémenter le compteur
@@ -145,10 +145,11 @@ public class Technician {
             return false;
         if (this.installationRounds.contains(installationRoundGiven)) {
             this.installationRounds.remove(installationRoundGiven);
-            this.nbConsecutiveInstallationRounds = this.calcNbConsecutiveRounds(); // mise à jour du nombre de tournées consécutives
-            return true;    
+            this.nbConsecutiveInstallationRounds = this.calcNbConsecutiveRounds(); // mise à jour du nombre de tournées
+                                                                                   // consécutives
+            return true;
         }
-        return false;   // la tournée n'etait pas contenue
+        return false; // la tournée n'etait pas contenue
     }
 
     public int calcNbConsecutiveRounds() {
@@ -160,7 +161,7 @@ public class Technician {
         int nbConsRounds = 0;
 
         for (int i = 1; i < 6; i++) {
-            InstallationRound previousRound = installationRounds.get(lastIndex-i);
+            InstallationRound previousRound = installationRounds.get(lastIndex - i);
             if (lastRound.follows(previousRound))
                 nbConsRounds += 1;
             else
@@ -196,9 +197,14 @@ public class Technician {
         str += "Distance cost : " + distanceCost + "\n";
         str += "Day cost : " + dayCost + "\n";
         str += "Cost : " + cost + "\n\n";
-        str += "Installation possible : \n\n";
+        str += "\nInstallation possible : \n\n";
         for (Map.Entry<Integer, Boolean> set : abilities.entrySet())
             str += "\t Machine n°" + set.getKey() + " - " + set.getValue() + "\n";
+        if (!installationRounds.isEmpty())
+            str += "Tournées d'installation : \n";
+        for (InstallationRound ir : installationRounds)
+            str += ir.toString();
+        str += "\nNb consecutive installation round : " + nbConsecutiveInstallationRounds + "\n";
         str += "\n-------------------------\n";
         return str;
     }
@@ -210,7 +216,7 @@ public class Technician {
         Machine m1 = new Machine(0, 5, 2);
         Request r1 = new Request(0, client1, 2, 7, m1, 1);
         Request r2 = new Request(1, client2, 5, 10, m1, 1);
-        
+
         LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<>();
         abilities.put(0, true);
         abilities.put(1, false);
@@ -220,7 +226,7 @@ public class Technician {
         couts.put("dayCost", 50);
         couts.put("cost", 30);
         Technician tech1 = new Technician(0, maison1, 90, 2, couts, abilities);
-        
+
         InstallationRound i1 = new InstallationRound(tech1, 5);
         tech1.addInstallationRound(i1);
         System.out.println("sans requêtes : " + tech1);
