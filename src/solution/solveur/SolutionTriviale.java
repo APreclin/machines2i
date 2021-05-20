@@ -3,6 +3,7 @@ package solution.solveur;
 import instance.Instance;
 import instance.reseau.Request;
 import io.InstanceReader;
+import io.SolutionWriter;
 import io.exception.ReaderException;
 import solution.Solution;
 
@@ -19,6 +20,10 @@ public class SolutionTriviale implements Solveur {
 
             sol.calculPenalties();
         }
+
+        SolutionWriter sw = new SolutionWriter(instance, sol);
+        sw.writeSolution();
+
         return sol;
     }
 
@@ -31,10 +36,10 @@ public class SolutionTriviale implements Solveur {
         try {
             InstanceReader reader = new InstanceReader();
             Instance instance = reader.readInstance();
-            System.out.println(instance);
+            SolutionTriviale sol = new SolutionTriviale();
+            sol.solve(instance);
         } catch (ReaderException ex) {
             System.out.println(ex.getMessage());
         }
     }
-
 }

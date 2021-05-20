@@ -1,5 +1,6 @@
 package solution;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 import instance.Instance;
@@ -82,6 +83,26 @@ public class Solution {
         return new LinkedHashMap<Integer, Day>(days);
     }
 
+    public HashSet<DeliveryRound> getDeliveryRounds() {
+        HashSet<DeliveryRound> deliveryRounds = new HashSet<>();
+        for (Day d : days.values()) {
+            for (DeliveryRound t : d.getDeliveryRounds()) {
+                deliveryRounds.add(t);
+            }
+        }
+        return deliveryRounds;
+    }
+
+    public HashSet<InstallationRound> getInstallationRounds() {
+        HashSet<InstallationRound> installatRounds = new HashSet<>();
+        for (Day d : days.values()) {
+            for (InstallationRound t : d.getInstallationRounds()) {
+                installatRounds.add(t);
+            }
+        }
+        return installatRounds;
+    }
+
     /**
      * Adds requestToAdd to a new DeliveryRound. The new DeliveryRound is added to
      * the deliveryRounds list
@@ -91,7 +112,7 @@ public class Solution {
     public void addRequestNewDeliveryRound(Request requestToAdd) {
         int date = requestToAdd.getFirstDay();
         Day newDay = new Day(date);
-        
+
         Day oldDay = days.put(date, newDay);
 
         if (oldDay != null) {
@@ -213,8 +234,13 @@ public class Solution {
     /*
      * Vérifie si un camion est déjà utilisé
      */
-    public void isTruckUsed(Truck truck) {
-        //
+    public boolean isTruckUsed(Truck truck) {
+        HashSet<DeliveryRound> deliveryRounds = this.getDeliveryRounds();
+        for (DeliveryRound dr : deliveryRounds) {
+            if(dr.getTruck().equals(truck))
+                return true;
+        }
+        return false;
     }
 
     @Override
