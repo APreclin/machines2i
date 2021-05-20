@@ -7,17 +7,18 @@ import instance.Instance;
 import instance.reseau.Machine;
 import instance.reseau.Request;
 import instance.reseau.Technician;
+import instance.reseau.Truck;
 import io.InstanceReader;
 import io.exception.ReaderException;
 import solution.tournee.DeliveryRound;
 import solution.tournee.InstallationRound;
-import solution.tournee.Round;
 
 public class Solution {
+    private int idRound;
     private Instance instance;
-    private LinkedList<InstallationRound> installationRounds;
-    private LinkedList<DeliveryRound> deliveryRounds;
     private LinkedHashMap<Integer, LinkedList<Integer>> roundsByDay;
+    private LinkedHashMap<Integer, InstallationRound> installationRounds;
+    private LinkedHashMap<Integer, DeliveryRound> deliveryRounds;
     private Integer truckDistance;
     private Integer nbTruckDays;
     private Integer nbTrucksUsed;
@@ -28,6 +29,7 @@ public class Solution {
     private Integer totalCost;
 
     public Solution() {
+        idRound = 0;
         instance = new Instance();
         truckDistance = 0;
         nbTruckDays = 0;
@@ -37,9 +39,9 @@ public class Solution {
         nbTechniciansUsed = 0;
         idleMachineCosts = 0;
         totalCost = 0;
-        installationRounds = new LinkedList<InstallationRound>();
-        deliveryRounds = new LinkedList<DeliveryRound>();
         roundsByDay = new LinkedHashMap<Integer, LinkedList<Integer>>();
+        installationRounds = new LinkedHashMap<Integer, InstallationRound>();
+        deliveryRounds = new LinkedHashMap<Integer, DeliveryRound>();
     }
 
     public Solution(Instance instanceToCopy) {
@@ -83,12 +85,12 @@ public class Solution {
         return instance;
     }
 
-    public LinkedList<DeliveryRound> getDeliveryRounds() {
-        return new LinkedList<DeliveryRound>(deliveryRounds);
+    public LinkedHashMap<Integer, DeliveryRound> getDeliveryRounds() {
+        return new LinkedHashMap<Integer, DeliveryRound>(deliveryRounds);
     }
 
-    public LinkedList<InstallationRound> getInstallationRounds() {
-        return new LinkedList<InstallationRound>(installationRounds);
+    public LinkedHashMap<Integer, InstallationRound> getInstallationRounds() {
+        return new LinkedHashMap<Integer, InstallationRound>(installationRounds);
     }
 
     /**
@@ -104,8 +106,11 @@ public class Solution {
         if (!isTruckUsed(tempRound.getTruck()))
             nbTrucksUsed += 1;
 
-        deliveryRounds.push(tempRound);
+        deliveryRounds.put(idRound++, tempRound);
+        addRoundByDay(idRound, tempRound.getDate());
+        
         totalCost += tempRound.getTotalCost();
+        truckDistance += tempRound.getCurrentDistance();
     }
 
     /**
@@ -120,8 +125,22 @@ public class Solution {
         InstallationRound tempRound = new InstallationRound(technician, requestToAdd.getFirstDay());
         tempRound.addRequest(requestToAdd);
 
-        installationRounds.push(tempRound);
+        installationRounds.put(idRound++, tempRound);
+        addRoundByDay(idRound, tempRound.getDate());
+
         totalCost += tempRound.getTotalCost();
+        technicianDistance += tempRound.getCoveredDistance();
+    }
+
+    private void addRoundByDay(int id, int date) {
+        if (roundsByDay.get(date) != null) {
+            roundsByDay.get(date).add(id);
+        }
+        else {
+            LinkedList<Integer> liste = new LinkedList<Integer>();
+            liste.add(id);
+            roundsByDay.put(date, liste);
+        }
     }
 
     /**
@@ -134,10 +153,12 @@ public class Solution {
         if (deliveryRounds.isEmpty())
             return false;
 
-        for (Round t : deliveryRounds) {
-            int ancienCout = t.getTotalCost();
+        for (DeliveryRound t : deliveryRounds.values()) {
+            int oldCost = t.getTotalCost();
+            int oldDistance = t.getCurrentDistance();
             if (t.addRequest(requestToAdd)) {
-                totalCost += t.getTotalCost() - ancienCout; // maj du cout (rempalcement de l'ancien)
+                totalCost += t.getTotalCost() - oldCost; // maj du cout (rempalcement de l'ancien)
+                truckDistance += t.getCurrentDistance() - oldDistance;
                 return true;
             }
         }
@@ -156,15 +177,50 @@ public class Solution {
         if (installationRounds.isEmpty())
             return false;
 
-        for (InstallationRound t : installationRounds) {
-            int ancienCout = t.getTotalCost();
+        for (InstallationRound t : installationRounds.values()) {
+            int oldCost = t.getTotalCost();
+            int oldDistance = t.getCoveredDistance();
             if (t.addRequest(requestToAdd)) {
-                totalCost += t.getTotalCost() - ancienCout;
+                totalCost += t.getTotalCost() - oldCost;
+                technicianDistance += t.getCoveredDistance() - oldDistance;
+
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Calculate the penalities by days and add them to the total cost
+     */
+    public void calculPenalities() {
+        if (installationRounds.isEmpty() || deliveryRounds.isEmpty())
+            return;
+
+        int totalPenalities = 0;
+
+        for (InstallationRound ir : installationRounds.values()) {
+            for (Request r : ir.getRequests()) {
+
+                int penality = r.getMachine().getPenaltyByDay();
+                int deliveryDate = r.getDeliveryDate();
+                int installationDate = r.getInstallationDate();
+                int diff = installationDate - deliveryDate;
+
+                if (diff >= 2)
+                    totalPenalities += (diff - 1) * penality;
+            }
+        }
+
+        totalCost += totalPenalities;
+    }
+
+    /*
+    *   Vérifie si un camion est déjà utilisé
+    */
+    public void isTruckUsed(Truck truck) {
+        //
     }
 
     @Override
@@ -189,8 +245,7 @@ public class Solution {
         for (Request r : i1.getRequests().values()) {
             if (s1.addRequestExistingDeliveryRound(r)) {
                 s1.addRequestExistingInstallationRound(r);
-            }
-            else {
+            } else {
                 s1.addRequestNewDeliveryRound(r);
                 s1.addRequestNewInstallationRound(r);
             }

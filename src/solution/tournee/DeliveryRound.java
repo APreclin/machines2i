@@ -39,6 +39,10 @@ public class DeliveryRound extends Round {
         currentCharge = 0;
     }
 
+    public int getCurrentDistance() {
+        return currentDistance;
+    }
+
     public int getCurrentCharge() {
         return currentCharge;
     }
