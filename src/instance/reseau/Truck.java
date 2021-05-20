@@ -6,15 +6,12 @@ public class Truck {
     private int maxDistance;
     private int distanceCost;
     private int dayCost;
-    private int cost;
 
     public Truck() {
         this.capacity = 0;
         this.maxDistance = 0;
         this.distanceCost = 0;
         this.dayCost = 0;
-        //TODO : mettre cost dans instance
-        this.cost = 0;
     }
 
     public Truck(int capacity, int maxDistance, int distanceCost, int dayCost) {
@@ -41,10 +38,6 @@ public class Truck {
         return dayCost;
     }
 
-    public int getCost() {
-        return cost;
-    }
-
     @Override
     public String toString() {
         String str = "";
@@ -52,8 +45,7 @@ public class Truck {
         str += "Capacity : " + capacity + "\n";
         str += "Max distance : " + maxDistance + "\n";
         str += "Distance cost : " + distanceCost + "\n";
-        str += "Day cost : " + dayCost + "\n";
-        str += "Cost : " + cost + "\n\n";
+        str += "Day cost : " + dayCost + "\n\n";
         str += "-----------------\n";
         return str;
     }
