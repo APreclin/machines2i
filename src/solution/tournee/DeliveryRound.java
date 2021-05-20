@@ -138,6 +138,7 @@ public class DeliveryRound extends Round {
         str += "\n----- Delivery Round -----\n";
         str += "Current charge : " + currentCharge + "\n";
         str += "Current distance : " + currentDistance + "\n";
+        str += "Date : " + deliveryDay.getDate() + "\n";
         str += depot;
         str += truck;
         str += super.toString();
