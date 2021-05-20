@@ -16,7 +16,7 @@ import solution.tournee.InstallationRound;
 public class Solution {
     private int idRound;
     private Instance instance;
-    private LinkedList<Day> days;
+    private LinkedHashMap<Integer, Day> days;
     private Integer truckDistance;
     private Integer nbTruckDays;
     private Integer nbTrucksUsed;
@@ -37,7 +37,7 @@ public class Solution {
         nbTechniciansUsed = 0;
         idleMachineCosts = 0;
         totalCost = 0;
-        days = new LinkedList<>();
+        days = new LinkedHashMap<Integer, Day>();
     }
 
     public Solution(Instance instanceToCopy) {
@@ -81,6 +81,10 @@ public class Solution {
         return instance;
     }
 
+    public LinkedHashMap<Integer, Day> getDays() {
+        return new LinkedHashMap<Integer, Day>(days);
+    }
+
     /**
      * Adds requestToAdd to a new DeliveryRound. The new DeliveryRound is added to
      * the deliveryRounds list
@@ -88,17 +92,28 @@ public class Solution {
      * @param requestToAdd
      */
     public void addRequestNewDeliveryRound(Request requestToAdd) {
-        DeliveryRound tempRound = new DeliveryRound(instance);
-        tempRound.addRequest(requestToAdd);
-        nbTruckDays += 1;
-        if (!isTruckUsed(tempRound.getTruck()))
-            nbTrucksUsed += 1;
+        int date = requestToAdd.getFirstDay();
+        Day newDay = new Day(date);
+        Day oldDay = days.put(date, newDay);
 
-        deliveryRounds.put(idRound++, tempRound);
-        addRoundByDay(idRound, tempRound.getDate());
-        
+        if (oldDay == null) {
+            DeliveryRound tempRound = new DeliveryRound(instance, newDay);
+            tempRound.addRequest(requestToAdd);
+            days.get(date).addDeliveryRound(tempRound);
+            totalCost += tempRound.getTotalCost();
+            truckDistance += tempRound.getCurrentDistance();
+            nbTruckDays += 1;
+
+            return;
+        }
+
+        days.put(date, oldDay);
+        DeliveryRound tempRound = new DeliveryRound(instance, oldDay);
+        tempRound.addRequest(requestToAdd);
+        days.get(date).addDeliveryRound(tempRound);
         totalCost += tempRound.getTotalCost();
         truckDistance += tempRound.getCurrentDistance();
+        nbTruckDays += 1;
     }
 
     /**
@@ -123,8 +138,7 @@ public class Solution {
     private void addRoundByDay(int id, int date) {
         if (roundsByDay.get(date) != null) {
             roundsByDay.get(date).add(id);
-        }
-        else {
+        } else {
             LinkedList<Integer> liste = new LinkedList<Integer>();
             liste.add(id);
             roundsByDay.put(date, liste);
@@ -205,8 +219,8 @@ public class Solution {
     }
 
     /*
-    *   Vérifie si un camion est déjà utilisé
-    */
+     * Vérifie si un camion est déjà utilisé
+     */
     public void isTruckUsed(Truck truck) {
         //
     }
