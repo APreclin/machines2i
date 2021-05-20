@@ -86,13 +86,13 @@ public class Technician {
 
         InstallationRound lastRound = installationRounds.getLast();
 
-        if (installationRoundGiven.getDateDiff(lastRound) <= 0)
+        if (installationRoundGiven.getInstallationDay().getDateDiff(lastRound.getInstallationDay()) <= 0)
             // Si la tournée a lieu le même jour que la tournée actuelle ou un jour passé
             return false;
 
         if (this.nbConsecutiveInstallationRounds >= 5) {
             // Le nombre max de jours de travail d'affilé est atteint
-            if (installationRoundGiven.getDateDiff(lastRound) < 2)
+            if (installationRoundGiven.getInstallationDay().getDateDiff(lastRound.getInstallationDay()) < 2)
                 return false; // il n'y a pas 2 jours de repos, il ne peut donc pas enchainer
 
             // 2 jours de repos => on peut ajouter la tournée
@@ -102,7 +102,7 @@ public class Technician {
             return true;
         } else {
             // nombre maximum de jours de travail consécutifs pas atteint
-            if (installationRoundGiven.follows(lastRound))
+            if (installationRoundGiven.getInstallationDay().follows(lastRound.getInstallationDay()))
                 // Si la nouvelle tournée suit la précédente, il faut incrémenter le compteur
                 this.nbConsecutiveInstallationRounds++;
             else
@@ -139,7 +139,7 @@ public class Technician {
 
         for (int i = 1; i < 6; i++) {
             InstallationRound previousRound = installationRounds.get(lastIndex - i);
-            if (lastRound.follows(previousRound))
+            if (lastRound.getInstallationDay().follows(previousRound.getInstallationDay()))
                 nbConsRounds += 1;
             else
                 nbConsRounds = 0;

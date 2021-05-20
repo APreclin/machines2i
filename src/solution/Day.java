@@ -24,11 +24,11 @@ public class Day {
     }
 
     public HashSet<InstallationRound> getInstallationRounds() {
-        return new HashSet<>(this.installationRounds);
+        return this.installationRounds;
     }
 
     public HashSet<DeliveryRound> getDeliveryRounds() {
-        return new HashSet<>(this.deliveryRounds);
+        return this.deliveryRounds;
     }
 
     public boolean addInstallationRound(InstallationRound ir) {
