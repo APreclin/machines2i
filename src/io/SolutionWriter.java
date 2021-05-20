@@ -4,9 +4,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
 
 import instance.Instance;
+import instance.reseau.Request;
 import solution.Solution;
+import solution.tournee.DeliveryRound;
+import solution.tournee.InstallationRound;
 
 public class SolutionWriter {
 
@@ -48,6 +52,37 @@ public class SolutionWriter {
             bw.write("IDLE_MACHINE_COSTS = " + solution.getIdleMachineCosts());
             bw.write("TOTAL_COST = " + solution.getTotalCost());
             // Ajouter les jours
+            for (int i = 1; i <= instance.getDays(); i++) {
+                bw.write("DAY = " + String.valueOf(i) + "\n");
+                if (solution.getDays().containsKey(i)) {
+                    HashSet<DeliveryRound> deliveryRounds = solution.getDays().get(i).getDeliveryRounds();
+                    HashSet<InstallationRound> installationRounds = solution.getDays().get(i).getInstallationRounds();
+                    bw.write("NUMBER_OF_TRUCKS = " + String.valueOf(deliveryRounds.size()) + "\n");
+                    if (!deliveryRounds.isEmpty()) {
+                        for (DeliveryRound deliveryRound : deliveryRounds) {
+                            for (Request request : deliveryRound.getRequests()) {
+                                bw.write(String.valueOf(request.getId()));
+                                bw.write(" ");
+                            }
+                            bw.write("\n");
+                        }
+                    }
+                    bw.write("NUMBER_OF_TECHNICIANS = " + String.valueOf(installationRounds.size()) + "\n");
+                    if (!installationRounds.isEmpty()) {
+                        for (InstallationRound installationRound : installationRounds) {
+                            for (Request request : installationRound.getRequests()) {
+                                bw.write(String.valueOf(request.getId()));
+                                bw.write(" ");
+                            }
+                            bw.write("\n");
+                        }
+                    }
+                } else {
+                    bw.write("NUMBER_OF_TRUCKS = 0\n");
+                    bw.write("NUMBER_OF_TECHNICIANS = 0\n");
+                }
+            }
+
             bw.close();
 
         } catch (IOException e) {
