@@ -126,6 +126,7 @@ public class InstallationRound extends Round {
     public String toString() {
         String str = "";
         str += "\n----- Installation Round -----\n";
+        str += "Date : " + day.getDate() + "\n";
         str += technician + "\n";
         str += "Covered distance : " + coveredDistance + "\n";
         str += super.toString();
@@ -136,13 +137,14 @@ public class InstallationRound extends Round {
     public static void main(String[] args) {
         // Création d'une installation round simple
         Location home = new Location(1, 0, 0);
+        Day d = new Day(5);
 
         LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<Integer, Boolean>();
         abilities.put(1, false);
         abilities.put(2, true);
 
         Technician t = new Technician(1, home, 20, 4, 20, 10, abilities);
-        InstallationRound ir = new InstallationRound(t, new Day(5));
+        InstallationRound ir = new InstallationRound(t, d);
         // System.out.println(ir.toString());
 
         // Le technicien ne sait pas installer cette machine (false)
