@@ -110,13 +110,13 @@ public class Request {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Request n°" + id + " -----\n\n";
+        str += "\n----- Request n°" + id + " -----\n";
         str += "ID : " + id + "\n";
         str += "Location n°" + this.location.getId() + "\n";
         str += "Machine n°" + this.machine.getId() + "\n";
         str += "Nb machines : " + nbMachines + "\n";
         str += "First Day : " + firstDay + "\n";
-        str += "Last Day : " + lastDay + "\n\n";
+        str += "Last Day : " + lastDay + "\n";
         str += "-----------------------\n";
         return str;
     }
@@ -132,7 +132,7 @@ public class Request {
         // Test de la fonction getDistanceTo
         Location l2 = new Location(2, 3, 3);
         Request r2 = new Request(2, l2, 1, 3, m, 4);
-        System.out.println(r.getDistanceTo(r2));
+        // System.out.println(r.getDistanceTo(r2));
     }
 
 }

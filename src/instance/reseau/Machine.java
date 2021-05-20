@@ -56,10 +56,10 @@ public class Machine {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Machine n°" + id + " -----\n\n";
+        str += "\n----- Machine n°" + id + " -----\n";
         str += "ID : " + id + "\n";
         str += "Size : " + size + "\n";
-        str += "Penalty by day : " + penaltyByDay + "\n\n";
+        str += "Penalty by day : " + penaltyByDay + "\n";
         str += "-----------------------\n";
         return str;
     }

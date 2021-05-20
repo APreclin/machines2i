@@ -103,12 +103,12 @@ public class Location {
     public String toString() {
         String str = "";
         if (id != 0)
-            str += "----- Location n°" + id + " -----\n\n";
+            str += "\n----- Location n° " + id + " -----\n";
         else
-            str += "---- Depôt ---- \n\n";
+            str += "\n---- Depôt ---- \n";
         str += "ID = " + id + "\n";
         str += "X = " + x + "\n";
-        str += "Y = " + y + "\n\n";
+        str += "Y = " + y + "\n";
         str += "------------------------\n";
         return str;
     }
@@ -121,7 +121,7 @@ public class Location {
 
         // Test de la fonction getDistance
         Location loc2 = new Location(2, 5, 5);
-        System.out.println(loc1.getDistanceTo(loc2));
+        // System.out.println(loc1.getDistanceTo(loc2));
 
         // Test de l'ajout de route
         // System.out.println(loc1.addRoad(loc2));

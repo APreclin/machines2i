@@ -27,7 +27,7 @@ public class Technician {
         this.distanceCost = 0;
         this.dayCost = 0;
         this.abilities = new LinkedHashMap<Integer, Boolean>();
-        this.installationRounds = new LinkedList<>();
+        this.installationRounds = new LinkedList<InstallationRound>();
         this.nbConsecutiveInstallationRounds = 0;
     }
 
@@ -64,7 +64,7 @@ public class Technician {
     }
 
     public LinkedList<InstallationRound> getInstallationRounds() {
-        return installationRounds;
+        return new LinkedList<InstallationRound>(installationRounds);
     }
 
     public int getDistanceCost() {
@@ -73,6 +73,94 @@ public class Technician {
 
     public int getDayCost() {
         return dayCost;
+    }
+
+    public boolean addInstallationRound(InstallationRound installationRoundGiven) {
+        // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
+        if (installationRounds.isEmpty()) {
+            this.installationRounds.push(installationRoundGiven);
+
+            return true;
+        }
+
+        InstallationRound lastRound = installationRounds.getLast();
+
+        if (installationRoundGiven.getDateDiff(lastRound) <= 0)
+            // Si la tournée a lieu le même jour que la tournée actuelle ou un jour passé
+            return false;
+
+        if (this.nbConsecutiveInstallationRounds >= 5) {
+            // Le nombre max de jours de travail d'affilé est atteint
+            if (installationRoundGiven.getDateDiff(lastRound) < 2)
+                return false; // il n'y a pas 2 jours de repos, il ne peut donc pas enchainer
+
+            // 2 jours de repos => on peut ajouter la tournée
+            this.installationRounds.push(installationRoundGiven);
+            this.nbConsecutiveInstallationRounds = 0;
+
+            return true;
+        } else {
+            // nombre maximum de jours de travail consécutifs pas atteint
+            if (installationRoundGiven.follows(lastRound))
+                // Si la nouvelle tournée suit la précédente, il faut incrémenter le compteur
+                this.nbConsecutiveInstallationRounds++;
+            else
+                // Si la nouvelle tournée ne suit pas, on remet le compteur à zéro
+                this.nbConsecutiveInstallationRounds = 0;
+
+            this.installationRounds.push(installationRoundGiven);
+
+            return true;
+        }
+    }
+
+    public boolean removeInstallationRound(InstallationRound installationRoundGiven) {
+        if (installationRoundGiven == null)
+            return false;
+
+        if (!this.installationRounds.contains(installationRoundGiven))
+            return false; // la tournée n'etait pas contenue
+
+        this.installationRounds.remove(installationRoundGiven);
+        this.nbConsecutiveInstallationRounds = this.calcNbConsecutiveRounds(); // mise à jour du nombre de tournées
+                                                                               // consécutives
+        return true;
+    }
+
+    public int calcNbConsecutiveRounds() {
+        // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
+        if (installationRounds.size() == 0)
+            return 0;
+
+        InstallationRound lastRound = installationRounds.getLast();
+        int lastIndex = installationRounds.indexOf(lastRound);
+        int nbConsRounds = 0;
+
+        for (int i = 1; i < 6; i++) {
+            InstallationRound previousRound = installationRounds.get(lastIndex - i);
+            if (lastRound.follows(previousRound))
+                nbConsRounds += 1;
+            else
+                nbConsRounds = 0;
+        }
+
+        return nbConsRounds;
+    }
+
+    /**
+     * Check if this Technician is able to install the machine passed in parameter
+     * 
+     * @param machineId the id of the machine we want to install
+     * @return wheter this Technician can install or not the machine passed in
+     *         parameter
+     */
+    public boolean checkMachineAbility(int machineId) {
+        // Vérifie que le technicien est capable d'installer la machine indiquée par son
+        // ID
+        if (!this.abilities.containsKey(machineId))
+            return false;
+
+        return this.abilities.get(machineId);
     }
 
     @Override
@@ -97,91 +185,10 @@ public class Technician {
         return true;
     }
 
-    public boolean addInstallationRound(InstallationRound installationRoundGiven) {
-        // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
-        if (installationRounds.isEmpty()) {
-            this.installationRounds.push(installationRoundGiven);
-            return true;
-        }
-        InstallationRound lastRound = installationRounds.getLast();
-
-        if (installationRoundGiven.getDateDiff(lastRound) <= 0)
-            // Si la tournée a lieu le même jour que la tournée actuelle ou un jour passé
-            return false;
-
-        if (this.nbConsecutiveInstallationRounds >= 5) {
-            // Le nombre max de jours de travail d'affilé est atteint
-            if (installationRoundGiven.getDateDiff(lastRound) >= 2) {
-                // 2 jours de repos => on peut ajouter la tournée
-                this.installationRounds.push(installationRoundGiven);
-                this.nbConsecutiveInstallationRounds = 0;
-                return true;
-            } else
-                // il n'y a pas 2 jours de repos, il ne peut donc pas enchainer
-                return false;
-        } else {
-            // nombre maximum de jours de travail consécutifs pas atteint
-            if (installationRoundGiven.follows(lastRound))
-                // Si la nouvelle tournée suit la précédente, il faut incrémenter le compteur
-                this.nbConsecutiveInstallationRounds++;
-            else
-                // Si la nouvelle tournée ne suit pas, on remet le compteur à zéro
-                this.nbConsecutiveInstallationRounds = 0;
-            this.installationRounds.push(installationRoundGiven);
-            return true;
-        }
-    }
-
-    public boolean removeInstallationRound(InstallationRound installationRoundGiven) {
-        if (installationRoundGiven == null)
-            return false;
-        if (this.installationRounds.contains(installationRoundGiven)) {
-            this.installationRounds.remove(installationRoundGiven);
-            this.nbConsecutiveInstallationRounds = this.calcNbConsecutiveRounds(); // mise à jour du nombre de tournées
-                                                                                   // consécutives
-            return true;
-        }
-        return false; // la tournée n'etait pas contenue
-    }
-
-    public int calcNbConsecutiveRounds() {
-        // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
-        if (installationRounds.size() == 0)
-            return 0;
-        InstallationRound lastRound = installationRounds.getLast();
-        int lastIndex = installationRounds.indexOf(lastRound);
-        int nbConsRounds = 0;
-
-        for (int i = 1; i < 6; i++) {
-            InstallationRound previousRound = installationRounds.get(lastIndex - i);
-            if (lastRound.follows(previousRound))
-                nbConsRounds += 1;
-            else
-                nbConsRounds = 0;
-        }
-        return nbConsRounds;
-    }
-
-    /**
-     * Check if this Technician is able to install the machine passed in parameter
-     * 
-     * @param machineId the id of the machine we want to install
-     * @return wheter this Technician can install or not the machine passed in
-     *         parameter
-     */
-    public boolean checkMachineAbility(int machineId) {
-        // Vérifie que le technicien est capable d'installer la machine indiquée par son
-        // ID
-        if (this.abilities.containsKey(machineId))
-            return this.abilities.get(machineId);
-        else
-            return false;
-    }
-
     @Override
     public String toString() {
         String str = "";
-        str += "----- Technician n°" + id + "-----\n\n";
+        str += "\n----- Technician n°" + id + "-----\n";
         str += "ID : " + id + "\n";
         str += "Location n°" + id + "\n";
         str += "Maximum distance : " + maxDistance + "\n";
@@ -196,7 +203,7 @@ public class Technician {
          * (InstallationRound ir : installationRounds) str += ir.toString();
          */
         str += "\nNb consecutive installation round : " + nbConsecutiveInstallationRounds + "\n";
-        str += "\n-------------------------\n";
+        str += "-------------------------\n";
         return str;
     }
 
