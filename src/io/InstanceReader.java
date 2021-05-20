@@ -35,6 +35,8 @@ public class InstanceReader {
     private File instanceFile;
     private LinkedHashMap<Integer, Location> locations;
     private LinkedHashMap<Integer, Machine> machines;
+    private int distanceCost;
+    private int dayCost;
 
     public InstanceReader() throws ReaderException {
         this.locations = new LinkedHashMap<Integer, Location>();
@@ -69,6 +71,8 @@ public class InstanceReader {
             int days = readDays(br);
             Truck truck = readTruck(br);
             int truckCost = readTruckCost(br);
+            distanceCost = readTechnicianDistanceCost(br);
+            dayCost = readTechnicianDayCost(br);
             int technicianCost = readTechnicianCost(br);
             LinkedHashMap<Integer, Machine> machines = readMachines(br);
             this.machines = machines;
@@ -78,9 +82,6 @@ public class InstanceReader {
             LinkedHashMap<Integer, Technician> technicians = readTechnicians(br);
 
             Instance instance = new Instance(dataset, name, days, technicianCost, truck, truckCost);
-
-            // TODO: A voir si on change ici : les LinkedHashMap ne servent à rien dans
-            // l'instance reader
             for (Location location : locations.values())
                 instance.addLocation(location);
 
@@ -350,8 +351,6 @@ public class InstanceReader {
             Location location = getLocation(idLocation);
             int maxDistance = techniciansData.get(2);
             int maxRequests = techniciansData.get(3);
-            int distanceCost = readTechnicianDistanceCost(br);
-            int dayCost = readTechnicianDayCost(br);
 
             int idMachine = 1;
             for (int j = 4; j < techniciansData.size(); j++) {

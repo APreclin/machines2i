@@ -126,7 +126,6 @@ public class InstallationRound extends Round {
     }
 
     public static void main(String[] args) {
-        // TODO : finir test unitaire installationRound : vérifier les couts
         // Création d'une installation round simple
         Location home = new Location(1, 0, 0);
 
