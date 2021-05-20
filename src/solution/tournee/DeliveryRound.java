@@ -44,12 +44,12 @@ public class DeliveryRound extends Round {
     }
 
     public boolean setTruck(Truck truck) {
-        if (this.truck == null) {
-            this.truck = truck;
-            this.totalCost = truck.getDayCost();
-            return true;
-        } else
+        if (this.truck != null)
             return false;
+
+        this.truck = truck;
+        this.totalCost = truck.getDayCost();
+        return true;
     }
 
     /**

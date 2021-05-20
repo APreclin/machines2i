@@ -26,12 +26,12 @@ public class InstallationRound extends Round {
     }
 
     public boolean setTechnician(Technician technician) {
-        if (this.technician == null) {
-            this.technician = technician;
-            this.totalCost = technician.getDayCost();
-            return true;
-        } else
+        if (this.technician != null)
             return false;
+
+        this.technician = technician;
+        this.totalCost = technician.getDayCost();
+        return true;
     }
 
     /**
