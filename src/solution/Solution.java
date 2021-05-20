@@ -16,9 +16,7 @@ import solution.tournee.InstallationRound;
 public class Solution {
     private int idRound;
     private Instance instance;
-    private LinkedHashMap<Integer, LinkedList<Integer>> roundsByDay;
-    private LinkedHashMap<Integer, InstallationRound> installationRounds;
-    private LinkedHashMap<Integer, DeliveryRound> deliveryRounds;
+    private LinkedList<Day> days;
     private Integer truckDistance;
     private Integer nbTruckDays;
     private Integer nbTrucksUsed;
@@ -39,9 +37,7 @@ public class Solution {
         nbTechniciansUsed = 0;
         idleMachineCosts = 0;
         totalCost = 0;
-        roundsByDay = new LinkedHashMap<Integer, LinkedList<Integer>>();
-        installationRounds = new LinkedHashMap<Integer, InstallationRound>();
-        deliveryRounds = new LinkedHashMap<Integer, DeliveryRound>();
+        days = new LinkedList<>();
     }
 
     public Solution(Instance instanceToCopy) {
@@ -83,14 +79,6 @@ public class Solution {
 
     public Instance getInstance() {
         return instance;
-    }
-
-    public LinkedHashMap<Integer, DeliveryRound> getDeliveryRounds() {
-        return new LinkedHashMap<Integer, DeliveryRound>(deliveryRounds);
-    }
-
-    public LinkedHashMap<Integer, InstallationRound> getInstallationRounds() {
-        return new LinkedHashMap<Integer, InstallationRound>(installationRounds);
     }
 
     /**

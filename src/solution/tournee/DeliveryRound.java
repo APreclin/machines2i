@@ -19,8 +19,8 @@ public class DeliveryRound extends Round {
         this.currentDistance = 0;
     }
 
-    public DeliveryRound(Truck truck, Location depot) {
-        super();
+    public DeliveryRound(Truck truck, Location depot, int date) {
+        super(date);
         this.setTruck(truck);
         this.depot = depot;
         this.currentCharge = 0;
@@ -32,8 +32,8 @@ public class DeliveryRound extends Round {
      * super(requests, date); }
      */
 
-    public DeliveryRound(Instance instanceToCopy) {
-        super();
+    public DeliveryRound(Instance instanceToCopy, int date) {
+        super(date);
         truck = instanceToCopy.getTruck();
         depot = instanceToCopy.getDepot();
         currentCharge = 0;
