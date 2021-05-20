@@ -120,13 +120,13 @@ public class InstallationRound extends Round {
             return false;
 
         return true;
-
     }
 
     @Override
     public String toString() {
         String str = "";
         str += "\n----- Installation Round -----\n";
+        str += "Date : " + day.getDate() + "\n";
         str += technician + "\n";
         str += "Covered distance : " + coveredDistance + "\n";
         str += super.toString();
