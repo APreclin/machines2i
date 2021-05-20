@@ -161,6 +161,31 @@ public class Solution {
         return false;
     }
 
+    /**
+     * Calculate the penalities by days and add them to the total cost
+     */
+    public void calculPenalities() {
+        if (installationRounds.isEmpty() || deliveryRounds.isEmpty())
+            return;
+
+        int totalPenalities = 0;
+
+        for (InstallationRound ir : installationRounds) {
+            for (Request r : ir.getRequests()) {
+
+                int penality = r.getMachine().getPenaltyByDay();
+                int deliveryDate = r.getDeliveryDate();
+                int installationDate = r.getInstallationDate();
+                int diff = installationDate - deliveryDate;
+
+                if (diff >= 2)
+                    totalPenalities += (diff - 1) * penality;
+            }
+        }
+
+        totalCost += totalPenalities;
+    }
+
     @Override
     public String toString() {
         return "Solution [deliveryRounds=" + deliveryRounds + ", idleMachineCosts=" + idleMachineCosts

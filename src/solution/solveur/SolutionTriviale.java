@@ -16,6 +16,8 @@ public class SolutionTriviale implements Solveur {
                 sol.addRequestNewDeliveryRound(r);
             if (!sol.addRequestExistingInstallationRound(r))
                 sol.addRequestNewInstallationRound(r);
+
+            sol.calculPenalities();
         }
         return sol;
     }
