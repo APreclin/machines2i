@@ -6,6 +6,7 @@ import instance.reseau.Request;
 
 public abstract class Round {
 
+    private int id;
     protected LinkedList<Request> requests;
     protected int totalCost;
     protected int date;

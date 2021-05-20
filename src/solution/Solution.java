@@ -1,5 +1,6 @@
 package solution;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import instance.Instance;
@@ -16,6 +17,7 @@ public class Solution {
     private Instance instance;
     private LinkedList<InstallationRound> installationRounds;
     private LinkedList<DeliveryRound> deliveryRounds;
+    private LinkedHashMap<Integer, LinkedList<Integer>> roundsByDay;
     private Integer truckDistance;
     private Integer nbTruckDays;
     private Integer nbTrucksUsed;
@@ -37,6 +39,7 @@ public class Solution {
         totalCost = 0;
         installationRounds = new LinkedList<InstallationRound>();
         deliveryRounds = new LinkedList<DeliveryRound>();
+        roundsByDay = new LinkedHashMap<Integer, LinkedList<Integer>>();
     }
 
     public Solution(Instance instanceToCopy) {
@@ -97,6 +100,9 @@ public class Solution {
     public void addRequestNewDeliveryRound(Request requestToAdd) {
         DeliveryRound tempRound = new DeliveryRound(instance);
         tempRound.addRequest(requestToAdd);
+        nbTruckDays += 1;
+        if (!isTruckUsed(tempRound.getTruck()))
+            nbTrucksUsed += 1;
 
         deliveryRounds.push(tempRound);
         totalCost += tempRound.getTotalCost();
