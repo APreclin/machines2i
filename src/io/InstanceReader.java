@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -36,12 +35,12 @@ public class InstanceReader {
     private File instanceFile;
     private LinkedHashMap<Integer, Location> locations;
     private LinkedHashMap<Integer, Machine> machines;
-    private HashMap<String, Integer> costs;
+    private int distanceCost;
+    private int dayCost;
 
     public InstanceReader() throws ReaderException {
         this.locations = new LinkedHashMap<Integer, Location>();
         this.machines = new LinkedHashMap<Integer, Machine>();
-        this.costs = new HashMap<String, Integer>();
 
         JFileChooser chooser = new JFileChooser();
         File workingDirectory = new File(System.getProperty("user.dir"));
@@ -71,12 +70,10 @@ public class InstanceReader {
             String name = readName(br);
             int days = readDays(br);
             Truck truck = readTruck(br);
-            int distanceCost = readTechnicianDistanceCost(br);
-            this.costs.put("distanceCost", distanceCost);
-            int dayCost = readTechnicianDayCost(br);
-            this.costs.put("dayCost", distanceCost);
-            int cost = readTechnicianCost(br);
-            this.costs.put("cost", distanceCost);
+            int truckCost = readTruckCost(br);
+            distanceCost = readTechnicianDistanceCost(br);
+            dayCost = readTechnicianDayCost(br);
+            int technicianCost = readTechnicianCost(br);
             LinkedHashMap<Integer, Machine> machines = readMachines(br);
             this.machines = machines;
             LinkedHashMap<Integer, Location> locations = readLocations(br);
@@ -84,10 +81,7 @@ public class InstanceReader {
             LinkedHashMap<Integer, Request> requests = readRequests(br);
             LinkedHashMap<Integer, Technician> technicians = readTechnicians(br);
 
-            Instance instance = new Instance(dataset, name, days, distanceCost, dayCost, cost, truck);
-
-            // TODO: A voir si on change ici : les LinkedHashMap ne servent à rien dans
-            // l'instance reader
+            Instance instance = new Instance(dataset, name, days, technicianCost, truck, truckCost);
             for (Location location : locations.values())
                 instance.addLocation(location);
 
@@ -232,13 +226,25 @@ public class InstanceReader {
         line = line.replace("TRUCK_DAY_COST = ", "");
         int dayCost = Integer.parseInt(line);
 
-        line = br.readLine();
-        line = line.replace("TRUCK_COST = ", "");
-        int cost = Integer.parseInt(line);
-
-        Truck truck = new Truck(capacity, maxDistance, distanceCost, dayCost, cost);
+        Truck truck = new Truck(capacity, maxDistance, distanceCost, dayCost);
 
         return truck;
+    }
+
+    /**
+     * Read truckCost
+     * 
+     * @param br
+     * @return the truckCost
+     * @throws IOException
+     */
+    private int readTruckCost(BufferedReader br) throws IOException {
+        String line = br.readLine();
+        while (!line.contains("TRUCK_COST = "))
+            line = br.readLine();
+
+        line = line.replace("TRUCK_COST = ", "");
+        return Integer.parseInt(line);
     }
 
     /**
@@ -352,7 +358,8 @@ public class InstanceReader {
                 abilities.put(idMachine++, ability);
             }
 
-            Technician technician = new Technician(id, location, maxDistance, maxRequests, costs, abilities);
+            Technician technician = new Technician(id, location, maxDistance, maxRequests, distanceCost, dayCost,
+                    abilities);
             technicians.put(id, technician);
 
             scanner.close();

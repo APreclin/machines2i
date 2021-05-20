@@ -5,16 +5,11 @@ public class Machine {
     private int id;
     private int size;
     private int penaltyByDay;
-//TODO : supprimer deliverydate et installationdate car pas dans le modèle objet
-    private int deliveryDate;
-    private int installationDate;
 
     public Machine() {
         this.id = 0;
         this.size = 0;
         this.penaltyByDay = 0;
-        this.deliveryDate = 0;
-        this.installationDate = 0;
     }
 
     public Machine(int id, int size, int penaltyByDay) {
@@ -34,14 +29,6 @@ public class Machine {
 
     public int getPenaltyByDay() {
         return penaltyByDay;
-    }
-
-    public int getDeliveryDate() {
-        return deliveryDate;
-    }
-
-    public int getInstallationDate() {
-        return installationDate;
     }
 
     @Override
@@ -72,9 +59,7 @@ public class Machine {
         str += "----- Machine n°" + id + " -----\n\n";
         str += "ID : " + id + "\n";
         str += "Size : " + size + "\n";
-        str += "Penalty by day : " + penaltyByDay + "\n";
-        str += "Delivery date : " + deliveryDate + "\n";
-        str += "Installation date : " + installationDate + "\n\n";
+        str += "Penalty by day : " + penaltyByDay + "\n\n";
         str += "-----------------------\n";
         return str;
     }

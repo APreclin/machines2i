@@ -13,14 +13,14 @@ public class Location {
         this.id = 0;
         this.x = 0;
         this.y = 0;
-        this.roadsStartingBy = new HashMap<Location, Road>();
+        // this.roadsStartingBy = new HashMap<Location, Road>();
     }
 
     public Location(int id, int x, int y) {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.roadsStartingBy = new HashMap<>();
+        // this.roadsStartingBy = new HashMap<>();
     }
 
     public int getId() {
@@ -35,9 +35,10 @@ public class Location {
         return y;
     }
 
-    public HashMap<Location, Road> getRoadsStartingBy() {
-        return roadsStartingBy;
-    }
+    /*
+     * public HashMap<Location, Road> getRoadsStartingBy() { return roadsStartingBy;
+     * }
+     */
 
     /**
      * Get distance between this location and destination
@@ -123,7 +124,7 @@ public class Location {
         System.out.println(loc1.getDistanceTo(loc2));
 
         // Test de l'ajout de route
-        System.out.println(loc1.addRoad(loc2));
-        System.out.println(loc1.getRoadsStartingBy().toString());
+        // System.out.println(loc1.addRoad(loc2));
+        // System.out.println(loc1.getRoadsStartingBy().toString());
     }
 }

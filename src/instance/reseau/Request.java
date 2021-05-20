@@ -17,11 +17,7 @@ public class Request {
         this.machine = new Machine();
         this.firstDay = -1;
         this.lastDay = -1;
-        this.deliveryDate = -1;
-        this.installationDate = -1;
-        this.machine = new Machine();
         this.nbMachines = 0;
-        this.location = new Location();
         this.deliveryDate = -1;
         this.installationDate = -1;
     }
@@ -125,7 +121,6 @@ public class Request {
         return str;
     }
 
-    // TODO : nullPointerException ici
     public static void main(String[] args) {
 
         // Création d'une requête simple

@@ -2,6 +2,8 @@ package solution.solveur;
 
 import instance.Instance;
 import instance.reseau.Request;
+import io.InstanceReader;
+import io.exception.ReaderException;
 import solution.Solution;
 
 public class SolutionTriviale implements Solveur {
@@ -24,8 +26,13 @@ public class SolutionTriviale implements Solveur {
     }
 
     public static void main(String[] args) {
-        // TODO: test unitaire solutionTriviale
-
+        try {
+            InstanceReader reader = new InstanceReader();
+            Instance instance = reader.readInstance();
+            System.out.println(instance);
+        } catch (ReaderException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
 }
