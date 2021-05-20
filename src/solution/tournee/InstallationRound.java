@@ -25,6 +25,14 @@ public class InstallationRound extends Round {
         return requests.getLast();
     }
 
+    public Integer getCoveredDistance() {
+        return coveredDistance;
+    }
+
+    public void setCoveredDistance(Integer coveredDistance) {
+        this.coveredDistance = coveredDistance;
+    }
+
     public boolean setTechnician(Technician technician) {
         if (this.technician != null)
             return false;

@@ -8,7 +8,6 @@ import instance.reseau.Request;
 import instance.reseau.Technician;
 import solution.tournee.DeliveryRound;
 import solution.tournee.InstallationRound;
-import solution.tournee.Round;
 
 public class Solution {
     private Instance instance;
@@ -98,6 +97,7 @@ public class Solution {
 
         deliveryRounds.push(tempRound);
         totalCost += tempRound.getTotalCost();
+        truckDistance += tempRound.getCurrentDistance();
     }
 
     /**
@@ -114,6 +114,7 @@ public class Solution {
 
         installationRounds.push(tempRound);
         totalCost += tempRound.getTotalCost();
+        technicianDistance += tempRound.getCoveredDistance();
     }
 
     /**
@@ -126,10 +127,13 @@ public class Solution {
         if (deliveryRounds.isEmpty())
             return false;
 
-        for (Round t : deliveryRounds) {
-            int ancienCout = t.getTotalCost();
+        for (DeliveryRound t : deliveryRounds) {
+            int oldCost = t.getTotalCost();
+            int oldDistance = t.getCurrentDistance();
             if (t.addRequest(requestToAdd)) {
-                totalCost += t.getTotalCost() - ancienCout;
+                totalCost += t.getTotalCost() - oldCost;
+                truckDistance += t.getCurrentDistance() - oldDistance;
+
                 return true;
             }
         }
@@ -149,9 +153,12 @@ public class Solution {
             return false;
 
         for (InstallationRound t : installationRounds) {
-            int ancienCout = t.getTotalCost();
+            int oldCost = t.getTotalCost();
+            int oldDistance = t.getCoveredDistance();
             if (t.addRequest(requestToAdd)) {
-                totalCost += t.getTotalCost() - ancienCout;
+                totalCost += t.getTotalCost() - oldCost;
+                technicianDistance += t.getCoveredDistance() - oldDistance;
+
                 return true;
             }
         }
