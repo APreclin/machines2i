@@ -54,7 +54,6 @@ public abstract class Round {
     public String toString() {
         String str = "";
         str += "\n----- Round -----\n";
-        str += "Date : " + date + "\n";
         str += "Total Cost : " + totalCost + "\n";
         for (Request r : requests) {
             str += r.toString();

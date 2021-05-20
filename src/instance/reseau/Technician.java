@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import solution.Day;
 import solution.tournee.InstallationRound;
 
 public class Technician {
@@ -216,6 +217,7 @@ public class Technician {
         Request r1 = new Request(1, client1, 2, 7, m1, 1);
         Request r2 = new Request(2, client2, 5, 10, m2, 1);
         Request r3 = new Request(2, client2, 6, 10, m1, 1);
+        Day d = new Day(5);
 
         LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<>();
         abilities.put(1, true);
@@ -223,24 +225,24 @@ public class Technician {
 
         Technician tech1 = new Technician(1, maison1, 90, 2, 2, 50, abilities);
 
-        InstallationRound i1 = new InstallationRound(tech1, 5);
+        InstallationRound i1 = new InstallationRound(tech1, d);
         tech1.addInstallationRound(i1);
         System.out.println("tournée sans requêtes : " + i1);
         tech1.removeInstallationRound(i1);
 
-        InstallationRound i2 = new InstallationRound(tech1, 5);
+        InstallationRound i2 = new InstallationRound(tech1, d);
         tech1.addInstallationRound(i2);
         i2.addRequest(r1);
         System.out.println("tournée avec requête faisable : " + i2);
         tech1.removeInstallationRound(i2);
 
-        InstallationRound i3 = new InstallationRound(tech1, 5);
+        InstallationRound i3 = new InstallationRound(tech1, d);
         tech1.addInstallationRound(i3);
         i3.addRequest(r2);
         System.out.println("tournée avec requête infaisable par le technicien : " + i3);
         tech1.removeInstallationRound(i3);
 
-        InstallationRound i4 = new InstallationRound(tech1, 5);
+        InstallationRound i4 = new InstallationRound(tech1, d);
         tech1.addInstallationRound(i4);
         i3.addRequest(r3);
         System.out.println("tournée avec requête sur un mauvais jour : " + i4);
