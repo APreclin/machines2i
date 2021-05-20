@@ -182,7 +182,7 @@ public class Technician {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Technician n°" + id + "-----\n\n";
+        str += "\n----- Technician n°" + id + "-----\n";
         str += "ID : " + id + "\n";
         str += "Location n°" + id + "\n";
         str += "Maximum distance : " + maxDistance + "\n";
@@ -197,7 +197,7 @@ public class Technician {
          * (InstallationRound ir : installationRounds) str += ir.toString();
          */
         str += "\nNb consecutive installation round : " + nbConsecutiveInstallationRounds + "\n";
-        str += "\n-------------------------\n";
+        str += "-------------------------\n";
         return str;
     }
 
