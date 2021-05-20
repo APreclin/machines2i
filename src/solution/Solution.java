@@ -94,6 +94,7 @@ public class Solution {
     public void addRequestNewDeliveryRound(Request requestToAdd) {
         int date = requestToAdd.getFirstDay();
         Day newDay = new Day(date);
+        
         Day oldDay = days.put(date, newDay);
 
         if (oldDay != null) {
