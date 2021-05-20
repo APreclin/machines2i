@@ -96,25 +96,18 @@ public class Solution {
         Day newDay = new Day(date);
         Day oldDay = days.put(date, newDay);
 
-        if (oldDay == null) {
-            DeliveryRound tempRound = new DeliveryRound(instance, newDay);
-            tempRound.addRequest(requestToAdd);
-            days.get(date).addDeliveryRound(tempRound);
-            totalCost += tempRound.getTotalCost();
-            truckDistance += tempRound.getCurrentDistance();
-            nbTruckDays += 1;
-
-            return;
+        if(oldDay != null) {
+            days.put(date, oldDay);
+            newDay = oldDay;
         }
 
-        days.put(date, oldDay);
-        DeliveryRound tempRound = new DeliveryRound(instance, oldDay);
+        DeliveryRound tempRound = new DeliveryRound(instance, newDay);
         tempRound.addRequest(requestToAdd);
         days.get(date).addDeliveryRound(tempRound);
         totalCost += tempRound.getTotalCost();
         truckDistance += tempRound.getCurrentDistance();
         nbTruckDays += 1;
-    }
+}
 
     /**
      * Adds requestToAdd to a new InstallationRound. The new InstallationRound is
