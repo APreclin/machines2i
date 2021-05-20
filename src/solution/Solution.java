@@ -1,5 +1,6 @@
 package solution;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import instance.Instance;
@@ -12,9 +13,10 @@ import solution.tournee.DeliveryRound;
 import solution.tournee.InstallationRound;
 
 public class Solution {
+    private int idRound;
     private Instance instance;
-    private LinkedList<InstallationRound> installationRounds;
-    private LinkedList<DeliveryRound> deliveryRounds;
+    private LinkedHashMap<Integer, InstallationRound> installationRounds;
+    private LinkedHashMap<Integer, DeliveryRound> deliveryRounds;
     private Integer truckDistance;
     private Integer nbTruckDays;
     private Integer nbTrucksUsed;
@@ -25,6 +27,7 @@ public class Solution {
     private Integer totalCost;
 
     public Solution() {
+        idRound = 0;
         instance = new Instance();
         truckDistance = 0;
         nbTruckDays = 0;
@@ -34,8 +37,8 @@ public class Solution {
         nbTechniciansUsed = 0;
         idleMachineCosts = 0;
         totalCost = 0;
-        installationRounds = new LinkedList<InstallationRound>();
-        deliveryRounds = new LinkedList<DeliveryRound>();
+        installationRounds = new LinkedHashMap<Integer, InstallationRound>();
+        deliveryRounds = new LinkedHashMap<Integer, DeliveryRound>();
     }
 
     public Solution(Instance instanceToCopy) {
@@ -79,12 +82,12 @@ public class Solution {
         return instance;
     }
 
-    public LinkedList<DeliveryRound> getDeliveryRounds() {
-        return new LinkedList<DeliveryRound>(deliveryRounds);
+    public LinkedHashMap<Integer, DeliveryRound> getDeliveryRounds() {
+        return new LinkedHashMap<Integer, DeliveryRound>(deliveryRounds);
     }
 
-    public LinkedList<InstallationRound> getInstallationRounds() {
-        return new LinkedList<InstallationRound>(installationRounds);
+    public LinkedHashMap<Integer, InstallationRound> getInstallationRounds() {
+        return new LinkedHashMap<Integer, InstallationRound>(installationRounds);
     }
 
     /**
@@ -97,7 +100,7 @@ public class Solution {
         DeliveryRound tempRound = new DeliveryRound(instance);
         tempRound.addRequest(requestToAdd);
 
-        deliveryRounds.push(tempRound);
+        deliveryRounds.put(idRound, tempRound);
         totalCost += tempRound.getTotalCost();
         truckDistance += tempRound.getCurrentDistance();
     }
@@ -114,7 +117,7 @@ public class Solution {
         InstallationRound tempRound = new InstallationRound(technician, requestToAdd.getFirstDay());
         tempRound.addRequest(requestToAdd);
 
-        installationRounds.push(tempRound);
+        installationRounds.put(idRound, tempRound);
         totalCost += tempRound.getTotalCost();
         technicianDistance += tempRound.getCoveredDistance();
     }
@@ -129,7 +132,7 @@ public class Solution {
         if (deliveryRounds.isEmpty())
             return false;
 
-        for (DeliveryRound t : deliveryRounds) {
+        for (DeliveryRound t : deliveryRounds.values()) {
             int oldCost = t.getTotalCost();
             int oldDistance = t.getCurrentDistance();
             if (t.addRequest(requestToAdd)) {
@@ -153,7 +156,7 @@ public class Solution {
         if (installationRounds.isEmpty())
             return false;
 
-        for (InstallationRound t : installationRounds) {
+        for (InstallationRound t : installationRounds.values()) {
             int oldCost = t.getTotalCost();
             int oldDistance = t.getCoveredDistance();
             if (t.addRequest(requestToAdd)) {
@@ -176,7 +179,7 @@ public class Solution {
 
         int totalPenalities = 0;
 
-        for (InstallationRound ir : installationRounds) {
+        for (InstallationRound ir : installationRounds.values()) {
             for (Request r : ir.getRequests()) {
 
                 int penality = r.getMachine().getPenaltyByDay();
