@@ -6,6 +6,8 @@ import instance.Instance;
 import instance.reseau.Machine;
 import instance.reseau.Request;
 import instance.reseau.Technician;
+import io.InstanceReader;
+import io.exception.ReaderException;
 import solution.tournee.DeliveryRound;
 import solution.tournee.InstallationRound;
 
@@ -131,9 +133,8 @@ public class Solution {
             int oldCost = t.getTotalCost();
             int oldDistance = t.getCurrentDistance();
             if (t.addRequest(requestToAdd)) {
-                totalCost += t.getTotalCost() - oldCost;
+                totalCost += t.getTotalCost() - oldCost; // maj du cout (rempalcement de l'ancien)
                 truckDistance += t.getCurrentDistance() - oldDistance;
-
                 return true;
             }
         }
@@ -166,6 +167,31 @@ public class Solution {
         return false;
     }
 
+    /**
+     * Calculate the penalities by days and add them to the total cost
+     */
+    public void calculPenalities() {
+        if (installationRounds.isEmpty() || deliveryRounds.isEmpty())
+            return;
+
+        int totalPenalities = 0;
+
+        for (InstallationRound ir : installationRounds) {
+            for (Request r : ir.getRequests()) {
+
+                int penality = r.getMachine().getPenaltyByDay();
+                int deliveryDate = r.getDeliveryDate();
+                int installationDate = r.getInstallationDate();
+                int diff = installationDate - deliveryDate;
+
+                if (diff >= 2)
+                    totalPenalities += (diff - 1) * penality;
+            }
+        }
+
+        totalCost += totalPenalities;
+    }
+
     @Override
     public String toString() {
         return "Solution [deliveryRounds=" + deliveryRounds + ", idleMachineCosts=" + idleMachineCosts
@@ -173,6 +199,27 @@ public class Solution {
                 + nbTechniciansDays + ", nbTechniciansUsed=" + nbTechniciansUsed + ", nbTruckDays=" + nbTruckDays
                 + ", nbTrucksUsed=" + nbTrucksUsed + ", technicianDistance=" + technicianDistance + ", totalCost="
                 + totalCost + ", truckDistance=" + truckDistance + "]";
+    }
+
+    public static void main(String[] args) {
+        Instance i1 = new Instance();
+        try {
+            InstanceReader reader = new InstanceReader();
+            i1 = reader.readInstance();
+            System.out.println("Instance lue avec success !");
+        } catch (ReaderException ex) {
+            System.out.println(ex.getMessage());
+        }
+        Solution s1 = new Solution(i1);
+        for (Request r : i1.getRequests().values()) {
+            if (s1.addRequestExistingDeliveryRound(r)) {
+                s1.addRequestExistingInstallationRound(r);
+            } else {
+                s1.addRequestNewDeliveryRound(r);
+                s1.addRequestNewInstallationRound(r);
+            }
+        }
+        System.out.println(s1);
     }
 
 }

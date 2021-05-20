@@ -51,10 +51,10 @@ public class Location {
         if (destination == null)
             return Integer.MAX_VALUE;
 
-        int x = destination.getX() - this.getX();
-        int y = destination.getY() - this.getY();
+        int abs = destination.getX() - this.getX();
+        int ord = destination.getY() - this.getY();
 
-        return (int) Math.round(Math.sqrt((Math.pow(x, 2) + Math.pow(y, 2))));
+        return (int) Math.round(Math.sqrt((Math.pow(abs, 2) + Math.pow(ord, 2))));
     }
 
     /**
