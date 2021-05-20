@@ -96,7 +96,7 @@ public class Solution {
         Day newDay = new Day(date);
         Day oldDay = days.put(date, newDay);
 
-        if(oldDay != null) {
+        if (oldDay != null) {
             days.put(date, oldDay);
             newDay = oldDay;
         }
@@ -107,7 +107,7 @@ public class Solution {
         totalCost += tempRound.getTotalCost();
         truckDistance += tempRound.getCurrentDistance();
         nbTruckDays += 1;
-}
+    }
 
     /**
      * Adds requestToAdd to a new InstallationRound. The new InstallationRound is
@@ -118,24 +118,20 @@ public class Solution {
     public void addRequestNewInstallationRound(Request requestToAdd) {
         Machine machine = requestToAdd.getMachine();
         Technician technician = instance.getTechnician(machine);
-        InstallationRound tempRound = new InstallationRound(technician, requestToAdd.getFirstDay());
+        int date = requestToAdd.getFirstDay();
+        Day newDay = new Day(date);
+        Day oldDay = days.put(date, newDay);
+
+        if (oldDay != null) {
+            days.put(date, oldDay);
+            newDay = oldDay;
+        }
+
+        InstallationRound tempRound = new InstallationRound(technician, newDay);
         tempRound.addRequest(requestToAdd);
-
-        installationRounds.put(idRound++, tempRound);
-        addRoundByDay(idRound, tempRound.getDate());
-
+        days.get(date).addInstallationRound(tempRound);
         totalCost += tempRound.getTotalCost();
         technicianDistance += tempRound.getCoveredDistance();
-    }
-
-    private void addRoundByDay(int id, int date) {
-        if (roundsByDay.get(date) != null) {
-            roundsByDay.get(date).add(id);
-        } else {
-            LinkedList<Integer> liste = new LinkedList<Integer>();
-            liste.add(id);
-            roundsByDay.put(date, liste);
-        }
     }
 
     /**
@@ -187,28 +183,26 @@ public class Solution {
     }
 
     /**
-     * Calculate the penalities by days and add them to the total cost
+     * Calculate the penalties by days and add them to the total cost
      */
-    public void calculPenalities() {
-        if (installationRounds.isEmpty() || deliveryRounds.isEmpty())
-            return;
+    public void calculPenalties() {
+        int totalPenalties = 0;
 
-        int totalPenalities = 0;
+        for (Day day : days.values())
+            if (!day.getInstallationRounds().isEmpty())
+                for (InstallationRound ir : day.getInstallationRounds())
+                    for (Request r : ir.getRequests()) {
 
-        for (InstallationRound ir : installationRounds.values()) {
-            for (Request r : ir.getRequests()) {
+                        int penalty = r.getMachine().getPenaltyByDay();
+                        int deliveryDate = r.getDeliveryDate();
+                        int installationDate = r.getInstallationDate();
+                        int diff = installationDate - deliveryDate;
 
-                int penality = r.getMachine().getPenaltyByDay();
-                int deliveryDate = r.getDeliveryDate();
-                int installationDate = r.getInstallationDate();
-                int diff = installationDate - deliveryDate;
+                        if (diff >= 2)
+                            totalPenalties += (diff - 1) * penalty;
+                    }
 
-                if (diff >= 2)
-                    totalPenalities += (diff - 1) * penality;
-            }
-        }
-
-        totalCost += totalPenalities;
+        totalCost += totalPenalties;
     }
 
     /*
@@ -220,11 +214,10 @@ public class Solution {
 
     @Override
     public String toString() {
-        return "Solution [deliveryRounds=" + deliveryRounds + ", idleMachineCosts=" + idleMachineCosts
-                + ", installationRounds=" + installationRounds + ", instance=" + instance + ", nbTechniciansDays="
-                + nbTechniciansDays + ", nbTechniciansUsed=" + nbTechniciansUsed + ", nbTruckDays=" + nbTruckDays
-                + ", nbTrucksUsed=" + nbTrucksUsed + ", technicianDistance=" + technicianDistance + ", totalCost="
-                + totalCost + ", truckDistance=" + truckDistance + "]";
+        return "Solution [days=" + days + ", idleMachineCosts=" + idleMachineCosts + ", instance=" + instance
+                + ", nbTechniciansDays=" + nbTechniciansDays + ", nbTechniciansUsed=" + nbTechniciansUsed
+                + ", nbTruckDays=" + nbTruckDays + ", nbTrucksUsed=" + nbTrucksUsed + ", technicianDistance="
+                + technicianDistance + ", totalCost=" + totalCost + ", truckDistance=" + truckDistance + "]";
     }
 
     public static void main(String[] args) {
