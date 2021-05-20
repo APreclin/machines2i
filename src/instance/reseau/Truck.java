@@ -41,11 +41,11 @@ public class Truck {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Truck -----\n\n";
+        str += "\n----- Truck -----\n";
         str += "Capacity : " + capacity + "\n";
         str += "Max distance : " + maxDistance + "\n";
         str += "Distance cost : " + distanceCost + "\n";
-        str += "Day cost : " + dayCost + "\n\n";
+        str += "Day cost : " + dayCost + "\n";
         str += "-----------------\n";
         return str;
     }

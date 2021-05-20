@@ -127,13 +127,13 @@ public class DeliveryRound extends Round {
     @Override
     public String toString() {
         String str = "";
-        str += "\n----- Delivery Round -----\n\n";
+        str += "\n----- Delivery Round -----\n";
         str += "Current charge : " + currentCharge + "\n";
-        str += "Current distance : " + currentDistance + "\n\n";
-        str += depot + "\n";
-        str += truck + "\n";
+        str += "Current distance : " + currentDistance + "\n";
+        str += depot;
+        str += truck;
         str += super.toString();
-        str += "--------------------------\n\n";
+        str += "--------------------------\n";
         return str;
     }
 

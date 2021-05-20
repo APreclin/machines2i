@@ -60,12 +60,12 @@ public abstract class Round {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Round -----\n\n";
+        str += "\n----- Round -----\n";
         str += "Date : " + date + "\n";
+        str += "Total Cost : " + totalCost + "\n";
         for (Request r : requests) {
             str += r.toString();
         }
-        str += "Total Cost : " + totalCost + "\n\n";
         str += "-----------------\n";
         return str;
     }
