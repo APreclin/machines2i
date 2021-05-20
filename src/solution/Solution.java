@@ -145,19 +145,22 @@ public class Solution {
      * @return whether the requestToAdd was added or not
      */
     public boolean addRequestExistingDeliveryRound(Request requestToAdd) {
-        if (deliveryRounds.isEmpty())
+        if (days.isEmpty())
             return false;
 
-        for (DeliveryRound t : deliveryRounds.values()) {
-            int oldCost = t.getTotalCost();
-            int oldDistance = t.getCurrentDistance();
-            if (t.addRequest(requestToAdd)) {
-                totalCost += t.getTotalCost() - oldCost; // maj du cout (rempalcement de l'ancien)
-                truckDistance += t.getCurrentDistance() - oldDistance;
-                return true;
+        for (Day d : days.values()) {
+            if (d.getDeliveryRounds().isEmpty())
+                return false;
+            for (DeliveryRound t : d.getDeliveryRounds()) {
+                int oldCost = t.getTotalCost();
+                int oldDistance = t.getCurrentDistance();
+                if (t.addRequest(requestToAdd)) {
+                    totalCost += t.getTotalCost() - oldCost; // maj du cout (rempalcement de l'ancien)
+                    truckDistance += t.getCurrentDistance() - oldDistance;
+                    return true;
+                }
             }
         }
-
         return false;
     }
 
@@ -169,17 +172,21 @@ public class Solution {
      * @return whether the requestToAdd was added or not
      */
     public boolean addRequestExistingInstallationRound(Request requestToAdd) {
-        if (installationRounds.isEmpty())
+        if (days.isEmpty())
             return false;
 
-        for (InstallationRound t : installationRounds.values()) {
-            int oldCost = t.getTotalCost();
-            int oldDistance = t.getCoveredDistance();
-            if (t.addRequest(requestToAdd)) {
-                totalCost += t.getTotalCost() - oldCost;
-                technicianDistance += t.getCoveredDistance() - oldDistance;
+        for (Day d : days.values()) {
+            if (d.getDeliveryRounds().isEmpty())
+                return false;
+            for (InstallationRound t : d.getInstallationRounds()) {
+                int oldCost = t.getTotalCost();
+                int oldDistance = t.getCoveredDistance();
+                if (t.addRequest(requestToAdd)) {
+                    totalCost += t.getTotalCost() - oldCost;
+                    technicianDistance += t.getCoveredDistance() - oldDistance;
 
-                return true;
+                    return true;
+                }
             }
         }
 

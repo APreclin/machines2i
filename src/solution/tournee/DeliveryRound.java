@@ -43,6 +43,10 @@ public class DeliveryRound extends Round {
         this.deliveryDay = deliveryDay;
     }
 
+    public Day getDeliverDay() {
+        return deliveryDay;
+    }
+
     public int getCurrentDistance() {
         return currentDistance;
     }
