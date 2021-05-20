@@ -5,12 +5,14 @@ import instance.reseau.Location;
 import instance.reseau.Machine;
 import instance.reseau.Request;
 import instance.reseau.Truck;
+import solution.Day;
 
 public class DeliveryRound extends Round {
     private Truck truck;
     private Location depot;
     private int currentCharge;
     private int currentDistance;
+    private Day deliveryDay;
 
     public DeliveryRound() {
         super();
@@ -19,24 +21,26 @@ public class DeliveryRound extends Round {
         this.currentDistance = 0;
     }
 
-    public DeliveryRound(Truck truck, Location depot, int date) {
-        super(date);
+    public DeliveryRound(Truck truck, Location depot, Day deliveryDay) {
+        super();
         this.setTruck(truck);
         this.depot = depot;
         this.currentCharge = 0;
         this.currentDistance = 0;
+        this.deliveryDay = deliveryDay;
     }
 
     /*
-     * public DeliveryRound(LinkedList<Request> requests, int date) {
-     * super(requests, date); }
+     * public DeliveryRound(LinkedList<Request> requests, int deliveryDay) {
+     * super(requests, deliveryDay); }
      */
 
-    public DeliveryRound(Instance instanceToCopy, int date) {
-        super(date);
-        truck = instanceToCopy.getTruck();
-        depot = instanceToCopy.getDepot();
-        currentCharge = 0;
+    public DeliveryRound(Instance instanceToCopy, Day deliveryDay) {
+        super();
+        this.truck = instanceToCopy.getTruck();
+        this.depot = instanceToCopy.getDepot();
+        this.currentCharge = 0;
+        this.deliveryDay = deliveryDay;
     }
 
     public int getCurrentDistance() {
@@ -94,7 +98,7 @@ public class DeliveryRound extends Round {
             this.requests.add(request);
             this.currentCharge += requestSize;
             this.currentDistance += locationToDepotRoundTrip;
-            request.setDeliveryDate(this.date);
+            request.setDeliverydeliveryDay(this.deliveryDay.getDate());
             this.totalCost += this.currentDistance * truckDistanceCost;
 
             return true;
@@ -111,7 +115,7 @@ public class DeliveryRound extends Round {
 
         this.currentCharge += requestSize;
         this.currentDistance += newDistance;
-        request.setDeliveryDate(this.date);
+        request.setDeliverydeliveryDay(this.deliveryDay.getDate());
         this.requests.add(request);
         this.totalCost += this.currentDistance * truckDistanceCost - lastDistance;
 
@@ -146,7 +150,8 @@ public class DeliveryRound extends Round {
         // Création d'une delivery round simple
         Location depot = new Location(0, 0, 0);
         Truck truck = new Truck(20, 50, 2, 100);
-        DeliveryRound dr = new DeliveryRound(truck, depot);
+        Day deliveryDay = new Day(0)
+        DeliveryRound dr = new DeliveryRound(truck, depot, deliveryDay);
         // System.out.println(dr.toString());
 
         // Ajout d'une requete qui dépasse la capacité du camion

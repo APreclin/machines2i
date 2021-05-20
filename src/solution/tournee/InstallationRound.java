@@ -5,16 +5,17 @@ import instance.reseau.Location;
 import instance.reseau.Machine;
 import instance.reseau.Request;
 import instance.reseau.Technician;
+import solution.Day;
 
 public class InstallationRound extends Round {
-
     private Technician technician;
     private Integer coveredDistance;
+    private Day installationDay;
 
-    public InstallationRound(Technician technician, int date) {
+    public InstallationRound(Technician technician, Day day) {
         super();
         this.setTechnician(technician);
-        this.date = date;
+        this.installationDay = day;
         this.coveredDistance = 0;
     }
 
@@ -87,7 +88,7 @@ public class InstallationRound extends Round {
     }
 
     private void doAddRequest(Request request, int distance) {
-        request.setInstallationDate(this.date);
+        request.setInstallationDate(this.installationDay.getDate());
         this.requests.push(request);
         this.coveredDistance += distance;
         this.totalCost += distance * this.technician.getDistanceCost();

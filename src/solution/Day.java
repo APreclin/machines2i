@@ -11,6 +11,10 @@ public class Day {
     private HashSet<InstallationRound> installationRounds;
     private HashSet<DeliveryRound> deliveryRounds;
 
+    public Day() {
+        this.date = -1;
+    }
+
     public Day(int date) {
         this.date = date;
     }

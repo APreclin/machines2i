@@ -6,23 +6,19 @@ import instance.reseau.Request;
 
 public abstract class Round {
 
-    private int id;
     protected LinkedList<Request> requests;
     protected int totalCost;
-    protected int date;
 
     public abstract boolean addRequest(Request request);
 
     protected Round() {
         requests = new LinkedList<Request>();
-        totalCost = 0;
-        date = -1;
+        this.totalCost = 0;
     }
 
-    protected Round(LinkedList<Request> requests, int date) {
+    protected Round(LinkedList<Request> requests) {
         this();
         this.requests = requests;
-        this.date = date;
     }
 
     public LinkedList<Request> getRequests() {
@@ -31,10 +27,6 @@ public abstract class Round {
 
     public int getTotalCost() {
         return totalCost;
-    }
-
-    public int getDate() {
-        return date;
     }
 
     /**
