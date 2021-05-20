@@ -120,7 +120,6 @@ public class InstallationRound extends Round {
             return false;
 
         return true;
-
     }
 
     @Override
@@ -143,7 +142,7 @@ public class InstallationRound extends Round {
         abilities.put(2, true);
 
         Technician t = new Technician(1, home, 20, 4, 20, 10, abilities);
-        InstallationRound ir = new InstallationRound(t, 5);
+        InstallationRound ir = new InstallationRound(t, new Day(5));
         // System.out.println(ir.toString());
 
         // Le technicien ne sait pas installer cette machine (false)

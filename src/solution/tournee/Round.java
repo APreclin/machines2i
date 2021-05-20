@@ -29,32 +29,10 @@ public abstract class Round {
         return totalCost;
     }
 
-    /**
-     * Check if the date of this round follows the date of otherRound
-     * 
-     * @param otherRound
-     * @return whether the date of this round follows the date of otherRound or not
-     */
-    public boolean follows(Round otherRound) {
-        return getDateDiff(otherRound) == 1;
-    }
-
-    /**
-     * Calculates and return the difference between otherRound's date and this
-     * round's date
-     * 
-     * @param otherRound
-     * @return The difference between otherRound's date and this round's date
-     */
-    public int getDateDiff(Round otherRound) {
-        return this.date - otherRound.getDate();
-    }
-
     @Override
     public String toString() {
         String str = "";
         str += "\n----- Round -----\n";
-        str += "Date : " + date + "\n";
         str += "Total Cost : " + totalCost + "\n";
         for (Request r : requests) {
             str += r.toString();
