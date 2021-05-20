@@ -1,7 +1,6 @@
 package solution;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 
 import instance.Instance;
 import instance.reseau.Machine;
@@ -14,7 +13,6 @@ import solution.tournee.DeliveryRound;
 import solution.tournee.InstallationRound;
 
 public class Solution {
-    private int idRound;
     private Instance instance;
     private LinkedHashMap<Integer, Day> days;
     private Integer truckDistance;
@@ -27,7 +25,6 @@ public class Solution {
     private Integer totalCost;
 
     public Solution() {
-        idRound = 0;
         instance = new Instance();
         truckDistance = 0;
         nbTruckDays = 0;
