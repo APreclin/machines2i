@@ -66,8 +66,8 @@ public class SolutionWriter {
 
                     if (!deliveryRounds.isEmpty())
                         for (DeliveryRound deliveryRound : deliveryRounds) {
-                            // bw.write(String.valueOf(deliveryRound.getTruck()));
-                            // bw.write(" ");
+                            bw.write(String.valueOf(deliveryRound.getTruck().getId()));
+                            bw.write(" ");
                             for (Request request : deliveryRound.getRequests()) {
                                 bw.write(String.valueOf(request.getId()));
                                 bw.write(" ");
