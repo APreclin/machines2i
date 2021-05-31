@@ -37,7 +37,7 @@ public class SolutionTriviale implements Solveur {
             InstanceReader reader = new InstanceReader();
             Instance instance = reader.readInstance();
             SolutionTriviale sol = new SolutionTriviale();
-            sol.solve(instance);
+            System.out.println(sol.solve(instance));
         } catch (ReaderException ex) {
             System.out.println(ex.getMessage());
         }

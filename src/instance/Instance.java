@@ -87,6 +87,10 @@ public class Instance {
         return new LinkedHashMap<Integer, Request>(requests);
     }
 
+    public LinkedHashMap<Integer, Truck> getTrucks() {
+        return new LinkedHashMap<Integer, Truck>(trucks);
+    }
+
     public Truck getTruckModel() {
         return truckModel;
     }

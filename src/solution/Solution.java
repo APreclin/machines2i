@@ -129,7 +129,7 @@ public class Solution {
         days.get(date).addDeliveryRound(tempRound);
         totalCost += tempRound.getTotalCost();
         truckDistance += tempRound.getCurrentDistance();
-        nbTruckDays += 1;
+        nbTruckDays++;
     }
 
     /**
@@ -159,11 +159,12 @@ public class Solution {
                     // update du cout
                     totalCost += tempRound.getTotalCost();
                     technicianDistance += tempRound.getCoveredDistance();
+                    nbTechniciansDays++;
                     return;
                 }
             }
         }
-        
+
     }
 
     /**
