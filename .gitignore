@@ -1,6 +1,9 @@
 # Instances
 instances/
 
+#solutions
+*_sol.txt
+
 # Compiled class file
 *.class
 
