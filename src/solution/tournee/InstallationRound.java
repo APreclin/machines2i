@@ -61,6 +61,10 @@ public class InstallationRound extends Round {
         if (request == null || technician == null)
             return false;
 
+        if (installationDay.getDate() <= request.getDeliveryDate())
+            // l'installation ne peut pas se faire avant ou le même jour que la livraison
+            return false;
+
         boolean checkMachineComp = this.checkMachineComp(request);
 
         if (requests.isEmpty()) {
