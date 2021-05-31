@@ -35,9 +35,9 @@ public class DeliveryRound extends Round {
      * super(requests, deliveryDay); }
      */
 
-    public DeliveryRound(Instance instanceToCopy, Day deliveryDay) {
+    public DeliveryRound(Truck truck, Instance instanceToCopy, Day deliveryDay) {
         super();
-        this.truck = instanceToCopy.getTruck();
+        this.truck = truck;
         this.depot = instanceToCopy.getDepot();
         this.currentCharge = 0;
         this.deliveryDay = deliveryDay;
@@ -154,7 +154,7 @@ public class DeliveryRound extends Round {
 
         // Création d'une delivery round simple
         Location depot = new Location(0, 0, 0);
-        Truck truck = new Truck(20, 50, 2, 100);
+        Truck truck = new Truck(1, 20, 50, 2, 100);
         Day deliveryDay = new Day(0);
         DeliveryRound dr = new DeliveryRound(truck, depot, deliveryDay);
         // System.out.println(dr.toString());

@@ -20,7 +20,8 @@ public class Instance {
     private LinkedHashMap<Integer, Location> locations;
     private LinkedHashMap<Integer, Machine> machines;
     private LinkedHashMap<Integer, Request> requests;
-    private Truck truck;
+    private LinkedHashMap<Integer, Truck> trucks;
+    private Truck truckModel;
 
     public Instance() {
         this.dataset = "";
@@ -32,7 +33,8 @@ public class Instance {
         this.locations = new LinkedHashMap<Integer, Location>();
         this.machines = new LinkedHashMap<Integer, Machine>();
         this.requests = new LinkedHashMap<Integer, Request>();
-        this.truck = new Truck();
+        this.trucks = new LinkedHashMap<Integer, Truck>();
+        this.truckModel = new Truck();
     }
 
     public Instance(String dataset, String name, int days, int technicianCost, Truck truck, int truckCost) {
@@ -46,7 +48,7 @@ public class Instance {
         this.locations = new LinkedHashMap<Integer, Location>();
         this.machines = new LinkedHashMap<Integer, Machine>();
         this.requests = new LinkedHashMap<Integer, Request>();
-        this.truck = truck;
+        this.truckModel = truck;
     }
 
     public String getDataset() {
@@ -85,8 +87,8 @@ public class Instance {
         return new LinkedHashMap<Integer, Request>(requests);
     }
 
-    public Truck getTruck() {
-        return truck;
+    public Truck getTruckModel() {
+        return truckModel;
     }
 
     public Location getDepot() {
@@ -130,6 +132,26 @@ public class Instance {
             return true;
 
         this.locations.put(id, tempLocation);
+
+        return false;
+    }
+
+    /**
+     * Add Truck if not already in trucks HashMap
+     * 
+     * @param truck the truck we want to add
+     * @return wheter the truck has been added or not to our trucks HashMap
+     */
+    public boolean addTruck(Truck truck) {
+        if (truck == null)
+            return false;
+
+        int id = truck.getID();
+        Truck truckTemp = this.trucks.put(id, truck);
+        if (truckTemp == null)
+            return true;
+
+        this.trucks.put(id, truck);
 
         return false;
     }
@@ -220,7 +242,7 @@ public class Instance {
         str += "Dataset : " + dataset + "\n";
         str += "Name : " + name + "\n";
         str += "Days : " + days + "\n\n";
-        str += truck.toString();
+        str += truckModel.toString();
         str += "Technician Cost : " + technicianCost + "\n";
         str += "Truck Cost : " + truckCost + "\n\n";
         str += "Liste des machines : \n\n";

@@ -24,6 +24,7 @@ public class Solution {
     private Integer nbTechniciansUsed;
     private Integer idleMachineCosts;
     private Integer totalCost;
+    private Integer idTrucks = 0;
 
     public Solution() {
         instance = new Instance();
@@ -112,6 +113,8 @@ public class Solution {
     public void addRequestNewDeliveryRound(Request requestToAdd) {
         int date = requestToAdd.getFirstDay();
         Day newDay = new Day(date);
+        Truck truck = new Truck(++idTrucks, instance.getTruckModel());
+        instance.addTruck(truck);
 
         Day oldDay = days.put(date, newDay);
 
@@ -120,7 +123,7 @@ public class Solution {
             newDay = oldDay;
         }
 
-        DeliveryRound tempRound = new DeliveryRound(instance, newDay);
+        DeliveryRound tempRound = new DeliveryRound(truck, instance, newDay);
         tempRound.addRequest(requestToAdd);
         days.get(date).addDeliveryRound(tempRound);
         totalCost += tempRound.getTotalCost();
@@ -237,7 +240,7 @@ public class Solution {
     public boolean isTruckUsed(Truck truck) {
         HashSet<DeliveryRound> deliveryRounds = this.getDeliveryRounds();
         for (DeliveryRound dr : deliveryRounds) {
-            if(dr.getTruck().equals(truck))
+            if (dr.getTruck().equals(truck))
                 return true;
         }
         return false;
