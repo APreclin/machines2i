@@ -10,11 +10,15 @@ public class Day {
 
     private HashSet<InstallationRound> installationRounds;
     private HashSet<DeliveryRound> deliveryRounds;
+    private int maxNbTruck;
+    private int maxNbTechnician;
 
     public Day() {
         this.date = -1;
         deliveryRounds = new HashSet<>();
         installationRounds = new HashSet<>();
+        this.maxNbTechnician = 0;
+        this.maxNbTruck = 0;
     }
 
     public Day(int date) {

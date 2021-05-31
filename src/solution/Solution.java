@@ -129,7 +129,7 @@ public class Solution {
         days.get(date).addDeliveryRound(tempRound);
         totalCost += tempRound.getTotalCost();
         truckDistance += tempRound.getCurrentDistance();
-        nbTruckDays += 1;
+        nbTruckDays++;
     }
 
     /**
@@ -143,23 +143,25 @@ public class Solution {
         HashMap<Integer, Technician> technicians = instance.getTechnicians(machine);
         int date = requestToAdd.getFirstDay();
 
-        for (int dateInc = 1 ; dateInc < instance.getDays() ; dateInc++) {
+        for (int dateInc = 1; dateInc < instance.getDays(); dateInc++) {
             // Test sur tous les jours de l'horizon tant qu'on ne trouve pas
             for (Technician tech : technicians.values()) {
-                // Test d'une nouvelle tournée avec tous les techniciens possibles tant qu'on ne trouve pas
-            
+                // Test d'une nouvelle tournée avec tous les techniciens possibles tant qu'on ne
+                // trouve pas
+
                 Day newDay = newDay(dateInc);
-                
+
                 InstallationRound tempRound = new InstallationRound(tech, newDay);
                 if (tempRound.addRequest(requestToAdd)) {
                     days.get(date).addInstallationRound(tempRound);
                     totalCost += tempRound.getTotalCost();
                     technicianDistance += tempRound.getCoveredDistance();
+                    nbTechniciansDays++;
                     return;
                 }
             }
         }
-        
+
     }
 
     /**
@@ -217,7 +219,7 @@ public class Solution {
         return false;
     }
 
-    private Day newDay (int date) {
+    private Day newDay(int date) {
         Day newDay = new Day(date);
         Day oldDay = days.put(date, newDay);
 
