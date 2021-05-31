@@ -80,7 +80,6 @@ public class Technician {
         // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
         if (installationRounds.isEmpty()) {
             this.installationRounds.push(installationRoundGiven);
-
             return true;
         }
 

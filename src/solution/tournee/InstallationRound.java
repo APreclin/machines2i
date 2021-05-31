@@ -30,6 +30,13 @@ public class InstallationRound extends Round {
         return requests.getLast();
     }
 
+    private Location getLastLocation() {
+        if (requests.isEmpty())
+            return technician.getHome();
+
+        return requests.getLast().getLocation();
+    }
+
     public Integer getCoveredDistance() {
         return coveredDistance;
     }
@@ -70,33 +77,46 @@ public class InstallationRound extends Round {
             return false;
 
         boolean checkMachineComp = this.checkMachineComp(request);
+        //TODO : modifier le calcul des distances pour prendre en compte de la requete vers la maison
+        int technicianMaxDistance = this.technician.getMaxDistance();
+        Location requestLocation = request.getLocation();
+        int requestLocationToHome = returnToHome(requestLocation);
 
         if (requests.isEmpty()) {
-            if (!checkMachineComp)
+            int locationToHomeTrip = requestLocationToHome * 2;
+            if (!checkMachineComp || locationToHomeTrip > technicianMaxDistance)
                 return false;
 
-            Location techHome = this.technician.getHome();
-            Location requestLocation = request.getLocation();
-            int distToTechHome = techHome.getDistanceTo(requestLocation);
-
-            doAddRequest(request, distToTechHome);
+            doAddRequest(request, requestLocationToHome * 2);
 
             return true;
         }
 
-        int techMaxDistance = this.technician.getMaxDistance();
         int techMaxRequests = this.technician.getMaxRequests();
-        int distToLastRequest = this.getLastRequest().getDistanceTo(request);
+        Location lastLocation = this.requests.getLast().getLocation();
+        int lastLocationToRequestLocation = lastLocation.getDistanceTo(requestLocation);
+        int lastLocationToHome = returnToHome(lastLocation);
+        int newDistance = lastLocationToRequestLocation - lastLocationToHome + requestLocationToHome;
 
-        boolean isDistanceRespected = this.coveredDistance + distToLastRequest <= techMaxDistance;
+        boolean isDistanceRespected = (newDistance + this.coveredDistance <= technicianMaxDistance);
         boolean isNbRequestsRespected = this.requests.size() < techMaxRequests;
 
         if (!isNbRequestsRespected || !isDistanceRespected || !checkMachineComp)
             return false;
 
-        doAddRequest(request, distToLastRequest);
+        doAddRequest(request, newDistance);
 
         return true;
+    }
+
+    /**
+     * Distance between location and the depot
+     * 
+     * @param location
+     * @return the distance between location and the depot
+     */
+    public int returnToHome(Location location) {
+        return location.getDistanceTo(this.technician.getHome());
     }
 
     private void doAddRequest(Request request, int distance) {
@@ -105,14 +125,6 @@ public class InstallationRound extends Round {
         this.coveredDistance += distance;
         this.totalCost += distance * this.technician.getDistanceCost();
     }
-
-    /*
-     * private void doAddRequest(Request request) { int distanceCost =
-     * this.requests.getLast().getDistanceTo(request); this.requests.push(request);
-     * request.setInstallationDate(this.date); // maj de la date au niveau de la
-     * requete this.totalCost += distanceCost; //ajout du cout en fonction de la
-     * distance }
-     */
 
     /**
      * Check if the technician is able to install the machine specified in the
