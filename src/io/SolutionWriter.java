@@ -66,6 +66,8 @@ public class SolutionWriter {
 
                     if (!deliveryRounds.isEmpty())
                         for (DeliveryRound deliveryRound : deliveryRounds) {
+                            // bw.write(String.valueOf(deliveryRound.getTruck()));
+                            // bw.write(" ");
                             for (Request request : deliveryRound.getRequests()) {
                                 bw.write(String.valueOf(request.getId()));
                                 bw.write(" ");
@@ -78,6 +80,8 @@ public class SolutionWriter {
 
                     if (!installationRounds.isEmpty())
                         for (InstallationRound installationRound : installationRounds) {
+                            bw.write(String.valueOf(installationRound.getTechnician().getId()));
+                            bw.write(" ");
                             for (Request request : installationRound.getRequests()) {
                                 bw.write(String.valueOf(request.getId()));
                                 bw.write(" ");
