@@ -1,5 +1,6 @@
 package solution;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
@@ -139,21 +140,26 @@ public class Solution {
      */
     public void addRequestNewInstallationRound(Request requestToAdd) {
         Machine machine = requestToAdd.getMachine();
-        Technician technician = instance.getTechnician(machine);
+        HashMap<Integer, Technician> technicians = instance.getTechnicians(machine);
         int date = requestToAdd.getFirstDay();
-        Day newDay = new Day(date);
-        Day oldDay = days.put(date, newDay);
 
-        if (oldDay != null) {
-            days.put(date, oldDay);
-            newDay = oldDay;
+        for (int dateInc = 1 ; dateInc < instance.getDays() ; dateInc++) {
+            // Test sur tous les jours de l'horizon tant qu'on ne trouve pas
+            for (Technician tech : technicians.values()) {
+                // Test d'une nouvelle tournée avec tous les techniciens possibles tant qu'on ne trouve pas
+            
+                Day newDay = newDay(dateInc);
+                
+                InstallationRound tempRound = new InstallationRound(tech, newDay);
+                if (tempRound.addRequest(requestToAdd)) {
+                    days.get(date).addInstallationRound(tempRound);
+                    totalCost += tempRound.getTotalCost();
+                    technicianDistance += tempRound.getCoveredDistance();
+                    return;
+                }
+            }
         }
-
-        InstallationRound tempRound = new InstallationRound(technician, newDay);
-        tempRound.addRequest(requestToAdd);
-        days.get(date).addInstallationRound(tempRound);
-        totalCost += tempRound.getTotalCost();
-        technicianDistance += tempRound.getCoveredDistance();
+        
     }
 
     /**
@@ -209,6 +215,17 @@ public class Solution {
         }
 
         return false;
+    }
+
+    private Day newDay (int date) {
+        Day newDay = new Day(date);
+        Day oldDay = days.put(date, newDay);
+
+        if (oldDay != null) {
+            days.put(date, oldDay);
+            newDay = oldDay;
+        }
+        return newDay;
     }
 
     /**
