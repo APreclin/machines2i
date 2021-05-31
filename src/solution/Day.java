@@ -10,15 +10,15 @@ public class Day {
 
     private HashSet<InstallationRound> installationRounds;
     private HashSet<DeliveryRound> deliveryRounds;
-    private int maxNbTruck;
-    private int maxNbTechnician;
+    private int nbTruck;
+    private int nbTechnician;
 
     public Day() {
         this.date = -1;
         deliveryRounds = new HashSet<>();
         installationRounds = new HashSet<>();
-        this.maxNbTechnician = 0;
-        this.maxNbTruck = 0;
+        this.nbTechnician = 0;
+        this.nbTruck = 0;
     }
 
     public Day(int date) {
@@ -28,6 +28,14 @@ public class Day {
 
     public int getDate() {
         return date;
+    }
+
+    public int getNbTruck() {
+        return nbTruck;
+    }
+
+    public int getNbTechnician() {
+        return nbTechnician;
     }
 
     public HashSet<InstallationRound> getInstallationRounds() {
@@ -65,5 +73,13 @@ public class Day {
      */
     public boolean follows(Day otherDay) {
         return getDateDiff(otherDay) == 1;
+    }
+
+    public void addTruck() {
+        nbTruck++;
+    }
+
+    public void addTechnician() {
+        this.nbTechnician++;
     }
 }

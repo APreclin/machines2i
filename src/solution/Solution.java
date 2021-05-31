@@ -129,7 +129,10 @@ public class Solution {
         days.get(date).addDeliveryRound(tempRound);
         totalCost += tempRound.getTotalCost();
         truckDistance += tempRound.getCurrentDistance();
+        totalCost += instance.getTruckCost();
+        totalCost += truck.getDayCost();
         nbTruckDays++;
+        newDay.addTruck();
     }
 
     /**
@@ -142,14 +145,15 @@ public class Solution {
         Machine machine = requestToAdd.getMachine();
         HashMap<Integer, Technician> technicians = instance.getTechnicians(machine);
 
-        for (int dateInc = requestToAdd.getDeliveryDate()+1 ; dateInc < requestToAdd.getLastDay() ; dateInc++) {
+        for (int dateInc = requestToAdd.getDeliveryDate() + 1; dateInc < requestToAdd.getLastDay(); dateInc++) {
             // Test sur tous les jours de l'horizon tant qu'on ne trouve pas
             for (Technician tech : technicians.values()) {
-                // Test d'une nouvelle tournée avec tous les techniciens possibles tant qu'on ne trouve pas
-            
+                // Test d'une nouvelle tournée avec tous les techniciens possibles tant qu'on ne
+                // trouve pas
+
                 // l'objet jour ne sera ajouté que si il contient une tournée valide
                 Day newDay = new Day(dateInc);
-                
+
                 // Création d'une tournée temporaire de test
                 InstallationRound tempRound = new InstallationRound(tech, newDay);
                 if (tempRound.addRequest(requestToAdd)) {
@@ -160,6 +164,8 @@ public class Solution {
                     totalCost += tempRound.getTotalCost();
                     technicianDistance += tempRound.getCoveredDistance();
                     nbTechniciansDays++;
+                    totalCost += instance.getTechnicianCost();
+                    newDay.addTechnician();
                     return;
                 }
             }
@@ -186,7 +192,7 @@ public class Solution {
                 if (t.addRequest(requestToAdd)) {
                     totalCost += t.getTotalCost() - oldCost; // maj du cout (rempalcement de l'ancien)
                     truckDistance += t.getCurrentDistance() - oldDistance;
-                    return true; 
+                    return true;
                 }
             }
         }
@@ -223,10 +229,11 @@ public class Solution {
     }
 
     /*
-    *   Add a Day to the days list of the current Solution (means that the day has at least one valid round)
-    *   !! Bien récupérer la valeur lors de l'appel : newDay = addDay(newDay);
-    */
-    private Day addDay (Day d) {
+     * Add a Day to the days list of the current Solution (means that the day has at
+     * least one valid round) !! Bien récupérer la valeur lors de l'appel : newDay =
+     * addDay(newDay);
+     */
+    private Day addDay(Day d) {
         Day oldDay = days.put(d.getDate(), d);
 
         if (oldDay != null) {
@@ -256,6 +263,7 @@ public class Solution {
                             totalPenalties += (diff - 1) * penalty;
                     }
 
+        this.idleMachineCosts = totalPenalties;
         totalCost += totalPenalties;
     }
 
@@ -269,6 +277,42 @@ public class Solution {
                 return true;
         }
         return false;
+    }
+
+    /**
+     * Retourne le nobmre maximal de camions utilisés en une journée
+     * 
+     * @return
+     */
+    public void getMaxTruckDays() {
+        int maxNbTruck = 0;
+
+        for (Day d : days.values()) {
+            int trucksPerDay = d.getNbTruck();
+
+            if (trucksPerDay > maxNbTruck)
+                maxNbTruck = trucksPerDay;
+        }
+
+        this.nbTrucksUsed = maxNbTruck;
+    }
+
+    /**
+     * Retourne le nobmre maximal de techniciens utilisés en une journée
+     * 
+     * @return
+     */
+    public void getMaxTechnicianDays() {
+        int maxNbTechnician = 0;
+
+        for (Day d : days.values()) {
+            int techniciansPerDay = d.getNbTechnician();
+
+            if (techniciansPerDay > maxNbTechnician)
+                maxNbTechnician = techniciansPerDay;
+        }
+
+        this.nbTechniciansUsed = maxNbTechnician;
     }
 
     @Override

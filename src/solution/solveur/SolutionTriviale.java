@@ -19,6 +19,9 @@ public class SolutionTriviale implements Solveur {
                 sol.addRequestNewInstallationRound(r);
 
             sol.calculPenalties();
+            sol.getMaxTechnicianDays();
+            sol.getMaxTruckDays();
+
         }
 
         SolutionWriter sw = new SolutionWriter(instance, sol);

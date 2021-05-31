@@ -43,6 +43,14 @@ public class SolutionWriter {
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write("DATASET = " + instance.getDataset() + "\n");
             bw.write("NAME = " + instance.getName() + "\n");
+            bw.write("TRUCK_DISTANCE = " + solution.getTruckDistance() + "\n");
+            bw.write("NUMBER_OF_TRUCK_DAYS = " + solution.getNbTruckDays() + "\n");
+            bw.write("NUMBER_OF_TRUCKS_USED = " + solution.getNbTrucksUsed() + "\n");
+            bw.write("TECHNICIAN_DISTANCE = " + solution.getTechnicianDistance() + "\n");
+            bw.write("NUMBER_OF_TECHNICIAN_DAYS = " + solution.getNbTechniciansDays() + "\n");
+            bw.write("NUMBER_OF_TECHNICIANS_USER = " + solution.getNbTechniciansUsed() + "\n");
+            bw.write("IDLE_MACHINE_COSTS = " + solution.getIdleMachineCosts() + "\n");
+            bw.write("TOTAL_COST = " + solution.getTotalCost() + "\n");
             /*
              * bw.write("TRUCK_DISTANCE = " + solution.getTruckDistance()+"\n");
              * bw.write("NUMBER_OF_TRUCK_DAYS = " + solution.getNbTruckDays()+"\n");
