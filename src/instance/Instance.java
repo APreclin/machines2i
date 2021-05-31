@@ -146,7 +146,7 @@ public class Instance {
         if (truck == null)
             return false;
 
-        int id = truck.getID();
+        int id = truck.getId();
         Truck truckTemp = this.trucks.put(id, truck);
         if (truckTemp == null)
             return true;

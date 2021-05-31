@@ -34,7 +34,7 @@ public class Truck {
         this.dayCost = truck.getDayCost();
     }
 
-    public int getID() {
+    public int getId() {
         return id;
     }
 
