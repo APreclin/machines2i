@@ -18,7 +18,7 @@ public class InstallationRound extends Round {
         this.installationDay = day;
         this.coveredDistance = 0;
     }
-    
+
     public Day getInstallationDay() {
         return installationDay;
     }
@@ -36,6 +36,10 @@ public class InstallationRound extends Round {
 
     public void setCoveredDistance(Integer coveredDistance) {
         this.coveredDistance = coveredDistance;
+    }
+
+    public Technician getTechnician() {
+        return technician;
     }
 
     public boolean setTechnician(Technician technician) {
