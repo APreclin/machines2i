@@ -141,18 +141,22 @@ public class Solution {
     public void addRequestNewInstallationRound(Request requestToAdd) {
         Machine machine = requestToAdd.getMachine();
         HashMap<Integer, Technician> technicians = instance.getTechnicians(machine);
-        int date = requestToAdd.getFirstDay();
 
-        for (int dateInc = 1 ; dateInc < instance.getDays() ; dateInc++) {
+        for (int dateInc = requestToAdd.getDeliveryDate()+1 ; dateInc < requestToAdd.getLastDay() ; dateInc++) {
             // Test sur tous les jours de l'horizon tant qu'on ne trouve pas
             for (Technician tech : technicians.values()) {
                 // Test d'une nouvelle tournée avec tous les techniciens possibles tant qu'on ne trouve pas
             
-                Day newDay = newDay(dateInc);
+                // l'objet jour ne sera ajouté que si il contient une tournée valide
+                Day newDay = new Day(dateInc);
                 
+                // Création d'une tournée temporaire de test
                 InstallationRound tempRound = new InstallationRound(tech, newDay);
                 if (tempRound.addRequest(requestToAdd)) {
-                    days.get(date).addInstallationRound(tempRound);
+                    // ajout du jour à la liste dans la solution (récup de l'existant si jamais)
+                    newDay = this.addDay(newDay);
+                    newDay.addInstallationRound(tempRound);
+                    // update du cout
                     totalCost += tempRound.getTotalCost();
                     technicianDistance += tempRound.getCoveredDistance();
                     return;
@@ -181,7 +185,7 @@ public class Solution {
                 if (t.addRequest(requestToAdd)) {
                     totalCost += t.getTotalCost() - oldCost; // maj du cout (rempalcement de l'ancien)
                     truckDistance += t.getCurrentDistance() - oldDistance;
-                    return true;
+                    return true; 
                 }
             }
         }
@@ -217,15 +221,18 @@ public class Solution {
         return false;
     }
 
-    private Day newDay (int date) {
-        Day newDay = new Day(date);
-        Day oldDay = days.put(date, newDay);
+    /*
+    *   Add a Day to the days list of the current Solution (means that the day has at least one valid round)
+    *   !! Bien récupérer la valeur lors de l'appel : newDay = addDay(newDay);
+    */
+    private Day addDay (Day d) {
+        Day oldDay = days.put(d.getDate(), d);
 
         if (oldDay != null) {
-            days.put(date, oldDay);
-            newDay = oldDay;
+            days.put(d.getDate(), oldDay);
+            d = oldDay;
         }
-        return newDay;
+        return d;
     }
 
     /**
