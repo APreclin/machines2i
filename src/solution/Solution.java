@@ -218,8 +218,8 @@ public class Solution {
             return false;
 
         for (Day d : days.values()) {
-            if (d.getDeliveryRounds().isEmpty())
-                return false;
+            // if (d.getDeliveryRounds().isEmpty())
+            // return false;
             for (InstallationRound t : d.getInstallationRounds()) {
                 int oldCost = t.getTotalCost();
                 int oldDistance = t.getCoveredDistance();
