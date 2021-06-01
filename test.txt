@@ -1,7 +1,7 @@
 DATASET = test
 NAME = testInstance
 
-DAYS = 7
+DAYS = 4
 TRUCK_CAPACITY = 5
 TRUCK_MAX_DISTANCE = 150
 
@@ -24,8 +24,8 @@ LOCATIONS = 5
 5 0 4
 
 REQUESTS = 2
-1 2 1 7 1 1
-2 3 2 6 2 3
+1 2 1 4 1 1
+2 3 2 4 2 3
 
 TECHNICIANS = 2
 1 4 6 1 1 0

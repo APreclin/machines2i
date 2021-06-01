@@ -162,7 +162,7 @@ public class Solution {
                     // ajout du jour à la liste dans la solution (récup de l'existant si jamais)
                     newDay = this.addDay(newDay);
                     newDay.addInstallationRound(tempRound);
-                    newDay.addTechnician();                    
+                    newDay.addTechnician();
 
                     // update du cout
                     totalCost += tempRound.getTotalCost();
@@ -171,7 +171,7 @@ public class Solution {
                     nbTechniciansDays++;
                     nbTechniciansUsed++;
                     totalCost += instance.getTechnicianCost();
-                    totalCost += tech.getDayCost();
+                    // totalCost += tech.getDayCost();
 
                     return;
                 }
