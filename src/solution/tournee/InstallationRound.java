@@ -14,9 +14,9 @@ public class InstallationRound extends Round {
 
     public InstallationRound(Technician technician, Day day) {
         super();
-        this.setTechnician(technician);
         this.installationDay = day;
         this.coveredDistance = 0;
+        this.setTechnician(technician);
     }
 
     public Day getInstallationDay() {

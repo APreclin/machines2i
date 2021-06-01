@@ -38,9 +38,9 @@ public class DeliveryRound extends Round {
     public DeliveryRound(Truck truck, Instance instanceToCopy, Day deliveryDay) {
         super();
         this.truck = truck;
-        this.depot = instanceToCopy.getDepot();
         this.currentCharge = 0;
         this.deliveryDay = deliveryDay;
+        this.depot = instanceToCopy.getDepot();
     }
 
     public Day getDeliverDay() {
