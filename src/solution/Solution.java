@@ -158,13 +158,11 @@ public class Solution {
 
                 // Création d'une tournée temporaire de test
                 InstallationRound tempRound = new InstallationRound(tech, newDay);
-                if (tempRound.addRequest(requestToAdd)) {
+                if (tempRound.addRequest(requestToAdd) && tech.addInstallationRound(tempRound)) {
                     // ajout du jour à la liste dans la solution (récup de l'existant si jamais)
                     newDay = this.addDay(newDay);
                     newDay.addInstallationRound(tempRound);
-                    newDay.addTechnician();
-                    //ajout à la liste du technicien
-                    tech.addInstallationRound(tempRound);
+                    newDay.addTechnician();                    
 
                     // update du cout
                     totalCost += tempRound.getTotalCost();
