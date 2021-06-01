@@ -55,7 +55,8 @@ public class InstallationRound extends Round {
 
         this.technician = technician;
         if (!technician.isWorkingOnDay(this.installationDay))
-            // Le cout journalier n'est ajouté que si le technicien ne travaillait pas deja ce jour
+            // Le cout journalier n'est ajouté que si le technicien ne travaillait pas deja
+            // ce jour
             this.totalCost = technician.getDayCost();
         return true;
     }
@@ -79,7 +80,8 @@ public class InstallationRound extends Round {
             return false;
 
         boolean checkMachineComp = this.checkMachineComp(request);
-        //TODO : modifier le calcul des distances pour prendre en compte de la requete vers la maison
+        // TODO : modifier le calcul des distances pour prendre en compte de la requete
+        // vers la maison
         int technicianMaxDistance = this.technician.getMaxDistance();
         Location requestLocation = request.getLocation();
         int requestLocationToHome = returnToHome(requestLocation);

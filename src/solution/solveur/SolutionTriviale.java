@@ -17,12 +17,11 @@ public class SolutionTriviale implements Solveur {
                 sol.addRequestNewDeliveryRound(r);
             if (!sol.addRequestExistingInstallationRound(r))
                 sol.addRequestNewInstallationRound(r);
-
-            sol.calculPenalties();
-            sol.getMaxTechnicianDays();
-            sol.getMaxTruckDays();
-
         }
+
+        sol.calculPenalties();
+        // sol.getMaxTechnicianDays();
+        sol.getMaxTruckDays();
 
         SolutionWriter sw = new SolutionWriter(instance, sol);
         sw.writeSolution();

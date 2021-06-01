@@ -127,12 +127,14 @@ public class Solution {
         DeliveryRound tempRound = new DeliveryRound(truck, instance, newDay);
         tempRound.addRequest(requestToAdd);
         days.get(date).addDeliveryRound(tempRound);
+        newDay.addTruck();
+
         totalCost += tempRound.getTotalCost();
         truckDistance += tempRound.getCurrentDistance();
-        totalCost += instance.getTruckCost();
+
+        // totalCost += instance.getTruckCost();
         totalCost += truck.getDayCost();
         nbTruckDays++;
-        newDay.addTruck();
     }
 
     /**
@@ -160,12 +162,17 @@ public class Solution {
                     // ajout du jour à la liste dans la solution (récup de l'existant si jamais)
                     newDay = this.addDay(newDay);
                     newDay.addInstallationRound(tempRound);
+                    newDay.addTechnician();
+
                     // update du cout
                     totalCost += tempRound.getTotalCost();
                     technicianDistance += tempRound.getCoveredDistance();
+
                     nbTechniciansDays++;
+                    nbTechniciansUsed++;
                     totalCost += instance.getTechnicianCost();
-                    newDay.addTechnician();
+                    totalCost += tech.getDayCost();
+
                     return;
                 }
             }
@@ -295,6 +302,7 @@ public class Solution {
         }
 
         this.nbTrucksUsed = maxNbTruck;
+        this.totalCost += maxNbTruck * this.instance.getTruckCost();
     }
 
     /**
