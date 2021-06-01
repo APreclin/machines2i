@@ -163,6 +163,8 @@ public class Solution {
                     newDay = this.addDay(newDay);
                     newDay.addInstallationRound(tempRound);
                     newDay.addTechnician();
+                    //ajout à la liste du technicien
+                    tech.addInstallationRound(tempRound);
 
                     // update du cout
                     totalCost += tempRound.getTotalCost();
