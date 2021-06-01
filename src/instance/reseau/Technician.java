@@ -18,7 +18,6 @@ public class Technician {
     private LinkedHashMap<Integer, Boolean> abilities;
     private LinkedList<InstallationRound> installationRounds; // ensemble des tournées réalisées ordonnées dans le sens
                                                               // descendant des dates de tournée
-    private int nbConsecutiveInstallationRounds;
 
     public Technician() {
         this.id = 0;
@@ -29,7 +28,6 @@ public class Technician {
         this.dayCost = 0;
         this.abilities = new LinkedHashMap<Integer, Boolean>();
         this.installationRounds = new LinkedList<InstallationRound>();
-        this.nbConsecutiveInstallationRounds = 0;
     }
 
     public Technician(int id, Location location, int maxDistance, int maxRequests, int distanceCost, int dayCost,
@@ -78,40 +76,80 @@ public class Technician {
 
     public boolean addInstallationRound(InstallationRound installationRoundGiven) {
         // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
-        if (installationRounds.isEmpty()) {
+        if (checkAddInstallationRound(installationRoundGiven)) {
             this.installationRounds.push(installationRoundGiven);
             return true;
         }
-
-        InstallationRound lastRound = installationRounds.getLast();
-
-        if (installationRoundGiven.getInstallationDay().getDateDiff(lastRound.getInstallationDay()) <= 0)
-            // Si la tournée a lieu le même jour que la tournée actuelle ou un jour passé
+        else {
             return false;
+        }
+    }
 
-        if (this.nbConsecutiveInstallationRounds >= 5) {
-            // Le nombre max de jours de travail d'affilé est atteint
-            if (installationRoundGiven.getInstallationDay().getDateDiff(lastRound.getInstallationDay()) < 2)
-                return false; // il n'y a pas 2 jours de repos, il ne peut donc pas enchainer
-
-            // 2 jours de repos => on peut ajouter la tournée
-            this.installationRounds.push(installationRoundGiven);
-            this.nbConsecutiveInstallationRounds = 0;
-
-            return true;
-        } else {
-            // nombre maximum de jours de travail consécutifs pas atteint
-            if (installationRoundGiven.getInstallationDay().follows(lastRound.getInstallationDay()))
-                // Si la nouvelle tournée suit la précédente, il faut incrémenter le compteur
-                this.nbConsecutiveInstallationRounds++;
-            else
-                // Si la nouvelle tournée ne suit pas, on remet le compteur à zéro
-                this.nbConsecutiveInstallationRounds = 0;
-
-            this.installationRounds.push(installationRoundGiven);
-
+    public boolean checkAddInstallationRound(InstallationRound installationRoundGiven) {
+        // TODO : ajouter la possibilité de faire plusieurs tournées le meme jour tant qu'on reste dans les capacités du technicien
+        for (InstallationRound ir : installationRounds) {
+            if (installationRoundGiven.getInstallationDay().getDateDiff(ir.getInstallationDay()) == 0)
+                return false;
+        }
+        
+        // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
+        if (installationRounds.size() < 5) {
             return true;
         }
+
+        InstallationRound round = installationRoundGiven;
+        int IrIndex = installationRounds.indexOf(round); 
+        int nbConsecutiveInstallationRounds = 1;    // Toujours +1 car on compte les ponts entre jours qui sont toujours = nbJours-1
+
+        try {
+            InstallationRound beforeRound = installationRounds.get(IrIndex--);
+
+            while(round.getInstallationDay().follows(beforeRound.getInstallationDay())) {
+                // On regarde combien de tournées consécutives sont présentes avant la tournée à ajouter
+                round = beforeRound;
+                beforeRound = installationRounds.get(IrIndex--);  // prend la tournée placée avant
+                nbConsecutiveInstallationRounds++;
+            }
+        } catch(IndexOutOfBoundsException e) {
+            System.out.println(e);
+        }
+
+        round = installationRoundGiven;
+        IrIndex = installationRounds.indexOf(round);
+        InstallationRound afterRound = null;
+        try {
+            afterRound = installationRounds.get(IrIndex++);
+            while(afterRound.getInstallationDay().follows(round.getInstallationDay())) {
+                // On regarde combien de tournées consécutives sont présentes après la tournée à ajouter
+                round = afterRound;
+                afterRound = installationRounds.get(IrIndex++);  // prend la tournée placée avant
+                nbConsecutiveInstallationRounds++;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println(e);
+        }
+
+        if (nbConsecutiveInstallationRounds > 5) {
+            // on ne peut pas demander plus de 5 jours d'affilé
+            return false;
+        }
+
+        if (nbConsecutiveInstallationRounds == 5) {
+            // vérification qu'à la fin de 5 jours consécutifs le technicien prendra bien 2 jours de congé
+            InstallationRound lastConsecutiveRound = afterRound;
+            if (lastConsecutiveRound == null)   // Il n'y a pas d'autre tournée après celle ajoutée, donc on vérifiera au prochaina ajout (5 consécutives avec pause infinie pour l'instant)
+                return true;
+            try {
+                InstallationRound afterLastConsecutiveRound = this.installationRounds.get(IrIndex++);
+                if (afterLastConsecutiveRound.getInstallationDay().getDateDiff(lastConsecutiveRound.getInstallationDay()) < 2)
+                    // La tournée après la dernière tournée consécutive est à moins de 2 jours et il y en a 5 d'affilé, on bloque
+                    return false;
+            } catch (Exception e) {
+                // Il n'y a pas de tournée après la dernière, donc on vérifiera au prochaina ajout (5 consécutives avec pause infinie pour l'instant)
+                return true;
+            }
+        }
+        return true;
     }
 
     public boolean removeInstallationRound(InstallationRound installationRoundGiven) {
@@ -122,8 +160,6 @@ public class Technician {
             return false; // la tournée n'etait pas contenue
 
         this.installationRounds.remove(installationRoundGiven);
-        this.nbConsecutiveInstallationRounds = this.calcNbConsecutiveRounds(); // mise à jour du nombre de tournées
-                                                                               // consécutives
         return true;
     }
 
@@ -132,13 +168,13 @@ public class Technician {
         if (installationRounds.size() == 0)
             return 0;
 
-        InstallationRound lastRound = installationRounds.getLast();
-        int lastIndex = installationRounds.indexOf(lastRound);
+        InstallationRound beforeRound = installationRounds.getLast();
+        int lastIndex = installationRounds.indexOf(beforeRound);
         int nbConsRounds = 0;
 
         for (int i = 1; i < 6; i++) {
             InstallationRound previousRound = installationRounds.get(lastIndex - i);
-            if (lastRound.getInstallationDay().follows(previousRound.getInstallationDay()))
+            if (beforeRound.getInstallationDay().follows(previousRound.getInstallationDay()))
                 nbConsRounds += 1;
             else
                 nbConsRounds = 0;
@@ -217,7 +253,6 @@ public class Technician {
          * if (!installationRounds.isEmpty()) str += "Tournées d'installation : \n"; for
          * (InstallationRound ir : installationRounds) str += ir.toString();
          */
-        str += "\nNb consecutive installation round : " + nbConsecutiveInstallationRounds + "\n";
         str += "-------------------------\n";
         return str;
     }
