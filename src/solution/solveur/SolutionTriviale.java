@@ -12,7 +12,7 @@ public class SolutionTriviale implements Solveur {
     @Override
     public Solution solve(Instance instance) {
         Solution sol = new Solution(instance);
-        for (Request r : instance.getRequests().values()) {
+        for (Request r : instance.getRequests().values()) { 
             if (!sol.addRequestExistingDeliveryRound(r))
                 sol.addRequestNewDeliveryRound(r);
             if (!sol.addRequestExistingInstallationRound(r))

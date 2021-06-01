@@ -75,7 +75,7 @@ public class InstallationRound extends Round {
         if (request == null || technician == null)
             return false;
 
-        if (installationDay.getDate() <= request.getDeliveryDate())
+        if (installationDay.getDate() < request.getFirstDay() || installationDay.getDate() <= request.getDeliveryDate() || installationDay.getDate() > request.getLastDay())
             // l'installation ne peut pas se faire avant ou le même jour que la livraison
             return false;
 

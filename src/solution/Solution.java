@@ -147,7 +147,7 @@ public class Solution {
         Machine machine = requestToAdd.getMachine();
         HashMap<Integer, Technician> technicians = instance.getTechnicians(machine);
 
-        for (int dateInc = requestToAdd.getDeliveryDate() + 1; dateInc < requestToAdd.getLastDay(); dateInc++) {
+        for (int dateInc = requestToAdd.getDeliveryDate() + 1; dateInc <= requestToAdd.getLastDay(); dateInc++) {
             // Test sur tous les jours de l'horizon tant qu'on ne trouve pas
             for (Technician tech : technicians.values()) {
                 // Test d'une nouvelle tournée avec tous les techniciens possibles tant qu'on ne

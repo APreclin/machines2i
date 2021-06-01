@@ -86,7 +86,7 @@ public class DeliveryRound extends Round {
         int truckCapacity = this.truck.getCapacity();
         int truckDistanceCost = this.truck.getDistanceCost();
 
-        if (deliveryDay.getDate() < request.getFirstDay())
+        if (deliveryDay.getDate() < request.getFirstDay() || deliveryDay.getDate() > request.getLastDay())
             return false;
 
         if (totalSize > truckCapacity)
