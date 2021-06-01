@@ -23,19 +23,18 @@ public class InstallationRound extends Round {
         return installationDay;
     }
 
-    private Request getLastRequest() {
-        if (requests == null)
-            return null;
+    /*
+     * private Request getLastRequest() { if (requests == null) return null;
+     * 
+     * return requests.getLast(); }
+     */
 
-        return requests.getLast();
-    }
-
-    private Location getLastLocation() {
-        if (requests.isEmpty())
-            return technician.getHome();
-
-        return requests.getLast().getLocation();
-    }
+    /*
+     * private Location getLastLocation() { if (requests.isEmpty()) return
+     * technician.getHome();
+     * 
+     * return requests.getLast().getLocation(); }
+     */
 
     public Integer getCoveredDistance() {
         return coveredDistance;
@@ -75,7 +74,8 @@ public class InstallationRound extends Round {
         if (request == null || technician == null)
             return false;
 
-        if (installationDay.getDate() < request.getFirstDay() || installationDay.getDate() <= request.getDeliveryDate() || installationDay.getDate() > request.getLastDay())
+        if (installationDay.getDate() < request.getFirstDay() || installationDay.getDate() <= request.getDeliveryDate()
+                || installationDay.getDate() > request.getLastDay())
             // l'installation ne peut pas se faire avant ou le même jour que la livraison
             return false;
 
