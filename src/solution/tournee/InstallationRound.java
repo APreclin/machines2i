@@ -80,8 +80,6 @@ public class InstallationRound extends Round {
             return false;
 
         boolean checkMachineComp = this.checkMachineComp(request);
-        // TODO : modifier le calcul des distances pour prendre en compte de la requete
-        // vers la maison
         int technicianMaxDistance = this.technician.getMaxDistance();
         Location requestLocation = request.getLocation();
         int requestLocationToHome = returnToHome(requestLocation);
