@@ -151,7 +151,7 @@ public class Technician {
      * Check if this Technician is able to install the machine passed in parameter
      * 
      * @param machineId the id of the machine we want to install
-     * @return wheter this Technician can install or not the machine passed in
+     * @return whether this Technician can install or not the machine passed in
      *         parameter
      */
     public boolean checkMachineAbility(int machineId) {
@@ -161,6 +161,21 @@ public class Technician {
             return false;
 
         return this.abilities.get(machineId);
+    }
+
+    /**
+     * Check if the technician is already working on a certain day
+     * 
+     * @param day the day concerned
+     * @return whether working or not
+     *         
+     */
+    public boolean isWorkingOnDay(Day day) {
+        for (InstallationRound ir : installationRounds) {
+            if (ir.getInstallationDay().getDate() == day.getDate())
+                return true;
+        }
+        return false;
     }
 
     @Override

@@ -54,7 +54,9 @@ public class InstallationRound extends Round {
             return false;
 
         this.technician = technician;
-        this.totalCost = technician.getDayCost();
+        if (!technician.isWorkingOnDay(this.installationDay))
+            // Le cout journalier n'est ajouté que si le technicien ne travaillait pas deja ce jour
+            this.totalCost = technician.getDayCost();
         return true;
     }
 
