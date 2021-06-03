@@ -6,6 +6,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+
 import instance.Instance;
 import instance.reseau.Request;
 import solution.Solution;
@@ -34,12 +37,17 @@ public class SolutionWriter {
         try {
 
             File file = new File(instance.getName() + "_sol.txt");
+            File fileJson = new File(instance.getName() + "_solJSON.txt");
 
-            if (!file.exists()) {
+            if (!file.exists())
                 file.createNewFile();
-            }
+
+            if (!fileJson.exists())
+                fileJson.createNewFile();
 
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            FileWriter fwJson = new FileWriter(fileJson.getAbsolutePath());
+
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write("DATASET = " + instance.getDataset() + "\n");
             bw.write("NAME = " + instance.getName() + "\n");
@@ -63,45 +71,124 @@ public class SolutionWriter {
              * solution.getIdleMachineCosts()+"\n"); bw.write("TOTAL_COST = " +
              * solution.getTotalCost());
              */
+
+            JSONObject obj = new JSONObject();
+            obj.put("dataset", instance.getDataset());
+            obj.put("name", instance.getName());
+            obj.put("truckDistance", solution.getTruckDistance());
+            obj.put("numberOfTruckDays", solution.getNbTruckDays());
+            obj.put("numberOfTrucksUsed", solution.getNbTrucksUsed());
+            obj.put("technicianDistance", solution.getTechnicianDistance());
+            obj.put("numberOfTechnicianDays", solution.getNbTechniciansDays());
+            obj.put("numberOfTechniciansUsed", solution.getNbTechniciansUsed());
+            obj.put("idleMachineCosts", solution.getIdleMachineCosts());
+            obj.put("totalCost", solution.getTotalCost());
+
+            JSONArray days = new JSONArray();
+
             // Ajouter les jours
             for (int i = 1; i <= instance.getDays(); i++) {
                 bw.write("DAY = " + String.valueOf(i) + "\n");
+                JSONObject day = new JSONObject();
 
                 if (solution.getDays().containsKey(i)) {
                     HashSet<DeliveryRound> deliveryRounds = solution.getDays().get(i).getDeliveryRounds();
                     HashSet<InstallationRound> installationRounds = solution.getDays().get(i).getInstallationRounds();
                     bw.write("NUMBER_OF_TRUCKS = " + String.valueOf(deliveryRounds.size()) + "\n");
+                    day.put("numberOfTrucks", deliveryRounds.size());
 
-                    if (!deliveryRounds.isEmpty())
+                    if (!deliveryRounds.isEmpty()) {
+                        JSONArray deliveryRoundsArray = new JSONArray();
                         for (DeliveryRound deliveryRound : deliveryRounds) {
                             bw.write(String.valueOf(deliveryRound.getTruck().getId()));
                             bw.write(" ");
+
+                            JSONObject deliveryRoundObject = new JSONObject();
+                            deliveryRoundObject.put("id", deliveryRound.getTruck().getId());
+                            JSONObject depot = new JSONObject();
+                            depot.put("x", deliveryRound.getDepot().getX());
+                            depot.put("y", deliveryRound.getDepot().getY());
+                            deliveryRoundObject.put("depot", depot);
+
+                            JSONArray requests = new JSONArray();
                             for (Request request : deliveryRound.getRequests()) {
                                 bw.write(String.valueOf(request.getId()));
                                 bw.write(" ");
+
+                                JSONObject requestObject = new JSONObject();
+                                requestObject.put("id", request.getId());
+                                JSONObject location = new JSONObject();
+                                location.put("x", request.getLocation().getX());
+                                location.put("y", request.getLocation().getY());
+                                requestObject.put("location", location);
+
+                                requests.add(requestObject);
                             }
+
+                            deliveryRoundsArray.add(deliveryRoundObject);
 
                             bw.write("\n");
                         }
 
-                    bw.write("NUMBER_OF_TECHNICIANS = " + String.valueOf(installationRounds.size()) + "\n");
+                        day.put("deliveryRounds", deliveryRoundsArray);
+                    }
 
-                    if (!installationRounds.isEmpty())
+                    bw.write("NUMBER_OF_TECHNICIANS = " + String.valueOf(installationRounds.size()) + "\n");
+                    day.put("numberOfTechnicians", installationRounds.size());
+
+                    if (!installationRounds.isEmpty()) {
+                        JSONArray installationRoundsArray = new JSONArray();
                         for (InstallationRound installationRound : installationRounds) {
                             bw.write(String.valueOf(installationRound.getTechnician().getId()));
                             bw.write(" ");
+
+                            JSONObject installationRoundObject = new JSONObject();
+                            installationRoundObject.put("id", installationRound.getTechnician().getId());
+                            JSONObject home = new JSONObject();
+                            home.put("x", installationRound.getTechnician().getHome().getX());
+                            home.put("y", installationRound.getTechnician().getHome().getY());
+                            installationRoundObject.put("home", home);
+
+                            JSONArray requests = new JSONArray();
+
                             for (Request request : installationRound.getRequests()) {
                                 bw.write(String.valueOf(request.getId()));
                                 bw.write(" ");
+
+                                JSONObject requestObject = new JSONObject();
+                                requestObject.put("id", request.getId());
+                                JSONObject location = new JSONObject();
+                                location.put("x", request.getLocation().getX());
+                                location.put("y", request.getLocation().getY());
+                                requestObject.put("location", location);
+
+                                requests.add(requestObject);
                             }
+
+                            installationRoundsArray.add(installationRoundObject);
 
                             bw.write("\n");
                         }
+
+                        day.put("installationRounds", installationRoundsArray);
+                    }
                 } else {
                     bw.write("NUMBER_OF_TRUCKS = 0\n");
                     bw.write("NUMBER_OF_TECHNICIANS = 0\n");
+                    day.put("numberOfTrucks", 0);
+                    day.put("numberOfTechnicians", 0);
                 }
+
+                days.add(day);
             }
+
+            obj.put("days", days);
+            System.out.println("bite");
+            System.out.println(obj.toJSONString());
+            System.out.println("bite2");
+            fwJson.write(obj.toJSONString());
+            fwJson.flush();
+            fwJson.close();
 
             bw.close();
 

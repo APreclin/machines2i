@@ -59,6 +59,10 @@ public class DeliveryRound extends Round {
         return this.truck;
     }
 
+    public Location getDepot() {
+        return depot;
+    }
+
     public boolean setTruck(Truck truck) {
         if (this.truck != null)
             return false;
