@@ -95,13 +95,13 @@ public class InstallationRound extends Round {
         }
 
         int techMaxRequests = this.technician.getMaxRequests();
+        boolean isNbRequestsRespected = this.requests.size() < techMaxRequests;
+        
         Location lastLocation = this.requests.getLast().getLocation();
         int lastLocationToRequestLocation = lastLocation.getDistanceTo(requestLocation);
         int lastLocationToHome = returnToHome(lastLocation);
         int newDistance = lastLocationToRequestLocation - lastLocationToHome + requestLocationToHome;
-
         boolean isDistanceRespected = (newDistance + this.coveredDistance <= technicianMaxDistance);
-        boolean isNbRequestsRespected = this.requests.size() < techMaxRequests;
 
         if (!isNbRequestsRespected || !isDistanceRespected || !checkMachineComp)
             return false;
@@ -123,7 +123,8 @@ public class InstallationRound extends Round {
 
     private void doAddRequest(Request request, int distance) {
         request.setInstallationDate(this.installationDay.getDate());
-        this.requests.push(request);
+        this.requests.addLast(request);
+        // TODO : trier en fonction de la distance avec Home
         this.coveredDistance += distance;
         this.totalCost += distance * this.technician.getDistanceCost();
     }

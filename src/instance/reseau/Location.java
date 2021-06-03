@@ -54,7 +54,7 @@ public class Location {
         int abs = destination.getX() - this.getX();
         int ord = destination.getY() - this.getY();
 
-        return (int) Math.round(Math.sqrt((Math.pow(abs, 2) + Math.pow(ord, 2))));
+        return (int) Math.ceil(Math.sqrt((Math.pow(abs, 2) + Math.pow(ord, 2))));
     }
 
     /**
