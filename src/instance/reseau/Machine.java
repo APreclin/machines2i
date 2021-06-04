@@ -5,15 +5,11 @@ public class Machine {
     private int id;
     private int size;
     private int penaltyByDay;
-    private int deliveryDate;
-    private int installationDate;
 
     public Machine() {
         this.id = 0;
         this.size = 0;
         this.penaltyByDay = 0;
-        this.deliveryDate = 0;
-        this.installationDate = 0;
     }
 
     public Machine(int id, int size, int penaltyByDay) {
@@ -33,14 +29,6 @@ public class Machine {
 
     public int getPenaltyByDay() {
         return penaltyByDay;
-    }
-
-    public int getDeliveryDate() {
-        return deliveryDate;
-    }
-
-    public int getInstallationDate() {
-        return installationDate;
     }
 
     @Override
@@ -68,13 +56,18 @@ public class Machine {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Machine n°" + id + " -----\n\n";
+        str += "\n----- Machine n°" + id + " -----\n";
         str += "ID : " + id + "\n";
         str += "Size : " + size + "\n";
         str += "Penalty by day : " + penaltyByDay + "\n";
-        str += "Delivery date : " + deliveryDate + "\n";
-        str += "Installation date : " + installationDate + "\n\n";
         str += "-----------------------\n";
         return str;
+    }
+
+    public static void main(String[] args) {
+
+        // Création d'une machine simple
+        Machine m = new Machine(1, 12, 30);
+        System.out.println(m.toString());
     }
 }

@@ -6,20 +6,19 @@ import instance.reseau.Request;
 
 public abstract class Round {
 
-    private LinkedList<Request> requests;
-    private int totalCost;
-    private int date;
+    protected LinkedList<Request> requests;
+    protected int totalCost;
 
-    public Round() {
-        this.requests = new LinkedList<Request>();
+    public abstract boolean addRequest(Request request);
+
+    protected Round() {
+        requests = new LinkedList<Request>();
         this.totalCost = 0;
-        this.date = -1;
     }
 
-    public Round(LinkedList<Request> requests, int date) {
+    protected Round(LinkedList<Request> requests) {
         this();
         this.requests = requests;
-        this.date = date;
     }
 
     public LinkedList<Request> getRequests() {
@@ -30,19 +29,16 @@ public abstract class Round {
         return totalCost;
     }
 
-    public int getDate() {
-        return date;
-    }
-
     @Override
     public String toString() {
         String str = "";
-        str += "----- Round -----\n\n";
-        str += "Date : " + date + "\n";
+        str += "\n----- Round -----\n";
+        str += "Total Cost : " + totalCost + "\n";
         for (Request r : requests) {
             str += r.toString();
         }
-        str += "-----------------\n\n";
+        str += "-----------------\n";
         return str;
     }
+
 }

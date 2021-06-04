@@ -3,20 +3,23 @@ package instance.reseau;
 public class Request {
 
     private int id;
-    private Location location;
-    private Machine machine;
     private int firstDay;
     private int lastDay;
+    private Machine machine;
     private int nbMachines;
+    private Location location;
+    private int deliveryDate;
+    private int installationDate;
 
     public Request() {
-
         this.id = 0;
         this.location = new Location();
         this.machine = new Machine();
         this.firstDay = -1;
         this.lastDay = -1;
         this.nbMachines = 0;
+        this.deliveryDate = -1;
+        this.installationDate = -1;
     }
 
     public Request(int id, Location location, int firstDay, int lastDay, Machine machine, int nbMachines) {
@@ -27,6 +30,8 @@ public class Request {
         this.firstDay = firstDay;
         this.lastDay = lastDay;
         this.nbMachines = nbMachines;
+        this.deliveryDate = -1;
+        this.installationDate = -1;
     }
 
     public int getId() {
@@ -53,6 +58,33 @@ public class Request {
         return nbMachines;
     }
 
+    public int getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(int deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    public int getInstallationDate() {
+        return installationDate;
+    }
+
+    public void setInstallationDate(int installationDate) {
+        this.installationDate = installationDate;
+    }
+
+    // DEBUT TRAITEMENTS
+
+    public Integer getDistanceTo(Request request) {
+        if (request == null)
+            return Integer.MAX_VALUE;
+
+        return this.location.getDistanceTo(request.getLocation());
+    }
+
+    // FIN TRAITEMENTS
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -78,15 +110,28 @@ public class Request {
     @Override
     public String toString() {
         String str = "";
-        str += "----- Request n°" + id + " -----\n\n";
+        str += "\n----- Request n°" + id + " -----\n";
         str += "ID : " + id + "\n";
         str += "Location n°" + this.location.getId() + "\n";
         str += "Machine n°" + this.machine.getId() + "\n";
-        str += "Nb machines :" + nbMachines + "\n";
+        str += "Nb machines : " + nbMachines + "\n";
         str += "First Day : " + firstDay + "\n";
-        str += "Last Day : " + lastDay + "\n\n";
+        str += "Last Day : " + lastDay + "\n";
         str += "-----------------------\n";
         return str;
+    }
+
+    public static void main(String[] args) {
+
+        /*
+         * // Création d'une requête simple Location l = new Location(1, 2, 3); Machine
+         * m = new Machine(1, 10, 20); Request r = new Request(1, l, 1, 3, m, 2);
+         * System.out.println(r.toString());
+         * 
+         * // Test de la fonction getDistanceTo Location l2 = new Location(2, 3, 3);
+         * Request r2 = new Request(2, l2, 1, 3, m, 4); //
+         * System.out.println(r.getDistanceTo(r2));
+         */
     }
 
 }

@@ -1,6 +1,9 @@
 # Instances
 instances/
 
+#solutions
+*_sol.txt
+
 # Compiled class file
 *.class
 
@@ -14,7 +17,6 @@ instances/
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -24,3 +26,4 @@ instances/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+testInstance_sol.txt

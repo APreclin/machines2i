@@ -35,8 +35,13 @@ public class InstanceReader {
     private File instanceFile;
     private LinkedHashMap<Integer, Location> locations;
     private LinkedHashMap<Integer, Machine> machines;
+    private int distanceCost;
+    private int dayCost;
 
     public InstanceReader() throws ReaderException {
+        this.locations = new LinkedHashMap<Integer, Location>();
+        this.machines = new LinkedHashMap<Integer, Machine>();
+
         JFileChooser chooser = new JFileChooser();
         File workingDirectory = new File(System.getProperty("user.dir"));
         chooser.setCurrentDirectory(workingDirectory);
@@ -51,6 +56,12 @@ public class InstanceReader {
         this.instanceFile = file;
     }
 
+    /**
+     * Read file loaded
+     * 
+     * @return the instance read
+     * @throws ReaderException when data is missing or in the wrong format
+     */
     public Instance readInstance() throws ReaderException {
         try {
             FileReader f = new FileReader(this.instanceFile.getAbsolutePath());
@@ -59,8 +70,9 @@ public class InstanceReader {
             String name = readName(br);
             int days = readDays(br);
             Truck truck = readTruck(br);
-            int technicianDistanceCost = readTechnicianDistanceCost(br);
-            int technicianDayCost = readTechnicianDayCost(br);
+            int truckCost = readTruckCost(br);
+            distanceCost = readTechnicianDistanceCost(br);
+            dayCost = readTechnicianDayCost(br);
             int technicianCost = readTechnicianCost(br);
             LinkedHashMap<Integer, Machine> machines = readMachines(br);
             this.machines = machines;
@@ -69,8 +81,8 @@ public class InstanceReader {
             List<Request> requests = readRequests(br);
             List<Technician> technicians = readTechnicians(br);
 
-            Instance instance = new Instance(dataset, name, days, technicianDistanceCost, technicianDayCost,
-                    technicianCost, truck);
+
+            Instance instance = new Instance(dataset, name, days, technicianCost, truck, truckCost);
 
             for (Location location : locations.values())
                 instance.addLocation(location);
@@ -92,6 +104,13 @@ public class InstanceReader {
         }
     }
 
+    /**
+     * Read dataset line
+     * 
+     * @param br
+     * @return the dataset of the instance
+     * @throws IOException
+     */
     private String readDataset(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("DATASET = "))
@@ -101,6 +120,13 @@ public class InstanceReader {
         return line;
     }
 
+    /**
+     * Read name line
+     * 
+     * @param br
+     * @return the name of the instance
+     * @throws IOException
+     */
     private String readName(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("NAME = "))
@@ -110,6 +136,13 @@ public class InstanceReader {
         return line;
     }
 
+    /**
+     * Read days line
+     * 
+     * @param br
+     * @return the number of days of the instance
+     * @throws IOException
+     */
     private int readDays(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("DAYS = "))
@@ -119,6 +152,13 @@ public class InstanceReader {
         return Integer.parseInt(line);
     }
 
+    /**
+     * Read techniciansDistanceCost line
+     * 
+     * @param br
+     * @return the techniciansDistanceCost
+     * @throws IOException
+     */
     private int readTechnicianDistanceCost(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("TECHNICIAN_DISTANCE_COST = "))
@@ -128,6 +168,13 @@ public class InstanceReader {
         return Integer.parseInt(line);
     }
 
+    /**
+     * Read technicianDayCost line
+     * 
+     * @param br
+     * @return the technicianDayCost
+     * @throws IOException
+     */
     private int readTechnicianDayCost(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("TECHNICIAN_DAY_COST = "))
@@ -137,6 +184,13 @@ public class InstanceReader {
         return Integer.parseInt(line);
     }
 
+    /**
+     * Read technicianCost
+     * 
+     * @param br
+     * @return the technicianCost
+     * @throws IOException
+     */
     private int readTechnicianCost(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("TECHNICIAN_COST = "))
@@ -146,6 +200,13 @@ public class InstanceReader {
         return Integer.parseInt(line);
     }
 
+    /**
+     * Read the truck
+     * 
+     * @param br
+     * @return a new instance of Truck
+     * @throws IOException
+     */
     private Truck readTruck(BufferedReader br) throws IOException {
         String line = br.readLine();
         while (!line.contains("TRUCK_CAPACITY = "))
@@ -167,15 +228,34 @@ public class InstanceReader {
         line = line.replace("TRUCK_DAY_COST = ", "");
         int dayCost = Integer.parseInt(line);
 
-        line = br.readLine();
-        line = line.replace("TRUCK_COST = ", "");
-        int cost = Integer.parseInt(line);
-
-        Truck truck = new Truck(capacity, maxDistance, distanceCost, dayCost, cost);
+        Truck truck = new Truck(0, capacity, maxDistance, distanceCost, dayCost);
 
         return truck;
     }
 
+    /**
+     * Read truckCost
+     * 
+     * @param br
+     * @return the truckCost
+     * @throws IOException
+     */
+    private int readTruckCost(BufferedReader br) throws IOException {
+        String line = br.readLine();
+        while (!line.contains("TRUCK_COST = "))
+            line = br.readLine();
+
+        line = line.replace("TRUCK_COST = ", "");
+        return Integer.parseInt(line);
+    }
+
+    /**
+     * Read all the Machine
+     * 
+     * @param br
+     * @return a HashMap of Machine
+     * @throws IOException
+     */
     private LinkedHashMap<Integer, Machine> readMachines(BufferedReader br) throws IOException {
         LinkedHashMap<Integer, Machine> machines = new LinkedHashMap<Integer, Machine>();
         String line = br.readLine();
@@ -205,6 +285,13 @@ public class InstanceReader {
         return machines;
     }
 
+    /**
+     * Read all the Location
+     * 
+     * @param br
+     * @return a HashMap of Location
+     * @throws IOException
+     */
     private LinkedHashMap<Integer, Location> readLocations(BufferedReader br) throws IOException {
         LinkedHashMap<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
         String line = br.readLine();
@@ -234,8 +321,16 @@ public class InstanceReader {
         return locations;
     }
 
-    private List<Technician> readTechnicians(BufferedReader br) throws IOException {
-        List<Technician> technicians = new ArrayList<Technician>();
+    /**
+     * Read all the Technician
+     * 
+     * @param br
+     * @return a HashMap of Technician
+     * @throws IOException
+     */
+    private LinkedHashMap<Integer, Technician> readTechnicians(BufferedReader br) throws IOException {
+        LinkedHashMap<Integer, Technician> technicians = new LinkedHashMap<Integer, Technician>();
+
 
         String line = br.readLine();
         while (!line.contains("TECHNICIANS = "))
@@ -266,8 +361,10 @@ public class InstanceReader {
                 abilities.put(idMachine++, ability);
             }
 
-            Technician technician = new Technician(id, location, maxDistance, maxRequests, abilities);
-            technicians.add(technician);
+
+            Technician technician = new Technician(id, location, maxDistance, maxRequests, distanceCost, dayCost,
+                    abilities);
+            technicians.put(id, technician);
 
             scanner.close();
         }
@@ -275,16 +372,36 @@ public class InstanceReader {
         return technicians;
     }
 
+    /**
+     * Get Location with an id
+     * 
+     * @param id
+     * @return Location which has id as key
+     */
     private Location getLocation(int id) {
         return this.locations.get(id);
     }
 
+    /**
+     * Get Machine with an id
+     * 
+     * @param id
+     * @return Machine which has id as key
+     */
     private Machine getMachine(int id) {
         return this.machines.get(id);
     }
 
-    private List<Request> readRequests(BufferedReader br) throws IOException {
-        List<Request> requests = new ArrayList<Request>();
+    /**
+     * Read all the Request
+     * 
+     * @param br
+     * @return a HashMap of Request
+     * @throws IOException
+     */
+    private LinkedHashMap<Integer, Request> readRequests(BufferedReader br) throws IOException {
+        LinkedHashMap<Integer, Request> requests = new LinkedHashMap<Integer, Request>();
+
         String line = br.readLine();
         while (!line.contains("REQUESTS ="))
             line = br.readLine();

@@ -2,27 +2,40 @@ package instance.reseau;
 
 public class Truck {
 
+    private int id;
     private int capacity;
     private int maxDistance;
     private int distanceCost;
     private int dayCost;
-    private int cost;
 
     public Truck() {
+        this.id = 0;
         this.capacity = 0;
         this.maxDistance = 0;
         this.distanceCost = 0;
         this.dayCost = 0;
-        this.cost = 0;
     }
 
-    public Truck(int capacity, int maxDistance, int distanceCost, int dayCost, int cost) {
+    public Truck(int id, int capacity, int maxDistance, int distanceCost, int dayCost) {
         this();
+        this.id = id;
         this.capacity = capacity;
         this.maxDistance = maxDistance;
         this.distanceCost = distanceCost;
         this.dayCost = dayCost;
-        this.cost = cost;
+    }
+
+    public Truck(int id, Truck truck) {
+        this();
+        this.id = id;
+        this.capacity = truck.getCapacity();
+        this.maxDistance = truck.getMaxDistance();
+        this.distanceCost = truck.getDistanceCost();
+        this.dayCost = truck.getDayCost();
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getCapacity() {
@@ -41,21 +54,22 @@ public class Truck {
         return dayCost;
     }
 
-    public int getCost() {
-        return cost;
-    }
-
     @Override
     public String toString() {
         String str = "";
-        str += "----- Truck -----\n\n";
+        str += "\n----- Truck -----\n";
         str += "Capacity : " + capacity + "\n";
         str += "Max distance : " + maxDistance + "\n";
         str += "Distance cost : " + distanceCost + "\n";
         str += "Day cost : " + dayCost + "\n";
-        str += "Cost : " + cost + "\n\n";
-        str += "-----------------\n\n";
+        str += "-----------------\n";
         return str;
     }
 
+    public static void main(String[] args) {
+
+        // Création d'un camion simple
+        Truck t = new Truck(1, 20, 50, 5, 10);
+        System.out.println(t.toString());
+    }
 }

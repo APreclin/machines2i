@@ -1,5 +1,6 @@
 package instance;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -13,43 +14,41 @@ public class Instance {
     private String dataset;
     private String name;
     private int days;
-    private int technicianDistanceCost;
-    private int technicianDayCost;
+    private int truckCost;
     private int technicianCost;
     private LinkedHashMap<Integer, Technician> technicians;
     private LinkedHashMap<Integer, Location> locations;
     private LinkedHashMap<Integer, Machine> machines;
     private LinkedHashMap<Integer, Request> requests;
-    private Truck truck;
+    private LinkedHashMap<Integer, Truck> trucks;
+    private Truck truckModel;
 
     public Instance() {
         this.dataset = "";
         this.name = "";
         this.days = 0;
-        this.technicianDistanceCost = 0;
-        this.technicianDayCost = 0;
+        this.truckCost = 0;
         this.technicianCost = 0;
         this.technicians = new LinkedHashMap<Integer, Technician>();
         this.locations = new LinkedHashMap<Integer, Location>();
         this.machines = new LinkedHashMap<Integer, Machine>();
         this.requests = new LinkedHashMap<Integer, Request>();
-        this.truck = new Truck();
+        this.trucks = new LinkedHashMap<Integer, Truck>();
+        this.truckModel = new Truck();
     }
 
-    public Instance(String dataset, String name, int days, int technicianDistanceCost, int technicianDayCost,
-            int technicianCost, Truck truck) {
+    public Instance(String dataset, String name, int days, int technicianCost, Truck truck, int truckCost) {
         this();
         this.dataset = dataset;
         this.name = name;
         this.days = days;
-        this.technicianDistanceCost = technicianDistanceCost;
-        this.technicianDayCost = technicianDayCost;
+        this.truckCost = truckCost;
         this.technicianCost = technicianCost;
         this.technicians = new LinkedHashMap<Integer, Technician>();
         this.locations = new LinkedHashMap<Integer, Location>();
         this.machines = new LinkedHashMap<Integer, Machine>();
         this.requests = new LinkedHashMap<Integer, Request>();
-        this.truck = truck;
+        this.truckModel = truck;
     }
 
     public String getDataset() {
@@ -64,12 +63,8 @@ public class Instance {
         return days;
     }
 
-    public int getTechnicianDistanceCost() {
-        return technicianDistanceCost;
-    }
-
-    public int getTechnicianDayCost() {
-        return technicianDayCost;
+    public int getTruckCost() {
+        return truckCost;
     }
 
     public int getTechnicianCost() {
@@ -92,10 +87,45 @@ public class Instance {
         return new LinkedHashMap<Integer, Request>(requests);
     }
 
-    public Truck getTruck() {
-        return truck;
+    public LinkedHashMap<Integer, Truck> getTrucks() {
+        return new LinkedHashMap<Integer, Truck>(trucks);
     }
 
+    public Truck getTruckModel() {
+        return truckModel;
+    }
+
+    public Location getDepot() {
+        if (locations == null)
+            return null;
+
+        return locations.get(1);
+
+    }
+
+    /**
+     * Get Technicians able to install the machine passed in parameter
+     * 
+     * @param machine the machine we want to install
+     * @return a HashMap of Technician able to install 'machine'
+     */
+    public HashMap<Integer, Technician> getTechnicians(Machine machine) {
+        HashMap<Integer, Technician> techniciansList = new HashMap<Integer, Technician>();
+
+        for (Technician tech : technicians.values()) {
+            if (tech.checkMachineAbility(machine.getId()))
+                techniciansList.put(tech.getId(), tech);
+        }
+
+        return techniciansList;
+    }
+
+    /**
+     * Add Location if not already in locations HashMap
+     * 
+     * @param location the location we want to add
+     * @return whether the location has been added or not to our locations HashMap
+     */
     public boolean addLocation(Location location) {
         if (location == null)
             return false;
@@ -106,46 +136,107 @@ public class Instance {
             return true;
 
         this.locations.put(id, tempLocation);
+
         return false;
     }
 
+    /**
+     * Add Truck if not already in trucks HashMap
+     * 
+     * @param truck the truck we want to add
+     * @return wheter the truck has been added or not to our trucks HashMap
+     */
+    public boolean addTruck(Truck truck) {
+        if (truck == null)
+            return false;
+
+        int id = truck.getId();
+        Truck truckTemp = this.trucks.put(id, truck);
+        if (truckTemp == null)
+            return true;
+
+        this.trucks.put(id, truck);
+
+        return false;
+    }
+
+    /**
+     * Add Machine if not already in machines HashMap
+     * 
+     * @param machine the machine we want to add
+     * @return wheter the machine has been added or not to our machines HashMap
+     */
     public boolean addMachine(Machine machine) {
         if (machine == null)
             return false;
 
         int id = machine.getId();
         Machine tempMachine = this.machines.put(id, machine);
+
         if (tempMachine == null)
             return true;
 
         this.machines.put(id, tempMachine);
+
         return false;
     }
 
+    /**
+     * Add Request if not already in requests HashMap
+     * 
+     * @param machine the request we want to add
+     * @return wheter the request has been added or not to our requests HashMap
+     */
     public boolean addRequest(Request request) {
         if (request == null)
             return false;
 
         int id = request.getId();
         Request tempRequest = this.requests.put(id, request);
+
         if (tempRequest == null)
             return true;
 
         this.requests.put(id, tempRequest);
+
         return false;
     }
 
+    /**
+     * Add Technician if not already in technicians HashMap
+     * 
+     * @param technician the technician we want to add
+     * @return whether the technician has been added or not to our technicians
+     *         HashMap
+     */
     public boolean addTechnician(Technician technician) {
         if (technician == null)
             return false;
 
         int id = technician.getId();
         Technician tempTechnician = this.technicians.put(id, technician);
+
         if (tempTechnician == null)
             return true;
 
         this.technicians.put(id, tempTechnician);
+
         return false;
+    }
+
+    /**
+     * Get the first Technician able to install the machine passed in parameter
+     * 
+     * @param machine the machine we want to install
+     * @return the first Technician able to install 'machine'
+     */
+    public Technician getTechnician(Machine machine) {
+        for (Technician tech : technicians.values()) {
+            if (tech.checkMachineAbility(machine.getId()))
+                return tech;
+        }
+
+        return new Technician();
     }
 
     @Override
@@ -155,10 +246,9 @@ public class Instance {
         str += "Dataset : " + dataset + "\n";
         str += "Name : " + name + "\n";
         str += "Days : " + days + "\n\n";
-        str += truck.toString();
+        str += truckModel.toString();
         str += "Technician Cost : " + technicianCost + "\n";
-        str += "Technician Day Cost : " + technicianDayCost + "\n";
-        str += "Technician Distance Cost : " + technicianDistanceCost + "\n\n";
+        str += "Truck Cost : " + truckCost + "\n\n";
         str += "Liste des machines : \n\n";
         for (Map.Entry<Integer, Machine> set : this.machines.entrySet())
             str += set.getValue() + "\n";
