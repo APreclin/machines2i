@@ -1,5 +1,6 @@
 package solution.tournee;
 
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import instance.reseau.Location;
 import instance.reseau.Machine;
@@ -7,7 +8,7 @@ import instance.reseau.Request;
 import instance.reseau.Technician;
 import solution.Day;
 
-public class InstallationRound extends Round {
+public class InstallationRound extends Round implements Comparable {
     private Technician technician;
     private Integer coveredDistance;
     private Day installationDay;
@@ -189,4 +190,20 @@ public class InstallationRound extends Round {
         System.out.println("Cout de la tournée d'installation (val:210) => " + ir.getTotalCost());
     }
 
+    @Override
+    public int compareTo(Object o) {
+        if (o.getClass().equals(this.getClass())) {
+            InstallationRound ir = (InstallationRound)(o);
+            return ir.getInstallationDay().getDateDiff(this.getInstallationDay());
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    public static Comparator<InstallationRound> InstallationRoundDateComparator 
+                          = new Comparator<InstallationRound>() {
+
+        public int compare(InstallationRound ir1, InstallationRound ir2) {
+          return ir2.compareTo(ir1);
+        }
+    };
 }

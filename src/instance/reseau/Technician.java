@@ -2,6 +2,7 @@ package instance.reseau;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import solution.Day;
@@ -78,6 +79,7 @@ public class Technician {
         // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
         if (checkAddInstallationRound(installationRoundGiven)) {
             this.installationRounds.push(installationRoundGiven);
+            this.installationRounds.sort(InstallationRound.InstallationRoundDateComparator);
             return true;
         }
         else {
@@ -97,18 +99,28 @@ public class Technician {
             return true;
         }
 
+        boolean flagGivenRoundIsolated = false;
         InstallationRound round = installationRoundGiven;
+        this.installationRounds.add(round);
+        this.installationRounds.sort(InstallationRound.InstallationRoundDateComparator);
         int IrIndex = installationRounds.indexOf(round); 
         int nbConsecutiveInstallationRounds = 1;    // Toujours +1 car on compte les ponts entre jours qui sont toujours = nbJours-1
 
         try {
-            InstallationRound beforeRound = installationRounds.get(IrIndex--);
+            InstallationRound beforeRound = installationRounds.get(--IrIndex);
+
+            if (!round.getInstallationDay().follows(beforeRound.getInstallationDay())) {
+                 // Si la tournée précédente celle ajoutée ne suit pas, on prend celle d'encore avant pour vérifier les 2 jours de pause à 5 jour de travail
+                flagGivenRoundIsolated = true;
+                round = installationRounds.get(IrIndex);
+                beforeRound = installationRounds.get(--IrIndex);
+            }
 
             while(round.getInstallationDay().follows(beforeRound.getInstallationDay())) {
+                nbConsecutiveInstallationRounds++;
                 // On regarde combien de tournées consécutives sont présentes avant la tournée à ajouter
                 round = beforeRound;
-                beforeRound = installationRounds.get(IrIndex--);  // prend la tournée placée avant
-                nbConsecutiveInstallationRounds++;
+                beforeRound = installationRounds.get(--IrIndex);  // prend la tournée placée avant
             }
         } catch(IndexOutOfBoundsException e) {
             System.out.println(e);
@@ -118,11 +130,11 @@ public class Technician {
         IrIndex = installationRounds.indexOf(round);
         InstallationRound afterRound = null;
         try {
-            afterRound = installationRounds.get(IrIndex++);
+            afterRound = installationRounds.get(++IrIndex);
             while(afterRound.getInstallationDay().follows(round.getInstallationDay())) {
                 // On regarde combien de tournées consécutives sont présentes après la tournée à ajouter
                 round = afterRound;
-                afterRound = installationRounds.get(IrIndex++);  // prend la tournée placée avant
+                afterRound = installationRounds.get(++IrIndex);  // prend la tournée placée avant
                 nbConsecutiveInstallationRounds++;
             }
         } catch (IndexOutOfBoundsException e) {
@@ -130,23 +142,36 @@ public class Technician {
         }
 
         if (nbConsecutiveInstallationRounds > 5) {
-            // on ne peut pas demander plus de 5 jours d'affilé
+            // on ne peut pas demander plus de 5 jours d'affilés
+            removeInstallationRound(round);
             return false;
         }
 
         if (nbConsecutiveInstallationRounds == 5) {
-            // vérification qu'à la fin de 5 jours consécutifs le technicien prendra bien 2 jours de congé
-            InstallationRound lastConsecutiveRound = afterRound;
-            if (lastConsecutiveRound == null)   // Il n'y a pas d'autre tournée après celle ajoutée, donc on vérifiera au prochaina ajout (5 consécutives avec pause infinie pour l'instant)
-                return true;
-            try {
-                InstallationRound afterLastConsecutiveRound = this.installationRounds.get(IrIndex++);
-                if (afterLastConsecutiveRound.getInstallationDay().getDateDiff(lastConsecutiveRound.getInstallationDay()) < 2)
+            // vérification qu'à la fin de 5 jours consécutifs le technicien prendra bien 2 jours de congé               
+            if (flagGivenRoundIsolated) {
+                IrIndex = installationRounds.indexOf(installationRoundGiven);
+                InstallationRound lastRound = installationRounds.get(--IrIndex);
+                if (installationRoundGiven.getInstallationDay().getDateDiff(lastRound.getInstallationDay()) <= 2) {
                     // La tournée après la dernière tournée consécutive est à moins de 2 jours et il y en a 5 d'affilé, on bloque
+                    removeInstallationRound(round);
                     return false;
-            } catch (Exception e) {
-                // Il n'y a pas de tournée après la dernière, donc on vérifiera au prochaina ajout (5 consécutives avec pause infinie pour l'instant)
-                return true;
+                }
+            }
+            else {
+                InstallationRound lastConsecutiveRound = round; // Si la tournée donnée etait la dernière consécutive, elle est prise, sinon la dernière consécutive est récupérée dans la boucle vers l'avant
+                IrIndex = installationRounds.indexOf(round);
+                try {
+                    InstallationRound afterLastConsecutiveRound = this.installationRounds.get(++IrIndex);
+                    if (afterLastConsecutiveRound.getInstallationDay().getDateDiff(lastConsecutiveRound.getInstallationDay()) <= 2) {
+                        // La tournée après la dernière tournée consécutive est à moins de 2 jours et il y en a 5 d'affilé, on bloque
+                        removeInstallationRound(round);
+                        return false;
+                    }
+                } catch (Exception e) {
+                    // Il n'y a pas de tournée après la dernière, donc on vérifiera au prochaina ajout (5 consécutives avec pause infinie pour l'instant)
+                    return true;
+                }
             }
         }
         return true;
