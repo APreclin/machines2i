@@ -49,7 +49,7 @@ public class SolutionWriter {
             bw.write("TECHNICIAN_DISTANCE = " + solution.getTechnicianDistance() + "\n");
             bw.write("NUMBER_OF_TECHNICIAN_DAYS = " + solution.getNbTechniciansDays() + "\n");
             //TODO : corriger le nombre de techniciens utilisés pour qu'il ne soit pas celui des jours/techniciens
-            //bw.write("NUMBER_OF_TECHNICIANS_USED = " + solution.getNbTechniciansUsed() + "\n");
+            bw.write("NUMBER_OF_TECHNICIANS_USED = " + solution.getNbTechniciansUsed() + "\n");
             bw.write("IDLE_MACHINE_COSTS = " + solution.getIdleMachineCosts() + "\n");
             bw.write("TOTAL_COST = " + solution.getTotalCost() + "\n");
             /*
