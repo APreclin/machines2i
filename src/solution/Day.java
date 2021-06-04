@@ -24,6 +24,8 @@ public class Day {
     public Day(int date) {
         this();
         this.date = date;
+        if (date == 8)
+            System.out.println("OUI");
     }
 
     public int getDate() {
