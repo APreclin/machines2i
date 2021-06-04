@@ -12,15 +12,11 @@ public class SolutionTriviale implements Solveur {
     @Override
     public Solution solve(Instance instance) {
         Solution sol = new Solution(instance);
-        for (Request r : instance.getRequests().values()) { 
-            if (!sol.addRequestExistingDeliveryRound(r))
-                sol.addRequestNewDeliveryRound(r);
-            if (!sol.addRequestExistingInstallationRound(r))
-                sol.addRequestNewInstallationRound(r);
+        for (Request r : instance.getRequests().values()) {
+            sol.addRequestNewDeliveryRound(r);
+            sol.addRequestNewInstallationRound(r);
         }
 
-        sol.calculPenalties();
-        // sol.getMaxTechnicianDays();
         sol.getMaxTruckDays();
 
         SolutionWriter sw = new SolutionWriter(instance, sol);
@@ -39,7 +35,7 @@ public class SolutionTriviale implements Solveur {
             InstanceReader reader = new InstanceReader();
             Instance instance = reader.readInstance();
             SolutionTriviale sol = new SolutionTriviale();
-            System.out.println(sol.solve(instance));
+            sol.solve(instance);
         } catch (ReaderException ex) {
             System.out.println(ex.getMessage());
         }
