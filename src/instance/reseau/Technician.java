@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import solution.Day;
 import solution.tournee.InstallationRound;
 
 public class Technician {
@@ -16,6 +15,7 @@ public class Technician {
     private int maxRequests;
     private int distanceCost;
     private int dayCost;
+    private boolean isUsed;
     private LinkedHashMap<Integer, Boolean> abilities;
     private LinkedList<InstallationRound> installationRounds; // ensemble des tournées réalisées ordonnées dans le sens
                                                               // descendant des dates de tournée
@@ -27,6 +27,7 @@ public class Technician {
         this.maxRequests = 0;
         this.distanceCost = 0;
         this.dayCost = 0;
+        this.isUsed = false;
         this.abilities = new LinkedHashMap<Integer, Boolean>();
         this.installationRounds = new LinkedList<InstallationRound>();
     }
@@ -176,36 +177,18 @@ public class Technician {
         }
         return true;
     }
-
-    public boolean removeInstallationRound(InstallationRound installationRoundGiven) {
-        if (installationRoundGiven == null)
-            return false;
-
-        if (!this.installationRounds.contains(installationRoundGiven))
-            return false; // la tournée n'etait pas contenue
-
-        this.installationRounds.remove(installationRoundGiven);
-        return true;
+    
+    public boolean getIsUsed() {
+        return isUsed;
     }
 
-    public int calcNbConsecutiveRounds() {
-        // Vérifie qu'il n'y ait pas plus de 5 tournées consécutives
-        if (installationRounds.size() == 0)
-            return 0;
+    public void setIsUsed() {
+        isUsed = true;
+    }
 
-        InstallationRound beforeRound = installationRounds.getLast();
-        int lastIndex = installationRounds.indexOf(beforeRound);
-        int nbConsRounds = 0;
-
-        for (int i = 1; i < 6; i++) {
-            InstallationRound previousRound = installationRounds.get(lastIndex - i);
-            if (beforeRound.getInstallationDay().follows(previousRound.getInstallationDay()))
-                nbConsRounds += 1;
-            else
-                nbConsRounds = 0;
-        }
-
-        return nbConsRounds;
+    public void addInstallationRound(InstallationRound installationRoundGiven) {
+        this.installationRounds.push(installationRoundGiven);
+        isUsed = true;
     }
 
     /**
@@ -222,21 +205,6 @@ public class Technician {
             return false;
 
         return this.abilities.get(machineId);
-    }
-
-    /**
-     * Check if the technician is already working on a certain day
-     * 
-     * @param day the day concerned
-     * @return whether working or not
-     *         
-     */
-    public boolean isWorkingOnDay(Day day) {
-        for (InstallationRound ir : installationRounds) {
-            if (ir.getInstallationDay().getDate() == day.getDate())
-                return true;
-        }
-        return false;
     }
 
     @Override
@@ -283,44 +251,38 @@ public class Technician {
     }
 
     public static void main(String[] args) {
-        Location maison1 = new Location(1, 0, 0);
-        Location client1 = new Location(2, 0, 50);
-        Location client2 = new Location(2, 50, 50);
-        Machine m1 = new Machine(1, 5, 2);
-        Machine m2 = new Machine(2, 5, 2);
-        Request r1 = new Request(1, client1, 2, 7, m1, 1);
-        Request r2 = new Request(2, client2, 5, 10, m2, 1);
-        Request r3 = new Request(2, client2, 6, 10, m1, 1);
-        Day d = new Day(5);
-
-        LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<>();
-        abilities.put(1, true);
-        abilities.put(2, false);
-
-        Technician tech1 = new Technician(1, maison1, 90, 2, 2, 50, abilities);
-
-        InstallationRound i1 = new InstallationRound(tech1, d);
-        tech1.addInstallationRound(i1);
-        System.out.println("tournée sans requêtes : " + i1);
-        tech1.removeInstallationRound(i1);
-
-        InstallationRound i2 = new InstallationRound(tech1, d);
-        tech1.addInstallationRound(i2);
-        i2.addRequest(r1);
-        System.out.println("tournée avec requête faisable : " + i2);
-        tech1.removeInstallationRound(i2);
-
-        InstallationRound i3 = new InstallationRound(tech1, d);
-        tech1.addInstallationRound(i3);
-        i3.addRequest(r2);
-        System.out.println("tournée avec requête infaisable par le technicien : " + i3);
-        tech1.removeInstallationRound(i3);
-
-        InstallationRound i4 = new InstallationRound(tech1, d);
-        tech1.addInstallationRound(i4);
-        i3.addRequest(r3);
-        System.out.println("tournée avec requête sur un mauvais jour : " + i4);
-        tech1.removeInstallationRound(i4);
+        /*
+         * Location maison1 = new Location(1, 0, 0); Location client1 = new Location(2,
+         * 0, 50); Location client2 = new Location(2, 50, 50); Machine m1 = new
+         * Machine(1, 5, 2); Machine m2 = new Machine(2, 5, 2); Request r1 = new
+         * Request(1, client1, 2, 7, m1, 1); Request r2 = new Request(2, client2, 5, 10,
+         * m2, 1); Request r3 = new Request(2, client2, 6, 10, m1, 1); Day d = new
+         * Day(5);
+         * 
+         * LinkedHashMap<Integer, Boolean> abilities = new LinkedHashMap<>();
+         * abilities.put(1, true); abilities.put(2, false);
+         * 
+         * Technician tech1 = new Technician(1, maison1, 90, 2, 2, 50, abilities);
+         * 
+         * InstallationRound i1 = new InstallationRound(tech1, d);
+         * tech1.addInstallationRound(i1); System.out.println("tournée sans requêtes : "
+         * + i1); tech1.removeInstallationRound(i1);
+         * 
+         * InstallationRound i2 = new InstallationRound(tech1, d);
+         * tech1.addInstallationRound(i2); i2.addRequest(r1);
+         * System.out.println("tournée avec requête faisable : " + i2);
+         * tech1.removeInstallationRound(i2);
+         * 
+         * InstallationRound i3 = new InstallationRound(tech1, d);
+         * tech1.addInstallationRound(i3); i3.addRequest(r2);
+         * System.out.println("tournée avec requête infaisable par le technicien : " +
+         * i3); tech1.removeInstallationRound(i3);
+         * 
+         * InstallationRound i4 = new InstallationRound(tech1, d);
+         * tech1.addInstallationRound(i4); i3.addRequest(r3);
+         * System.out.println("tournée avec requête sur un mauvais jour : " + i4);
+         * tech1.removeInstallationRound(i4);
+         */
 
     }
 

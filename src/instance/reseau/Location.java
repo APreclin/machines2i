@@ -115,16 +115,15 @@ public class Location {
 
     public static void main(String[] args) {
 
-        // Création d'une location
-        Location loc1 = new Location(1, 4, 5);
-        System.out.println(loc1.toString());
-
-        // Test de la fonction getDistance
-        Location loc2 = new Location(2, 5, 5);
-        // System.out.println(loc1.getDistanceTo(loc2));
-
-        // Test de l'ajout de route
-        // System.out.println(loc1.addRoad(loc2));
-        // System.out.println(loc1.getRoadsStartingBy().toString());
+        /*
+         * // Création d'une location Location loc1 = new Location(1, 4, 5);
+         * System.out.println(loc1.toString());
+         * 
+         * // Test de la fonction getDistance Location loc2 = new Location(2, 5, 5); //
+         * System.out.println(loc1.getDistanceTo(loc2));
+         * 
+         * // Test de l'ajout de route // System.out.println(loc1.addRoad(loc2)); //
+         * System.out.println(loc1.getRoadsStartingBy().toString());
+         */
     }
 }

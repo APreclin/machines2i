@@ -9,8 +9,6 @@ import instance.reseau.Machine;
 import instance.reseau.Request;
 import instance.reseau.Technician;
 import instance.reseau.Truck;
-import io.InstanceReader;
-import io.exception.ReaderException;
 import solution.tournee.DeliveryRound;
 import solution.tournee.InstallationRound;
 
@@ -113,28 +111,29 @@ public class Solution {
      */
     public void addRequestNewDeliveryRound(Request requestToAdd) {
         int date = requestToAdd.getFirstDay();
-        Day newDay = new Day(date);
-        Truck truck = new Truck(++idTrucks, instance.getTruckModel());
-        instance.addTruck(truck);
+        Day deliveryDay = new Day(date);
+        Truck truck = createNewTruck();
 
-        Day oldDay = days.put(date, newDay);
-
-        if (oldDay != null) {
-            days.put(date, oldDay);
-            newDay = oldDay;
-        }
-
-        DeliveryRound tempRound = new DeliveryRound(truck, instance, newDay);
+        DeliveryRound tempRound = new DeliveryRound(truck, instance, deliveryDay);
         tempRound.addRequest(requestToAdd);
-        days.get(date).addDeliveryRound(tempRound);
-        newDay.addTruck();
+
+        deliveryDay = this.addDay(deliveryDay);
+        deliveryDay.addDeliveryRound(tempRound);
+        deliveryDay.addTruck();
 
         totalCost += tempRound.getTotalCost();
-        truckDistance += tempRound.getCurrentDistance();
-
-        // totalCost += instance.getTruckCost();
         totalCost += truck.getDayCost();
+        truckDistance += tempRound.getCurrentDistance();
+    }
+
+    public Truck createNewTruck() {
+
+        Truck truck = new Truck(++idTrucks, instance.getTruckModel());
+        instance.addTruck(truck);
+        totalCost += instance.getTruckCost();
         nbTruckDays++;
+
+        return truck;
     }
 
     /**
@@ -146,94 +145,29 @@ public class Solution {
     public void addRequestNewInstallationRound(Request requestToAdd) {
         Machine machine = requestToAdd.getMachine();
         HashMap<Integer, Technician> technicians = instance.getTechnicians(machine);
+        Day installationDay = new Day(requestToAdd.getDeliveryDate() + 1);
 
-        for (int dateInc = requestToAdd.getDeliveryDate() + 1; dateInc <= requestToAdd.getLastDay(); dateInc++) {
-            // Test sur tous les jours de l'horizon tant qu'on ne trouve pas
-            for (Technician tech : technicians.values()) {
-                // Test d'une nouvelle tournée avec tous les techniciens possibles tant qu'on ne
-                // trouve pas
+        for (Technician tech : technicians.values()) {
+            InstallationRound tempRound = new InstallationRound(tech, installationDay);
 
-                // l'objet jour ne sera ajouté que si il contient une tournée valide
-                Day newDay = new Day(dateInc);
+            if (!tech.getIsUsed() && tempRound.addRequest(requestToAdd)) {
 
-                // Création d'une tournée temporaire de test
-                InstallationRound tempRound = new InstallationRound(tech, newDay);
-                if (tech.checkAddInstallationRound(tempRound) && tempRound.addRequest(requestToAdd)) {
-                    tech.addInstallationRound(tempRound);
-                    // ajout du jour à la liste dans la solution (récup de l'existant si jamais)
-                    newDay = this.addDay(newDay);
-                    newDay.addInstallationRound(tempRound);
-                    newDay.addTechnician();
+                tech.addInstallationRound(tempRound);
+                tech.setIsUsed();
+                installationDay = this.addDay(installationDay);
+                installationDay.addInstallationRound(tempRound);
+                installationDay.addTechnician();
 
-                    // update du cout
-                    totalCost += tempRound.getTotalCost();
-                    technicianDistance += tempRound.getCoveredDistance();
+                technicianDistance += tempRound.getCoveredDistance();
+                totalCost += instance.getTechnicianCost();
+                totalCost += tempRound.getTotalCost();
 
-                    nbTechniciansDays++;
-                    nbTechniciansUsed++;
-                    totalCost += instance.getTechnicianCost();
-                    // totalCost += tech.getDayCost();
+                nbTechniciansDays++;
+                nbTechniciansUsed++;
 
-                    return;
-                }
+                return;
             }
         }
-
-    }
-
-    /**
-     * Adds requestToAdd to an existing DeliveryRound if deliveryRounds is not null
-     * 
-     * @param requestToAdd
-     * @return whether the requestToAdd was added or not
-     */
-    public boolean addRequestExistingDeliveryRound(Request requestToAdd) {
-        if (days.isEmpty())
-            return false;
-
-        for (Day d : days.values()) {
-            if (d.getDeliveryRounds().isEmpty())
-                return false;
-            for (DeliveryRound t : d.getDeliveryRounds()) {
-                int oldCost = t.getTotalCost();
-                int oldDistance = t.getCurrentDistance();
-                if (t.addRequest(requestToAdd)) {
-                    totalCost += t.getTotalCost() - oldCost; // maj du cout (rempalcement de l'ancien)
-                    truckDistance += t.getCurrentDistance() - oldDistance;
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Adds requestToAdd to an existing InstallationRound if installationRounds is
-     * not null
-     * 
-     * @param requestToAdd
-     * @return whether the requestToAdd was added or not
-     */
-    public boolean addRequestExistingInstallationRound(Request requestToAdd) {
-        if (days.isEmpty())
-            return false;
-
-        for (Day d : days.values()) {
-            // if (d.getDeliveryRounds().isEmpty())
-            // return false;
-            for (InstallationRound t : d.getInstallationRounds()) {
-                int oldCost = t.getTotalCost();
-                int oldDistance = t.getCoveredDistance();
-                if (t.addRequest(requestToAdd)) {
-                    totalCost += t.getTotalCost() - oldCost;
-                    technicianDistance += t.getCoveredDistance() - oldDistance;
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     /*
@@ -273,18 +207,6 @@ public class Solution {
 
         this.idleMachineCosts = totalPenalties;
         totalCost += totalPenalties;
-    }
-
-    /*
-     * Vérifie si un camion est déjà utilisé
-     */
-    public boolean isTruckUsed(Truck truck) {
-        HashSet<DeliveryRound> deliveryRounds = this.getDeliveryRounds();
-        for (DeliveryRound dr : deliveryRounds) {
-            if (dr.getTruck().equals(truck))
-                return true;
-        }
-        return false;
     }
 
     /**
@@ -333,24 +255,17 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        Instance i1 = new Instance();
-        try {
-            InstanceReader reader = new InstanceReader();
-            i1 = reader.readInstance();
-            System.out.println("Instance lue avec success !");
-        } catch (ReaderException ex) {
-            System.out.println(ex.getMessage());
-        }
-        Solution s1 = new Solution(i1);
-        for (Request r : i1.getRequests().values()) {
-            if (s1.addRequestExistingDeliveryRound(r)) {
-                s1.addRequestExistingInstallationRound(r);
-            } else {
-                s1.addRequestNewDeliveryRound(r);
-                s1.addRequestNewInstallationRound(r);
-            }
-        }
-        System.out.println(s1);
+        /*
+         * Instance i1 = new Instance(); try { InstanceReader reader = new
+         * InstanceReader(); i1 = reader.readInstance();
+         * System.out.println("Instance lue avec success !"); } catch (ReaderException
+         * ex) { System.out.println(ex.getMessage()); } Solution s1 = new Solution(i1);
+         * for (Request r : i1.getRequests().values()) { if
+         * (s1.addRequestExistingDeliveryRound(r)) {
+         * s1.addRequestExistingInstallationRound(r); } else {
+         * s1.addRequestNewDeliveryRound(r); s1.addRequestNewInstallationRound(r); } }
+         * System.out.println(s1);
+         */
     }
 
 }

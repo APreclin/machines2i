@@ -17,7 +17,7 @@ public class InstallationRound extends Round implements Comparable {
         super();
         this.installationDay = day;
         this.coveredDistance = 0;
-        this.setTechnician(technician);
+        this.technician = technician;
     }
 
     public Day getInstallationDay() {
@@ -49,18 +49,6 @@ public class InstallationRound extends Round implements Comparable {
         return technician;
     }
 
-    public boolean setTechnician(Technician technician) {
-        if (this.technician != null)
-            return false;
-
-        this.technician = technician;
-        if (!technician.isWorkingOnDay(this.installationDay))
-            // Le cout journalier n'est ajouté que si le technicien ne travaillait pas deja
-            // ce jour
-            this.totalCost = technician.getDayCost();
-        return true;
-    }
-
     /**
      * Check if it is possible to add request to the list of requests. Check if the
      * technician is able to install the machine specified in the request. Check if
@@ -86,11 +74,11 @@ public class InstallationRound extends Round implements Comparable {
         int requestLocationToHome = returnToHome(requestLocation);
 
         if (requests.isEmpty()) {
-            int locationToHomeTrip = requestLocationToHome * 2;
+            int locationToHomeTrip = (requestLocationToHome * 2);
             if (!checkMachineComp || locationToHomeTrip > technicianMaxDistance)
                 return false;
 
-            doAddRequest(request, requestLocationToHome * 2);
+            doAddRequest(request, locationToHomeTrip);
 
             return true;
         }
@@ -104,7 +92,7 @@ public class InstallationRound extends Round implements Comparable {
         int newDistance = lastLocationToRequestLocation - lastLocationToHome + requestLocationToHome;
         boolean isDistanceRespected = (newDistance + this.coveredDistance <= technicianMaxDistance);
 
-        if (!isNbRequestsRespected || !isDistanceRespected || !checkMachineComp)
+        if (!isDistanceRespected || !checkMachineComp)
             return false;
 
         doAddRequest(request, newDistance);

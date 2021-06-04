@@ -123,16 +123,15 @@ public class Request {
 
     public static void main(String[] args) {
 
-        // Création d'une requête simple
-        Location l = new Location(1, 2, 3);
-        Machine m = new Machine(1, 10, 20);
-        Request r = new Request(1, l, 1, 3, m, 2);
-        System.out.println(r.toString());
-
-        // Test de la fonction getDistanceTo
-        Location l2 = new Location(2, 3, 3);
-        Request r2 = new Request(2, l2, 1, 3, m, 4);
-        // System.out.println(r.getDistanceTo(r2));
+        /*
+         * // Création d'une requête simple Location l = new Location(1, 2, 3); Machine
+         * m = new Machine(1, 10, 20); Request r = new Request(1, l, 1, 3, m, 2);
+         * System.out.println(r.toString());
+         * 
+         * // Test de la fonction getDistanceTo Location l2 = new Location(2, 3, 3);
+         * Request r2 = new Request(2, l2, 1, 3, m, 4); //
+         * System.out.println(r.getDistanceTo(r2));
+         */
     }
 
 }
