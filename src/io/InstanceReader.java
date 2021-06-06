@@ -78,22 +78,20 @@ public class InstanceReader {
             this.machines = machines;
             LinkedHashMap<Integer, Location> locations = readLocations(br);
             this.locations = locations;
-            List<Request> requests = readRequests(br);
-            List<Technician> technicians = readTechnicians(br);
-
+            LinkedHashMap<Integer, Request> requests = readRequests(br);
+            LinkedHashMap<Integer, Technician> technicians = readTechnicians(br);
 
             Instance instance = new Instance(dataset, name, days, technicianCost, truck, truckCost);
-
             for (Location location : locations.values())
                 instance.addLocation(location);
 
             for (Machine machine : machines.values())
                 instance.addMachine(machine);
 
-            for (Request request : requests)
+            for (Request request : requests.values())
                 instance.addRequest(request);
 
-            for (Technician technician : technicians)
+            for (Technician technician : technicians.values())
                 instance.addTechnician(technician);
 
             return instance;
@@ -331,7 +329,6 @@ public class InstanceReader {
     private LinkedHashMap<Integer, Technician> readTechnicians(BufferedReader br) throws IOException {
         LinkedHashMap<Integer, Technician> technicians = new LinkedHashMap<Integer, Technician>();
 
-
         String line = br.readLine();
         while (!line.contains("TECHNICIANS = "))
             line = br.readLine();
@@ -360,7 +357,6 @@ public class InstanceReader {
                 Boolean ability = techniciansData.get(j) == 1;
                 abilities.put(idMachine++, ability);
             }
-
 
             Technician technician = new Technician(id, location, maxDistance, maxRequests, distanceCost, dayCost,
                     abilities);
@@ -401,7 +397,6 @@ public class InstanceReader {
      */
     private LinkedHashMap<Integer, Request> readRequests(BufferedReader br) throws IOException {
         LinkedHashMap<Integer, Request> requests = new LinkedHashMap<Integer, Request>();
-
         String line = br.readLine();
         while (!line.contains("REQUESTS ="))
             line = br.readLine();
@@ -424,7 +419,7 @@ public class InstanceReader {
             int nbMachines = requestsData.get(5);
 
             Request request = new Request(id, requestLocation, firstDay, lastDay, machine, nbMachines);
-            requests.add(request);
+            requests.put(id, request);
 
             scanner.close();
         }

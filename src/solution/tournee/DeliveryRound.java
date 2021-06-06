@@ -58,6 +58,10 @@ public class DeliveryRound extends Round {
         return this.truck;
     }
 
+    public Location getDepot() {
+        return this.depot;
+    }
+
     /**
      * Check if it is possible to add request to the list of requests. Check if the
      * capacity of the truck is respected. Check if the max distance of the truck is

@@ -2,7 +2,14 @@
     "java.project.sourcePaths": [
         "src"
     ],
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ]
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "d:\\Desktop\\json-simple-1.1.1.jar"
+        ],
+        "exclude": [
+            "d:\\Desktop\\IG2I\\4e annee\\Option Systeme d'Information\\Programmation orienté objet pour l'optimisation\\Projet\\json-simple-1.1.1.jar",
+            "lib/json/json-simple-1.1.1.jar"
+        ]
+    }
 }
