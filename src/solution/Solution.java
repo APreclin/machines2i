@@ -22,7 +22,7 @@ public class Solution {
     private Integer nbTechniciansDays;
     private Integer nbTechniciansUsed;
     private Integer idleMachineCosts;
-    private Integer totalCost;
+    private long totalCost;
     private Integer idTrucks = 0;
 
     public Solution() {
@@ -71,7 +71,7 @@ public class Solution {
         return idleMachineCosts;
     }
 
-    public Integer getTotalCost() {
+    public long getTotalCost() {
         return this.totalCost;
     }
 
@@ -130,7 +130,7 @@ public class Solution {
 
         Truck truck = new Truck(++idTrucks, instance.getTruckModel());
         instance.addTruck(truck);
-        totalCost += instance.getTruckCost();
+        // totalCost += instance.getTruckCost();
         nbTruckDays++;
 
         return truck;
@@ -161,6 +161,7 @@ public class Solution {
                 technicianDistance += tempRound.getCoveredDistance();
                 totalCost += instance.getTechnicianCost();
                 totalCost += tempRound.getTotalCost();
+                totalCost += tech.getDayCost();
 
                 nbTechniciansDays++;
                 nbTechniciansUsed++;
