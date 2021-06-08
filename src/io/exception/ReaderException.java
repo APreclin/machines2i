@@ -22,8 +22,5 @@ public class ReaderException extends Exception {
     public String getMessage() {
         return "ERREUR : "+infos+"\n\t--> "+conseils;
     }
-    
-    
-    
-    
+
 }

@@ -183,9 +183,7 @@ public class SolutionWriter {
             }
 
             obj.put("days", days);
-            System.out.println("bite");
             System.out.println(obj.toJSONString());
-            System.out.println("bite2");
             fwJson.write(obj.toJSONString());
             fwJson.flush();
             fwJson.close();

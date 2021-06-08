@@ -1,13 +1,10 @@
 package instance.reseau;
 
-import java.util.HashMap;
-
 public class Location {
 
     private int id;
     private int x;
     private int y;
-    private HashMap<Location, Road> roadsStartingBy;
 
     public Location() {
         this.id = 0;
@@ -55,26 +52,6 @@ public class Location {
         int ord = destination.getY() - this.getY();
 
         return (int) Math.ceil(Math.sqrt((Math.pow(abs, 2) + Math.pow(ord, 2))));
-    }
-
-    /**
-     * Add road between this location and destination if not already created
-     * 
-     * @param destination
-     * @return whether the road has been created or not
-     */
-    public boolean addRoad(Location destination) {
-        if (destination == null)
-            return false;
-
-        Road tempRoad = roadsStartingBy.put(destination, new Road(this, destination));
-
-        if (tempRoad == null)
-            return true;
-
-        roadsStartingBy.put(destination, tempRoad);
-
-        return false;
     }
 
     @Override

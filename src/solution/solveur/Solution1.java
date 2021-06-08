@@ -7,16 +7,20 @@ import io.SolutionWriter;
 import io.exception.ReaderException;
 import solution.Solution;
 
-public class SolutionTriviale implements Solveur {
+public class Solution1 implements Solveur {
 
     @Override
     public Solution solve(Instance instance) {
         Solution sol = new Solution(instance);
-        for (Request r : instance.getRequests().values()) {
-            sol.addRequestNewDeliveryRoundSolutionTriviale(r);
-            sol.addRequestNewInstallationRoundSolutionTriviale(r);
+        for (Request r : instance.getRequests().values()) { 
+            if (!sol.addRequestExistingDeliveryRoundSolution1(r))
+                sol.addRequestNewDeliveryRoundSolution1(r);
+            if (!sol.addRequestExistingInstallationRoundSolution1(r))
+                sol.addRequestNewInstallationRoundSolution1(r);
         }
 
+        sol.calculPenalties();
+        // sol.getMaxTechnicianDays();
         sol.getMaxTruckDays();
 
         SolutionWriter sw = new SolutionWriter(instance, sol);
@@ -34,7 +38,7 @@ public class SolutionTriviale implements Solveur {
         try {
             InstanceReader reader = new InstanceReader();
             Instance instance = reader.readInstance();
-            SolutionTriviale sol = new SolutionTriviale();
+            Solution1 sol = new Solution1();
             sol.solve(instance);
         } catch (ReaderException ex) {
             System.out.println(ex.getMessage());
