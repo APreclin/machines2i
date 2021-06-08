@@ -8,7 +8,7 @@ import instance.reseau.Request;
 import instance.reseau.Technician;
 import solution.Day;
 
-public class InstallationRound extends Round implements Comparable {
+public class InstallationRound extends Round implements Comparable<InstallationRound> {
     private Technician technician;
     private Integer coveredDistance;
     private Day installationDay;
@@ -45,6 +45,18 @@ public class InstallationRound extends Round implements Comparable {
         this.coveredDistance = coveredDistance;
     }
 
+    public boolean setTechnician(Technician technician) {
+        if (this.technician != null)
+            return false;
+
+        this.technician = technician;
+        if (!technician.isWorkingOnDay(this.installationDay))
+            // Le cout journalier n'est ajouté que si le technicien ne travaillait pas deja
+            // ce jour
+            this.totalCost = technician.getDayCost();
+        return true;
+    }
+
     public Technician getTechnician() {
         return technician;
     }
@@ -74,11 +86,11 @@ public class InstallationRound extends Round implements Comparable {
         int requestLocationToHome = returnToHome(requestLocation);
 
         if (requests.isEmpty()) {
-            int locationToHomeTrip = (requestLocationToHome * 2);
+            int locationToHomeTrip = requestLocationToHome * 2;
             if (!checkMachineComp || locationToHomeTrip > technicianMaxDistance)
                 return false;
 
-            doAddRequest(request, locationToHomeTrip);
+            doAddRequest(request, requestLocationToHome * 2);
 
             return true;
         }
@@ -92,13 +104,14 @@ public class InstallationRound extends Round implements Comparable {
         int newDistance = lastLocationToRequestLocation - lastLocationToHome + requestLocationToHome;
         boolean isDistanceRespected = (newDistance + this.coveredDistance <= technicianMaxDistance);
 
-        if (!isDistanceRespected || !checkMachineComp)
+        if (!isNbRequestsRespected || !isDistanceRespected || !checkMachineComp)
             return false;
 
         doAddRequest(request, newDistance);
 
         return true;
     }
+    
 
     /**
      * Distance between location and the depot
@@ -110,6 +123,13 @@ public class InstallationRound extends Round implements Comparable {
         return location.getDistanceTo(this.technician.getHome());
     }
 
+     /**
+     * Réalise les actions nécessaires à l'ajout d'une requête (sans prendre en compte les vérifications qui sont faites par la méthodes appelante)
+     * 
+     * @param request requête à ajouter
+     * @param distance distance engendrée par cet ajout
+     * @return void
+     */
     private void doAddRequest(Request request, int distance) {
         request.setInstallationDate(this.installationDay.getDate());
         this.requests.addLast(request);
@@ -149,6 +169,19 @@ public class InstallationRound extends Round implements Comparable {
         str += "------------------------------\n";
         return str;
     }
+
+    @Override
+    public int compareTo(InstallationRound ir) {
+        return ir.getInstallationDay().getDateDiff(this.getInstallationDay());
+    }
+
+    public static Comparator<InstallationRound> InstallationRoundDateComparator 
+                          = new Comparator<InstallationRound>() {
+
+        public int compare(InstallationRound ir1, InstallationRound ir2) {
+          return ir2.compareTo(ir1);
+        }
+    };
 
     public static void main(String[] args) {
         // Création d'une installation round simple

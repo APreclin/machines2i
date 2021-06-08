@@ -58,6 +58,10 @@ public class DeliveryRound extends Round {
         return this.truck;
     }
 
+    public Location getDepot() {
+        return this.depot;
+    }
+
     /**
      * Check if it is possible to add request to the list of requests. Check if the
      * capacity of the truck is respected. Check if the max distance of the truck is
@@ -72,13 +76,14 @@ public class DeliveryRound extends Round {
         int nbMachines = request.getNbMachines();
         int machineSize = request.getMachine().getSize();
         int requestSize = machineSize * nbMachines;
+        int totalSize = requestSize + this.currentCharge;
         int truckCapacity = this.truck.getCapacity();
         int truckDistanceCost = this.truck.getDistanceCost();
 
         if (deliveryDay.getDate() < request.getFirstDay() || deliveryDay.getDate() > request.getLastDay())
             return false;
 
-        if (requestSize > truckCapacity)
+        if (totalSize > truckCapacity)
             return false;
 
         Location requestLocation = request.getLocation();
@@ -104,15 +109,16 @@ public class DeliveryRound extends Round {
         int lastLocationToRequestLocation = lastLocation.getDistanceTo(requestLocation);
         int lastLocationToDepot = returnToDepot(lastLocation);
         int newDistance = lastLocationToRequestLocation - lastLocationToDepot + requestLocationToDepot;
+        int lastDistance = this.currentDistance * truckDistanceCost;
 
-        if (newDistance > truckMaxDistance)
+        if (newDistance + this.currentDistance > truckMaxDistance)
             return false;
 
         this.currentCharge += requestSize;
         this.currentDistance += newDistance;
         request.setDeliveryDate(this.deliveryDay.getDate());
         this.requests.add(request);
-        this.totalCost += this.currentDistance * truckDistanceCost;
+        this.totalCost += this.currentDistance * truckDistanceCost - lastDistance;
 
         return true;
     }
