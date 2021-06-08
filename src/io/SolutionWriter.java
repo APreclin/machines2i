@@ -36,8 +36,8 @@ public class SolutionWriter {
     public void writeSolution() {
         try {
 
-            File file = new File(instance.getName() + "_sol.txt");
-            File fileJson = new File(instance.getName() + "_sol.json");
+            File file = new File("solutions/"+instance.getName() + "_sol.txt");
+            File fileJson = new File("solutions/"+instance.getName() + "_sol.json");
 
             if (!file.exists())
                 file.createNewFile();

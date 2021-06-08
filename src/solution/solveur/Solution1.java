@@ -20,7 +20,6 @@ public class Solution1 implements Solveur {
         }
 
         sol.calculPenalties();
-        // sol.getMaxTechnicianDays();
         sol.getMaxTruckDays();
 
         SolutionWriter sw = new SolutionWriter(instance, sol);
