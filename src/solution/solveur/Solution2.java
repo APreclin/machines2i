@@ -7,13 +7,13 @@ import io.SolutionWriter;
 import io.exception.ReaderException;
 import solution.Solution;
 
-public class Solution1 implements Solveur {
+public class Solution2 implements Solveur {
 
     @Override
     public Solution solve(Instance instance) {
         Solution sol = new Solution(instance);
         for (Request r : instance.getRequests().values()) {
-            if (!sol.addRequestExistingDeliveryRoundSolution1(r))
+            if (!sol.addRequestExistingDeliveryRoundSolution2(r))
                 sol.addRequestNewDeliveryRoundSolution1(r);
             if (!sol.addRequestExistingInstallationRoundSolution1(r))
                 sol.addRequestNewInstallationRoundSolution1(r);
@@ -30,14 +30,14 @@ public class Solution1 implements Solveur {
 
     @Override
     public String getNom() {
-        return "Solution 1 ";
+        return "Solution 2 ";
     }
 
     public static void main(String[] args) {
         try {
             InstanceReader reader = new InstanceReader();
             Instance instance = reader.readInstance();
-            Solution1 sol = new Solution1();
+            Solution2 sol = new Solution2();
             sol.solve(instance);
         } catch (ReaderException ex) {
             System.out.println(ex.getMessage());

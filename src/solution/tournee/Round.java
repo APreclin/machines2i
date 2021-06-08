@@ -11,6 +11,8 @@ public abstract class Round {
 
     public abstract boolean addRequest(Request request);
 
+    public abstract boolean addRequestSolution2(Request request);
+
     protected Round() {
         requests = new LinkedList<Request>();
         this.totalCost = 0;

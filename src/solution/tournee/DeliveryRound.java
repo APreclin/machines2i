@@ -1,5 +1,8 @@
 package solution.tournee;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import instance.Instance;
 import instance.reseau.Location;
 import instance.reseau.Request;
@@ -13,11 +16,14 @@ public class DeliveryRound extends Round {
     private int currentDistance;
     private Day deliveryDay;
 
+    private LinkedList<Integer> returnToDepot; // Contient à quel moment le camion repasse par le dépôt
+
     public DeliveryRound() {
         super();
         depot = new Location();
         this.currentCharge = 0;
         this.currentDistance = 0;
+        this.returnToDepot = new LinkedList<Integer>();
     }
 
     public DeliveryRound(Truck truck, Location depot, Day deliveryDay) {
@@ -27,6 +33,7 @@ public class DeliveryRound extends Round {
         this.currentDistance = 0;
         this.truck = truck;
         this.deliveryDay = deliveryDay;
+        this.returnToDepot = new LinkedList<Integer>();
     }
 
     /*
@@ -40,6 +47,7 @@ public class DeliveryRound extends Round {
         this.deliveryDay = deliveryDay;
         this.truck = truck;
         this.depot = instanceToCopy.getDepot();
+        this.returnToDepot = new LinkedList<Integer>();
     }
 
     public Day getDeliverDay() {
@@ -60,6 +68,10 @@ public class DeliveryRound extends Round {
 
     public Location getDepot() {
         return this.depot;
+    }
+
+    public LinkedList<Integer> getReturnToDepot() {
+        return new LinkedList<>(returnToDepot);
     }
 
     /**
@@ -122,6 +134,110 @@ public class DeliveryRound extends Round {
 
         return true;
     }
+
+    // *********************************************************************************
+    // **************** FONCTIONS UTILISEES POUR LA SOLUTION2
+    // **************************
+    // *********************************************************************************
+
+    /**
+     * Check if it is possible to add request to the list of requests. Check if the
+     * capacity of the truck is respected. Check if the max distance of the truck is
+     * respected.
+     * 
+     * @param request
+     * @return whether the request was add or not to the list of requests
+     */
+    @Override
+    public boolean addRequestSolution2(Request request) {
+        // Ajouter le cout de la tournée
+        int nbMachines = request.getNbMachines();
+        int machineSize = request.getMachine().getSize();
+        int requestSize = machineSize * nbMachines;
+        int totalSize = requestSize + this.currentCharge;
+        int truckCapacity = this.truck.getCapacity();
+        int truckDistanceCost = this.truck.getDistanceCost();
+
+        if (deliveryDay.getDate() < request.getFirstDay() || deliveryDay.getDate() > request.getLastDay())
+            return false;
+
+        if (totalSize > truckCapacity && !continueDelivery(request))
+            return false;
+
+        Location requestLocation = request.getLocation();
+        int requestLocationToDepot = returnToDepot(requestLocation);
+        int truckMaxDistance = this.truck.getMaxDistance();
+
+        if (totalSize > truckCapacity && continueDelivery(request)) {
+            int locationToDepotRoundTrip = requestLocationToDepot * 2;
+
+            this.returnToDepot.add(this.requests.size()); // ex: on revient au dépôt après "3" request
+            this.requests.add(request);
+            this.currentCharge = requestSize;
+            this.currentDistance += locationToDepotRoundTrip;
+            this.totalCost += locationToDepotRoundTrip * truckDistanceCost;
+            request.setDeliveryDate(this.deliveryDay.getDate());
+
+            return true;
+        }
+
+        if (this.currentDistance == 0) {
+            int locationToDepotRoundTrip = requestLocationToDepot * 2;
+
+            if (locationToDepotRoundTrip > truckMaxDistance)
+                return false;
+
+            this.requests.add(request);
+            this.currentCharge += requestSize;
+            this.currentDistance += locationToDepotRoundTrip;
+            request.setDeliveryDate(this.deliveryDay.getDate());
+            this.totalCost += this.currentDistance * truckDistanceCost;
+
+            return true;
+        }
+
+        Location lastLocation = this.requests.getLast().getLocation();
+        int lastLocationToRequestLocation = lastLocation.getDistanceTo(requestLocation);
+        int lastLocationToDepot = returnToDepot(lastLocation);
+        int newDistance = lastLocationToRequestLocation - lastLocationToDepot + requestLocationToDepot;
+        int lastDistance = this.currentDistance * truckDistanceCost;
+
+        if (newDistance + this.currentDistance > truckMaxDistance)
+            return false;
+
+        this.currentCharge += requestSize;
+        this.currentDistance += newDistance;
+        request.setDeliveryDate(this.deliveryDay.getDate());
+        this.requests.add(request);
+        this.totalCost += this.currentDistance * truckDistanceCost - lastDistance;
+
+        return true;
+    }
+
+    public boolean continueDelivery(Request request) {
+
+        int nbMachines = request.getNbMachines();
+        int machineSize = request.getMachine().getSize();
+        int requestSize = machineSize * nbMachines;
+        int truckCapacity = this.truck.getCapacity();
+
+        Location requestLocation = request.getLocation();
+        int requestLocationToDepot = returnToDepot(requestLocation);
+        int truckMaxDistance = this.truck.getMaxDistance();
+
+        if (this.currentDistance + (requestLocationToDepot * 2) > truckMaxDistance)
+            return false;
+
+        if (requestSize > truckCapacity)
+            return false;
+
+        return true;
+    }
+
+    // *********************************************************************************
+    // ********* FIN DES FONCTIONS UTILISEES POUR LA SOLUTION2
+    // ******************
+    // *********************************************************************************
 
     /**
      * Distance between location and the depot
