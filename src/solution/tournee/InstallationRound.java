@@ -211,20 +211,4 @@ public class InstallationRound extends Round implements Comparable<InstallationR
         System.out.println("Cout de la tournée d'installation (val:210) => " + ir.getTotalCost());
     }
 
-    @Override
-    public int compareTo(Object o) {
-        if (o.getClass().equals(this.getClass())) {
-            InstallationRound ir = (InstallationRound)(o);
-            return ir.getInstallationDay().getDateDiff(this.getInstallationDay());
-        }
-        return Integer.MAX_VALUE;
-    }
-
-    public static Comparator<InstallationRound> InstallationRoundDateComparator 
-                          = new Comparator<InstallationRound>() {
-
-        public int compare(InstallationRound ir1, InstallationRound ir2) {
-          return ir2.compareTo(ir1);
-        }
-    };
 }

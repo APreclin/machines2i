@@ -3,6 +3,7 @@ instances/
 
 #solutions
 *_sol.txt
+*_sol.json
 
 # Compiled class file
 *.class
