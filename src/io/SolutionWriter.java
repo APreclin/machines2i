@@ -125,6 +125,7 @@ public class SolutionWriter {
                                 requests.add(requestObject);
                             }
 
+                            deliveryRoundObject.put("requests", requests);
                             deliveryRoundsArray.add(deliveryRoundObject);
 
                             bw.write("\n");
@@ -165,6 +166,7 @@ public class SolutionWriter {
                                 requests.add(requestObject);
                             }
 
+                            installationRoundObject.put("requests", requests);
                             installationRoundsArray.add(installationRoundObject);
 
                             bw.write("\n");
