@@ -4,6 +4,8 @@ import instance.Instance;
 import instance.reseau.Location;
 import instance.reseau.Request;
 import instance.reseau.Truck;
+import operateur.InRoundOperator;
+import operateur.InRoundOperatorType;
 import solution.Day;
 
 public class DeliveryRound extends Round {
@@ -60,6 +62,39 @@ public class DeliveryRound extends Round {
 
     public Location getDepot() {
         return this.depot;
+    }
+
+    public Location getCurrent(int position) {
+        if (position == requests.size()) {
+            return this.getDepot();
+        }
+        else if (isInsertionPositionValid(position)) { 
+            return requests.get(position).getLocation();
+        }
+        else
+            return null;
+    }
+
+    public Location getPrec(int position) {
+        if (position == 0) {
+            return this.getDepot();
+        }
+        else if (isInsertionPositionValid(position-1)) { 
+            return requests.get(position-1).getLocation();
+        }
+        else
+            return null;
+    }
+
+    public Location getNext(int position) {
+        if (position == requests.size()-1) {
+            return this.getDepot();
+        }
+        else if (isPositionValid(position+1)) { 
+            return requests.get(position+1).getLocation();
+        }
+        else
+            return null;
     }
 
     /**
@@ -123,6 +158,45 @@ public class DeliveryRound extends Round {
         return true;
     }
 
+    @Override
+    public boolean checkAddingRequest(Request request) {
+        // Ajouter le cout de la tournée
+        int nbMachines = request.getNbMachines();
+        int machineSize = request.getMachine().getSize();
+        int requestSize = machineSize * nbMachines;
+        int totalSize = requestSize + this.currentCharge;
+        int truckCapacity = this.truck.getCapacity();
+
+        if (deliveryDay.getDate() < request.getFirstDay() || deliveryDay.getDate() > request.getLastDay())
+            return false;
+
+        if (totalSize > truckCapacity)
+            return false;
+
+        Location requestLocation = request.getLocation();
+        int requestLocationToDepot = returnToDepot(requestLocation);
+        int truckMaxDistance = this.truck.getMaxDistance();
+
+        if (this.currentDistance == 0) {
+            int locationToDepotRoundTrip = requestLocationToDepot * 2;
+
+            if (locationToDepotRoundTrip > truckMaxDistance)
+                return false;
+
+            return true;
+        }
+
+        Location lastLocation = this.requests.getLast().getLocation();
+        int lastLocationToRequestLocation = lastLocation.getDistanceTo(requestLocation);
+        int lastLocationToDepot = returnToDepot(lastLocation);
+        int newDistance = lastLocationToRequestLocation - lastLocationToDepot + requestLocationToDepot;
+
+        if (newDistance + this.currentDistance > truckMaxDistance)
+            return false;
+
+        return true;
+    }
+
     /**
      * Distance between location and the depot
      * 
@@ -131,6 +205,22 @@ public class DeliveryRound extends Round {
      */
     public int returnToDepot(Location location) {
         return location.getDistanceTo(this.depot);
+    }
+
+    @Override
+    public InRoundOperator getBestInRoundOperator(InRoundOperatorType type) {
+        if (requests == null)
+            return InRoundOperator.getInRoundOperator(type, this, 0, -1);
+        InRoundOperator bestOp = InRoundOperator.getInRoundOperator(type, this, 0, 0);   // Operateur impossible pour avoir un cout maximal
+        for (int i = 0 ; i < requests.size() ; i++) {
+            for (int j = 0 ; j <= requests.size() ; j++) {
+                InRoundOperator newOp = InRoundOperator.getInRoundOperator(type, this, i, j);
+                if (newOp.getDeltaCost() < bestOp.getDeltaCost()) {
+                    bestOp = newOp;
+                }
+            }
+        }
+        return bestOp;
     }
 
     @Override

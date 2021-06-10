@@ -10,8 +10,13 @@ import instance.reseau.Machine;
 import instance.reseau.Request;
 import instance.reseau.Technician;
 import instance.reseau.Truck;
+import operateur.InRoundExchange;
+import operateur.InRoundMove;
+import operateur.InRoundOperator;
+import operateur.InRoundOperatorType;
 import solution.tournee.DeliveryRound;
 import solution.tournee.InstallationRound;
+import solution.tournee.Round;
 
 public class Solution {
     private Instance instance;
@@ -321,6 +326,45 @@ public class Solution {
 
     // *********************************************************************************
     // ************ FIN DES FONCTIONS UTILISEES POUR LA SOLUTION1 ********************** 
+    // *********************************************************************************
+
+    // *********************************************************************************
+    // **************** FONCTIONS UTILISEES POUR LA SOLUTION3 ************************** 
+    // *********************************************************************************
+
+    public InRoundOperator getBestInRoundOperator(InRoundOperatorType type) {
+        InRoundOperator bestOp = InRoundOperator.getInRoundOperator(type);
+
+        for (Day d : days.values()) {
+            for (InstallationRound t : d.getInstallationRounds()) {
+                InRoundOperator newOp = t.getBestInRoundOperator(type);
+                if (newOp.getDeltaCost() < bestOp.getDeltaCost()) {
+                   bestOp = newOp;
+                }
+            }
+            for (DeliveryRound t : d.getDeliveryRounds()) {
+                InRoundOperator newOp = t.getBestInRoundOperator(type);
+                if (newOp.getDeltaCost() < bestOp.getDeltaCost()) {
+                   bestOp = newOp;
+                }
+            }
+        }
+        
+        return bestOp;
+    }
+
+    public boolean doInRoundMovement(InRoundOperator infos) {
+        if (infos.doMovementIfPossible()) {
+            this.totalCost += infos.getDeltaCost();
+            return true;
+        }
+        else
+            return false;
+
+    }
+
+    // *********************************************************************************
+    // ************ FIN DES FONCTIONS UTILISEES POUR LA SOLUTION3 ********************** 
     // *********************************************************************************
 
     /*

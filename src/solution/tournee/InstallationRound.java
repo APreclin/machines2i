@@ -6,6 +6,8 @@ import instance.reseau.Location;
 import instance.reseau.Machine;
 import instance.reseau.Request;
 import instance.reseau.Technician;
+import operateur.InRoundOperator;
+import operateur.InRoundOperatorType;
 import solution.Day;
 
 public class InstallationRound extends Round implements Comparable<InstallationRound> {
@@ -61,6 +63,39 @@ public class InstallationRound extends Round implements Comparable<InstallationR
         return technician;
     }
 
+    public Location getCurrent(int position) {
+        if (position == requests.size()) {
+            return this.getTechnician().getHome();
+        }
+        else if (isInsertionPositionValid(position)) { 
+            return requests.get(position).getLocation();
+        }
+        else
+            return null;
+    }
+
+    public Location getPrec(int position) {
+        if (position == 0) {
+            return this.getTechnician().getHome();
+        }
+        else if (isInsertionPositionValid(position-1)) { 
+            return requests.get(position-1).getLocation();
+        }
+        else
+            return null;
+    }
+
+    public Location getNext(int position) {
+        if (position == requests.size()-1) {
+            return this.getTechnician().getHome();
+        }
+        else if (isPositionValid(position+1)) { 
+            return requests.get(position+1).getLocation();
+        }
+        else
+            return null;
+    }
+
     /**
      * Check if it is possible to add request to the list of requests. Check if the
      * technician is able to install the machine specified in the request. Check if
@@ -111,16 +146,43 @@ public class InstallationRound extends Round implements Comparable<InstallationR
 
         return true;
     }
-    
 
-    /**
-     * Distance between location and the depot
-     * 
-     * @param location
-     * @return the distance between location and the depot
-     */
-    public int returnToHome(Location location) {
-        return location.getDistanceTo(this.technician.getHome());
+    @Override
+    public boolean checkAddingRequest(Request request) {
+        if (request == null || technician == null)
+            return false;
+
+        if (installationDay.getDate() < request.getFirstDay() || installationDay.getDate() <= request.getDeliveryDate()
+                || installationDay.getDate() > request.getLastDay())
+            // l'installation ne peut pas se faire avant ou le même jour que la livraison
+            return false;
+
+        boolean checkMachineComp = this.checkMachineComp(request);
+        int technicianMaxDistance = this.technician.getMaxDistance();
+        Location requestLocation = request.getLocation();
+        int requestLocationToHome = returnToHome(requestLocation);
+
+        if (requests.isEmpty()) {
+            int locationToHomeTrip = requestLocationToHome * 2;
+            if (!checkMachineComp || locationToHomeTrip > technicianMaxDistance)
+                return false;
+
+            return true;
+        }
+
+        int techMaxRequests = this.technician.getMaxRequests();
+        boolean isNbRequestsRespected = this.requests.size() < techMaxRequests;
+        
+        Location lastLocation = this.requests.getLast().getLocation();
+        int lastLocationToRequestLocation = lastLocation.getDistanceTo(requestLocation);
+        int lastLocationToHome = returnToHome(lastLocation);
+        int newDistance = lastLocationToRequestLocation - lastLocationToHome + requestLocationToHome;
+        boolean isDistanceRespected = (newDistance + this.coveredDistance <= technicianMaxDistance);
+
+        if (!isNbRequestsRespected || !isDistanceRespected || !checkMachineComp)
+            return false;
+
+        return true;
     }
 
      /**
@@ -133,9 +195,34 @@ public class InstallationRound extends Round implements Comparable<InstallationR
     private void doAddRequest(Request request, int distance) {
         request.setInstallationDate(this.installationDay.getDate());
         this.requests.addLast(request);
-        // TODO : trier en fonction de la distance avec Home
         this.coveredDistance += distance;
         this.totalCost += distance * this.technician.getDistanceCost();
+    }
+
+    /**
+     * Distance between location and the depot
+     * 
+     * @param location
+     * @return the distance between location and the depot
+     */
+    public int returnToHome(Location location) {
+        return location.getDistanceTo(this.technician.getHome());
+    }
+
+    @Override
+    public InRoundOperator getBestInRoundOperator(InRoundOperatorType type) {
+        if (requests == null)
+            return InRoundOperator.getInRoundOperator(type, this, 0, -1);
+        InRoundOperator bestOp = InRoundOperator.getInRoundOperator(type, this, 0, 0);   // Operateur impossible pour avoir un cout maximal
+        for (int i = 0 ; i < requests.size() ; i++) {
+            for (int j = 0 ; j <= requests.size() ; j++) {
+                InRoundOperator newOp = InRoundOperator.getInRoundOperator(type, this, i, j);
+                if (newOp.getDeltaCost() < bestOp.getDeltaCost()) {
+                    bestOp = newOp;
+                }
+            }
+        }
+        return bestOp;
     }
 
     /**
