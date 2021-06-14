@@ -358,13 +358,15 @@ public class Solution {
         return bestOp;
     }
 
-    // TODO : return true ?
     public boolean doInRoundMovement(InRoundOperator infos) {
         if (infos.doMovementIfPossible()) {
-            if (infos.getInstallationRound() != null)
+            if (infos.getInstallationRound() != null) {
                 this.totalCost += infos.getDeltaDistance() * infos.getDistanceCost();
-            else if (infos.getDeliveryRound() != null)
+                this.technicianDistance += infos.getDeltaDistance();
+            } else if (infos.getDeliveryRound() != null) {
                 this.totalCost += infos.getDeltaDistance() * infos.getDistanceCost();
+                this.truckDistance += infos.getDeltaDistance();
+            }
             return true;
         } else
             return false;

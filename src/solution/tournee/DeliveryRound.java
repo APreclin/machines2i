@@ -262,18 +262,17 @@ public class DeliveryRound extends Round {
         Request clientI = infos.getRequestI();
         Request clientJ = infos.getRequestJ();
         if (infos.isMovementPossible()) {
-            {
-                if (positionI < positionJ) {
-                    this.requests.add(positionJ, clientI);
-                    this.requests.remove(positionI);
-                    this.requests.add(positionI, clientJ);
-                    this.requests.remove(positionJ + 1);
-                } else {
-                    this.requests.add(positionI, clientJ);
-                    this.requests.remove(positionJ);
-                    this.requests.add(positionJ, clientI);
-                    this.requests.remove(positionI + 1);
-                }
+
+            if (positionI < positionJ) {
+                this.requests.add(positionJ, clientI);
+                this.requests.remove(positionI);
+                this.requests.add(positionI, clientJ);
+                this.requests.remove(positionJ + 1);
+            } else {
+                this.requests.add(positionI, clientJ);
+                this.requests.remove(positionJ);
+                this.requests.add(positionJ, clientI);
+                this.requests.remove(positionI + 1);
             }
 
             this.totalCost += infos.getDeltaDistance() * truck.getDistanceCost();
