@@ -405,12 +405,13 @@ public class Solution {
                     for (Request r : ir.getRequests()) {
 
                         int penalty = r.getMachine().getPenaltyByDay();
+                        int nbMachinesRequest = r.getNbMachines();
                         int deliveryDate = r.getDeliveryDate();
                         int installationDate = r.getInstallationDate();
                         int diff = installationDate - deliveryDate;
 
                         if (diff >= 2)
-                            totalPenalties += (diff - 1) * penalty;
+                            totalPenalties += (diff - 1) * penalty * nbMachinesRequest;
                     }
 
         this.idleMachineCosts = totalPenalties;
