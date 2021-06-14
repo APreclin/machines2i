@@ -237,26 +237,28 @@ public class InstallationRound extends Round implements Comparable<InstallationR
         LinkedList<Request> requestsSave = this.getRequests();
         int positionI = infos.getPositionI();
         int positionJ = infos.getPositionJ();
-        Request clientI = infos.getRequestI();
-        Request clientJ = infos.getRequestJ();
-        if (infos.isMovementPossible() && positionI < positionJ) {
-            this.requests.add(positionJ, clientI);
-            this.requests.remove(positionJ+1);
-            this.requests.add(positionI, clientJ);
-            this.requests.remove(positionI+1);
+        Request clientToMove = infos.getRequestI();
+        if (infos.isMovementPossible()) {
+            if (positionI < positionJ) {
+                this.requests.add(positionJ, clientToMove);
+                this.requests.remove(positionI);
+            }
+            else {
+                this.requests.remove(positionI);
+                this.requests.add(positionJ, clientToMove);
+            }
+            this.totalCost += infos.getDeltaDistance();
+            this.coveredDistance += infos.getDeltaDistance();
 
-            this.totalCost += infos.getDeltaDistance()*technician.getDistanceCost();
-
-            /*
             if (this.check()) {
                 return true;
             }
             else {
                 this.requests = requestsSave;
-                this.totalCost -= infos.getDeltaDistance()*technician.getDistanceCost();
+                this.totalCost -= infos.getDeltaDistance();
+                this.coveredDistance -= infos.getDeltaDistance();
                 return false;
             }
-            */
         }
         return false;
     }

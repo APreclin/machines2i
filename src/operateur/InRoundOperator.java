@@ -118,6 +118,7 @@ public abstract class InRoundOperator {
 
     public boolean doMovementIfPossible() {
         if (isMovementPossible()) {
+ 
             if (doMouvement())
                 return true;
         }

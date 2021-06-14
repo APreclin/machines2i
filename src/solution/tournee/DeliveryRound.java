@@ -231,22 +231,26 @@ public class DeliveryRound extends Round {
         LinkedList<Request> requestsSave = this.getRequests();
         int positionI = infos.getPositionI();
         int positionJ = infos.getPositionJ();
-        Request clientI = infos.getRequestI();
-        Request clientJ = infos.getRequestJ();
-        if (infos.isMovementPossible() && positionI < positionJ) {
-            this.requests.add(positionJ, clientI);
-            this.requests.remove(positionJ + 1);
-            this.requests.add(positionI, clientJ);
-            this.requests.remove(positionI + 1);
-
-            this.totalCost += infos.getDeltaDistance() * truck.getDistanceCost();
-            this.currentDistance -= infos.getDeltaDistance();
+        Request clientToMove = infos.getRequestI();
+        if (infos.isMovementPossible()) {
+            if (positionI < positionJ) {
+                this.requests.add(positionJ, clientToMove);
+                this.requests.remove(positionI);
+            }
+            else {
+                this.requests.remove(positionI);
+                this.requests.add(positionJ, clientToMove);
+            }
+            this.totalCost += infos.getDeltaDistance();
+            this.currentDistance += infos.getDeltaDistance();
 
             if (this.check()) {
                 return true;
-            } else {
+            }
+            else {
                 this.requests = requestsSave;
-                this.totalCost -= infos.getDeltaDistance() * truck.getDistanceCost();
+                this.totalCost -= infos.getDeltaDistance();
+                this.currentDistance -= infos.getDeltaDistance();
                 return false;
             }
         }
@@ -266,13 +270,14 @@ public class DeliveryRound extends Round {
             this.requests.remove(positionI + 1);
 
             this.totalCost += infos.getDeltaDistance() * truck.getDistanceCost();
-            this.currentDistance -= infos.getDeltaDistance();
+            this.currentDistance += infos.getDeltaDistance();
 
             if (this.check()) {
                 return true;
             } else {
                 this.requests = requestsSave;
                 this.totalCost -= infos.getDeltaDistance() * truck.getDistanceCost();
+                this.currentDistance -= infos.getDeltaDistance();
                 return false;
             }
 
