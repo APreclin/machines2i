@@ -112,7 +112,8 @@ public class Solution {
     }
 
     // **********************************************************************************
-    // ********* FONCTIONS UTILISEES POUR LA SOLUTIONTRIVIALE *************************** 
+    // ********* FONCTIONS UTILISEES POUR LA SOLUTIONTRIVIALE
+    // ***************************
     // **********************************************************************************
 
     /**
@@ -186,11 +187,13 @@ public class Solution {
     }
 
     // *********************************************************************************
-    // ********* FIN DES FONCTIONS UTILISEES POUR LA SOLUTIONTRIVIALE ****************** 
+    // ********* FIN DES FONCTIONS UTILISEES POUR LA SOLUTIONTRIVIALE
+    // ******************
     // *********************************************************************************
 
     // *********************************************************************************
-    // **************** FONCTIONS UTILISEES POUR LA SOLUTION1 ************************** 
+    // **************** FONCTIONS UTILISEES POUR LA SOLUTION1
+    // **************************
     // *********************************************************************************
 
     /**
@@ -325,11 +328,13 @@ public class Solution {
     }
 
     // *********************************************************************************
-    // ************ FIN DES FONCTIONS UTILISEES POUR LA SOLUTION1 ********************** 
+    // ************ FIN DES FONCTIONS UTILISEES POUR LA SOLUTION1
+    // **********************
     // *********************************************************************************
 
     // *********************************************************************************
-    // **************** FONCTIONS UTILISEES POUR LA SOLUTION3 ************************** 
+    // **************** FONCTIONS UTILISEES POUR LA SOLUTION3
+    // **************************
     // *********************************************************************************
 
     public InRoundOperator getBestInRoundOperator(InRoundOperatorType type) {
@@ -339,35 +344,36 @@ public class Solution {
             for (InstallationRound t : d.getInstallationRounds()) {
                 InRoundOperator newOp = t.getBestInRoundOperator(type);
                 if (newOp.getDeltaDistance() < bestOp.getDeltaDistance()) {
-                   bestOp = newOp;
+                    bestOp = newOp;
                 }
             }
             for (DeliveryRound t : d.getDeliveryRounds()) {
                 InRoundOperator newOp = t.getBestInRoundOperator(type);
                 if (newOp.getDeltaDistance() < bestOp.getDeltaDistance()) {
-                   bestOp = newOp;
+                    bestOp = newOp;
                 }
             }
         }
-        
+
         return bestOp;
     }
 
+    // TODO : return true ?
     public boolean doInRoundMovement(InRoundOperator infos) {
         if (infos.doMovementIfPossible()) {
             if (infos.getInstallationRound() != null)
-                this.totalCost += infos.getDeltaDistance()*infos.getDistanceCost();
-            else if (infos.getInstallationRound() != null)
-                this.totalCost += infos.getDeltaDistance()*infos.getDistanceCost();
+                this.totalCost += infos.getDeltaDistance() * infos.getDistanceCost();
+            else if (infos.getDeliveryRound() != null)
+                this.totalCost += infos.getDeltaDistance() * infos.getDistanceCost();
             return true;
-        }
-        else
+        } else
             return false;
 
     }
 
     // *********************************************************************************
-    // ************ FIN DES FONCTIONS UTILISEES POUR LA SOLUTION3 ********************** 
+    // ************ FIN DES FONCTIONS UTILISEES POUR LA SOLUTION3
+    // **********************
     // *********************************************************************************
 
     /*

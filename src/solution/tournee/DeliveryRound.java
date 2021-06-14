@@ -71,33 +71,27 @@ public class DeliveryRound extends Round {
     public Location getCurrent(int position) {
         if (position == requests.size()) {
             return this.getDepot();
-        }
-        else if (isInsertionPositionValid(position)) { 
+        } else if (isInsertionPositionValid(position)) {
             return requests.get(position).getLocation();
-        }
-        else
+        } else
             return null;
     }
 
     public Location getPrec(int position) {
         if (position == 0) {
             return this.getDepot();
-        }
-        else if (isInsertionPositionValid(position-1)) { 
-            return requests.get(position-1).getLocation();
-        }
-        else
+        } else if (isInsertionPositionValid(position - 1)) {
+            return requests.get(position - 1).getLocation();
+        } else
             return null;
     }
 
     public Location getNext(int position) {
-        if (position == requests.size()-1) {
+        if (position == requests.size() - 1) {
             return this.getDepot();
-        }
-        else if (isPositionValid(position+1)) { 
-            return requests.get(position+1).getLocation();
-        }
-        else
+        } else if (isPositionValid(position + 1)) {
+            return requests.get(position + 1).getLocation();
+        } else
             return null;
     }
 
@@ -212,16 +206,18 @@ public class DeliveryRound extends Round {
     }
 
     // ********************************************************************************************
-    // ***************    FONCTIONS POUR LA SOLUTION3    ******************************************
+    // *************** FONCTIONS POUR LA SOLUTION3
+    // ******************************************
     // ********************************************************************************************
 
     @Override
     public InRoundOperator getBestInRoundOperator(InRoundOperatorType type) {
         if (requests == null)
             return InRoundOperator.getInRoundOperator(type, this, 0, -1);
-        InRoundOperator bestOp = InRoundOperator.getInRoundOperator(type, this, 0, 0);   // Operateur impossible pour avoir un cout maximal
-        for (int i = 0 ; i < requests.size() ; i++) {
-            for (int j = 0 ; j <= requests.size() ; j++) {
+        InRoundOperator bestOp = InRoundOperator.getInRoundOperator(type, this, 0, 0); // Operateur impossible pour
+                                                                                       // avoir un cout maximal
+        for (int i = 0; i < requests.size(); i++) {
+            for (int j = 0; j <= requests.size(); j++) {
                 InRoundOperator newOp = InRoundOperator.getInRoundOperator(type, this, i, j);
                 if (newOp.getDeltaDistance() < bestOp.getDeltaDistance()) {
                     bestOp = newOp;
@@ -239,18 +235,18 @@ public class DeliveryRound extends Round {
         Request clientJ = infos.getRequestJ();
         if (infos.isMovementPossible() && positionI < positionJ) {
             this.requests.add(positionJ, clientI);
-            this.requests.remove(positionJ+1);
+            this.requests.remove(positionJ + 1);
             this.requests.add(positionI, clientJ);
-            this.requests.remove(positionI+1);
+            this.requests.remove(positionI + 1);
 
-            this.totalCost += infos.getDeltaDistance()*truck.getDistanceCost();
+            this.totalCost += infos.getDeltaDistance() * truck.getDistanceCost();
+            this.currentDistance -= infos.getDeltaDistance();
 
             if (this.check()) {
                 return true;
-            }
-            else {
+            } else {
                 this.requests = requestsSave;
-                this.totalCost -= infos.getDeltaDistance()*truck.getDistanceCost();
+                this.totalCost -= infos.getDeltaDistance() * truck.getDistanceCost();
                 return false;
             }
         }
@@ -265,33 +261,34 @@ public class DeliveryRound extends Round {
         Request clientJ = infos.getRequestJ();
         if (infos.isMovementPossible() && positionI < positionJ) {
             this.requests.add(positionJ, clientI);
-            this.requests.remove(positionJ+1);
+            this.requests.remove(positionJ + 1);
             this.requests.add(positionI, clientJ);
-            this.requests.remove(positionI+1);
+            this.requests.remove(positionI + 1);
 
-            this.totalCost += infos.getDeltaDistance()*truck.getDistanceCost();
-            /*
+            this.totalCost += infos.getDeltaDistance() * truck.getDistanceCost();
+            this.currentDistance -= infos.getDeltaDistance();
+
             if (this.check()) {
                 return true;
-            }
-            else {
+            } else {
                 this.requests = requestsSave;
-                this.totalCost -= infos.getDeltaDistance()*truck.getDistanceCost();
+                this.totalCost -= infos.getDeltaDistance() * truck.getDistanceCost();
                 return false;
             }
-            */
+
         }
         return false;
     }
 
     public boolean check() {
-        if (calcTotalCost() != totalCost) return false;
+        if (calcTotalCost() != totalCost)
+            return false;
         return true;
     }
-    
+
     private int calcTotalCost() {
         int totalRealDistance = 0;
-        if (requests.size() == 0 )
+        if (requests.size() == 0)
             return 0;
         Request lastRequestDone = requests.getFirst();
         for (Request r : requests) {
@@ -304,11 +301,12 @@ public class DeliveryRound extends Round {
         if (!requests.isEmpty())
             totalRealDistance += requests.getLast().getLocation().getDistanceTo(depot);
 
-        return totalRealDistance*truck.getDistanceCost();
+        return totalRealDistance * truck.getDistanceCost();
     }
 
     // ********************************************************************************************
-    // ************    FIN DES FONCTIONS POUR LA SOLUTION3    *************************************
+    // ************ FIN DES FONCTIONS POUR LA SOLUTION3
+    // *************************************
     // ********************************************************************************************
 
     @Override
