@@ -236,20 +236,18 @@ public class DeliveryRound extends Round {
             if (positionI < positionJ) {
                 this.requests.add(positionJ, clientToMove);
                 this.requests.remove(positionI);
-            }
-            else {
+            } else {
                 this.requests.remove(positionI);
                 this.requests.add(positionJ, clientToMove);
             }
-            this.totalCost += infos.getDeltaDistance();
+            this.totalCost += infos.getDeltaDistance() * this.truck.getDistanceCost();
             this.currentDistance += infos.getDeltaDistance();
 
             if (this.check()) {
                 return true;
-            }
-            else {
+            } else {
                 this.requests = requestsSave;
-                this.totalCost -= infos.getDeltaDistance();
+                this.totalCost -= infos.getDeltaDistance() * this.truck.getDistanceCost();
                 this.currentDistance -= infos.getDeltaDistance();
                 return false;
             }
@@ -263,11 +261,20 @@ public class DeliveryRound extends Round {
         int positionJ = infos.getPositionJ();
         Request clientI = infos.getRequestI();
         Request clientJ = infos.getRequestJ();
-        if (infos.isMovementPossible() && positionI < positionJ) {
-            this.requests.add(positionJ, clientI);
-            this.requests.remove(positionJ + 1);
-            this.requests.add(positionI, clientJ);
-            this.requests.remove(positionI + 1);
+        if (infos.isMovementPossible()) {
+            {
+                if (positionI < positionJ) {
+                    this.requests.add(positionJ, clientI);
+                    this.requests.remove(positionI);
+                    this.requests.add(positionI, clientJ);
+                    this.requests.remove(positionJ + 1);
+                } else {
+                    this.requests.add(positionI, clientJ);
+                    this.requests.remove(positionJ);
+                    this.requests.add(positionJ, clientI);
+                    this.requests.remove(positionI + 1);
+                }
+            }
 
             this.totalCost += infos.getDeltaDistance() * truck.getDistanceCost();
             this.currentDistance += infos.getDeltaDistance();
