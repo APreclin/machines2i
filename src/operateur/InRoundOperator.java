@@ -7,7 +7,7 @@ import solution.tournee.Round;
 
 public abstract class InRoundOperator {
 
-    protected int deltaCost = Integer.MAX_VALUE;
+    protected int deltaDistance = Integer.MAX_VALUE;
     protected InstallationRound installationRound;
     protected DeliveryRound deliveryRound;
 
@@ -31,7 +31,7 @@ public abstract class InRoundOperator {
         requestJ = this.deliveryRound.getRequestByPosition(positionJ);
         this.requestI= round.getRequestByPosition(positionI);
         this.requestJ = round.getRequestByPosition(positionJ);
-        this.deltaCost = evalDeltaCost();
+        this.deltaDistance = evalDeltaDistance();
     }
 
     public InRoundOperator(InstallationRound round, int positionI, int positionJ) {
@@ -40,7 +40,7 @@ public abstract class InRoundOperator {
         requestJ = this.installationRound.getRequestByPosition(positionJ);
         this.requestI= round.getRequestByPosition(positionI);
         this.requestJ = round.getRequestByPosition(positionJ);
-        this.deltaCost = evalDeltaCost();
+        this.deltaDistance = evalDeltaDistance();
     }
 
     public static InRoundOperator getInRoundOperator(InRoundOperatorType type) {
@@ -76,8 +76,8 @@ public abstract class InRoundOperator {
         }
     }
 
-    public int getDeltaCost () {
-        return deltaCost;
+    public int getDeltaDistance () {
+        return deltaDistance;
     }
 
     public Round getDeliveryRound() {
@@ -88,7 +88,33 @@ public abstract class InRoundOperator {
         return installationRound;
     }
 
-    protected abstract int evalDeltaCost();
+    public Request getRequestI() {
+        return requestI;
+    }
+
+    public Request getRequestJ() {
+        return requestJ;
+    }
+
+    public int getPositionI() {
+        return positionI;
+    }
+
+    public int getPositionJ() {
+        return positionJ;
+    }
+
+    public int getDistanceCost() {
+        if (installationRound != null)
+            return installationRound.getTechnician().getDistanceCost();
+        else if (deliveryRound != null)
+            return deliveryRound.getTruck().getDistanceCost();
+        return Integer.MAX_VALUE;
+    }
+
+    // ************************* FONCTIONS UTILITAIRES
+
+    protected abstract int evalDeltaDistance();
 
     public boolean doMovementIfPossible() {
         if (isMovementPossible()) {
@@ -101,21 +127,21 @@ public abstract class InRoundOperator {
     protected abstract boolean doMouvement();
 
     public boolean isMovementPossible() {
-        if (this.deltaCost < Integer.MAX_VALUE)
+        if (this.deltaDistance < Integer.MAX_VALUE)
             return true;
         else
             return false;
     }
 
     public boolean isMovementBetter() {
-        if (this.deltaCost < 0)
+        if (this.deltaDistance < 0)
             return true;
         else
             return false;
     }
 
     public boolean isBetter(InRoundOperator op) {
-        if (this.deltaCost < op.getDeltaCost())
+        if (this.deltaDistance < op.getDeltaDistance())
             return true;
         else
             return false;
@@ -123,15 +149,15 @@ public abstract class InRoundOperator {
     
     /*
     @Override
-    public int evalDeltaCost() {
+    public int evalDeltaDistance() {
         if (this.deliveryRound != null) {
-            int coutInsertion = this.deliveryRound.deltaCostInsertion(positionJ, requestI, false);
-            int coutSuppression = this.deliveryRound.deltaCostSuppression(positionI);
+            int coutInsertion = this.deliveryRound.deltaDistanceInsertion(positionJ, requestI, false);
+            int coutSuppression = this.deliveryRound.deltaDistanceSuppression(positionI);
             return coutInsertion + coutSuppression;
         }
         else {
-            int coutInsertion = this.installationRound.deltaCostInsertion(positionJ, requestI, false);
-            int coutSuppression = this.installationRound.deltaCostSuppression(positionI);
+            int coutInsertion = this.installationRound.deltaDistanceInsertion(positionJ, requestI, false);
+            int coutSuppression = this.installationRound.deltaDistanceSuppression(positionI);
             return coutInsertion + coutSuppression;
         }
     }

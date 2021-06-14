@@ -1,9 +1,13 @@
 package solution.tournee;
 
+import java.util.LinkedList;
+
 import instance.Instance;
 import instance.reseau.Location;
 import instance.reseau.Request;
 import instance.reseau.Truck;
+import operateur.InRoundExchange;
+import operateur.InRoundMove;
 import operateur.InRoundOperator;
 import operateur.InRoundOperatorType;
 import solution.Day;
@@ -207,6 +211,10 @@ public class DeliveryRound extends Round {
         return location.getDistanceTo(this.depot);
     }
 
+    // ********************************************************************************************
+    // ***************    FONCTIONS POUR LA SOLUTION3    ******************************************
+    // ********************************************************************************************
+
     @Override
     public InRoundOperator getBestInRoundOperator(InRoundOperatorType type) {
         if (requests == null)
@@ -215,13 +223,93 @@ public class DeliveryRound extends Round {
         for (int i = 0 ; i < requests.size() ; i++) {
             for (int j = 0 ; j <= requests.size() ; j++) {
                 InRoundOperator newOp = InRoundOperator.getInRoundOperator(type, this, i, j);
-                if (newOp.getDeltaCost() < bestOp.getDeltaCost()) {
+                if (newOp.getDeltaDistance() < bestOp.getDeltaDistance()) {
                     bestOp = newOp;
                 }
             }
         }
         return bestOp;
     }
+
+    public boolean doMove(InRoundMove infos) {
+        LinkedList<Request> requestsSave = this.getRequests();
+        int positionI = infos.getPositionI();
+        int positionJ = infos.getPositionJ();
+        Request clientI = infos.getRequestI();
+        Request clientJ = infos.getRequestJ();
+        if (infos.isMovementPossible() && positionI < positionJ) {
+            this.requests.add(positionJ, clientI);
+            this.requests.remove(positionJ+1);
+            this.requests.add(positionI, clientJ);
+            this.requests.remove(positionI+1);
+
+            this.totalCost += infos.getDeltaDistance()*truck.getDistanceCost();
+
+            if (this.check()) {
+                return true;
+            }
+            else {
+                this.requests = requestsSave;
+                this.totalCost -= infos.getDeltaDistance()*truck.getDistanceCost();
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public boolean doExchange(InRoundExchange infos) {
+        LinkedList<Request> requestsSave = this.getRequests();
+        int positionI = infos.getPositionI();
+        int positionJ = infos.getPositionJ();
+        Request clientI = infos.getRequestI();
+        Request clientJ = infos.getRequestJ();
+        if (infos.isMovementPossible() && positionI < positionJ) {
+            this.requests.add(positionJ, clientI);
+            this.requests.remove(positionJ+1);
+            this.requests.add(positionI, clientJ);
+            this.requests.remove(positionI+1);
+
+            this.totalCost += infos.getDeltaDistance()*truck.getDistanceCost();
+            /*
+            if (this.check()) {
+                return true;
+            }
+            else {
+                this.requests = requestsSave;
+                this.totalCost -= infos.getDeltaDistance()*truck.getDistanceCost();
+                return false;
+            }
+            */
+        }
+        return false;
+    }
+
+    public boolean check() {
+        if (calcTotalCost() != totalCost) return false;
+        return true;
+    }
+    
+    private int calcTotalCost() {
+        int totalRealDistance = 0;
+        if (requests.size() == 0 )
+            return 0;
+        Request lastRequestDone = requests.getFirst();
+        for (Request r : requests) {
+            if (r.equals(requests.getFirst()))
+                totalRealDistance += depot.getDistanceTo(r.getLocation());
+            else
+                totalRealDistance += lastRequestDone.getDistanceTo(r);
+            lastRequestDone = r;
+        }
+        if (!requests.isEmpty())
+            totalRealDistance += requests.getLast().getLocation().getDistanceTo(depot);
+
+        return totalRealDistance*truck.getDistanceCost();
+    }
+
+    // ********************************************************************************************
+    // ************    FIN DES FONCTIONS POUR LA SOLUTION3    *************************************
+    // ********************************************************************************************
 
     @Override
     public String toString() {

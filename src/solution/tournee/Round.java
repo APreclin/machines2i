@@ -61,7 +61,7 @@ public abstract class Round {
 
     public abstract boolean checkAddingRequest(Request request);
 
-    public int deltaCostInsertion(int position, Request requestToAdd, boolean watchCapacity) {
+    public int deltaDistanceInsertion(int position, Request requestToAdd, boolean watchCapacity) {
         if (requestToAdd == null) return Integer.MAX_VALUE;
         Location current = getCurrent(position);
         Location prec = getPrec(position);
@@ -80,7 +80,7 @@ public abstract class Round {
         return cout1 + cout2 - cout3;
     }
 
-    public int deltaCostSuppression(int position) {
+    public int deltaDistanceSuppression(int position) {
         Location requestPrec = getPrec(position);
         Location ClientNext = getNext(position);
         Location ClientCurr = getCurrent(position);
@@ -95,18 +95,18 @@ public abstract class Round {
         return cout1 - ( cout2 + cout3 );
     }
 
-    public int deltaCostMove(int positionI, int positionJ) {
+    public int deltaDistanceMove(int positionI, int positionJ) {
         if (!this.isPositionValid(positionI) || !this.isInsertionPositionValid(positionJ))
             return Integer.MAX_VALUE;
-        int coutInsertion = deltaCostInsertion(positionJ, requests.get(positionI), false);
-        int coutSuppression = deltaCostSuppression(positionI);
+        int coutInsertion = deltaDistanceInsertion(positionJ, requests.get(positionI), false);
+        int coutSuppression = deltaDistanceSuppression(positionI);
         if (coutInsertion == Integer.MAX_VALUE || coutSuppression == Integer.MAX_VALUE || positionI == positionJ || Math.abs(positionI - positionJ) == 1)
             return Integer.MAX_VALUE;
         else
-            return deltaCostInsertion(positionJ, requests.get(positionI), false) + deltaCostSuppression(positionI);
+            return deltaDistanceInsertion(positionJ, requests.get(positionI), false) + deltaDistanceSuppression(positionI);
     }
 
-    private int deltaCostConsecutivExchange(int positionI) {
+    private int deltaDistanceConsecutivExchange(int positionI) {
         Location requestI = this.getRequestByPosition(positionI).getLocation();
         Location requestBefore = this.getPrec(positionI);
         Location requestJ = this.getRequestByPosition(positionI+1).getLocation();
@@ -121,7 +121,7 @@ public abstract class Round {
         return cout;
     }
 
-    public int deltaCostReplace(int position, Request request, boolean watchCapacity) {
+    public int deltaDistanceReplace(int position, Request request, boolean watchCapacity) {
         Location requestBefore = this.getPrec(position);
         Location ancientRequest = this.getRequestByPosition(position).getLocation();
         Location requestAfter = this.getNext(position);
@@ -140,15 +140,15 @@ public abstract class Round {
         return cout;
     }
     
-    public int deltaCostExchange(int positionI, int positionJ) {
+    public int deltaDistanceExchange(int positionI, int positionJ) {
         if (!this.isPositionValid(positionI) || !this.isPositionValid(positionJ))
             return Integer.MAX_VALUE;
         if (positionI >= positionJ)
             return Integer.MAX_VALUE;
         if (Math.abs(positionI - positionJ) == 1)
-            return deltaCostConsecutivExchange(positionI);
+            return deltaDistanceConsecutivExchange(positionI);
         else
-            return deltaCostReplace(positionJ, requests.get(positionI), false) + deltaCostReplace(positionI, requests.get(positionJ), false);
+            return deltaDistanceReplace(positionJ, requests.get(positionI), false) + deltaDistanceReplace(positionI, requests.get(positionJ), false);
     }
 
     public abstract InRoundOperator getBestInRoundOperator(InRoundOperatorType type);

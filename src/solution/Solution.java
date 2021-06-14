@@ -338,13 +338,13 @@ public class Solution {
         for (Day d : days.values()) {
             for (InstallationRound t : d.getInstallationRounds()) {
                 InRoundOperator newOp = t.getBestInRoundOperator(type);
-                if (newOp.getDeltaCost() < bestOp.getDeltaCost()) {
+                if (newOp.getDeltaDistance() < bestOp.getDeltaDistance()) {
                    bestOp = newOp;
                 }
             }
             for (DeliveryRound t : d.getDeliveryRounds()) {
                 InRoundOperator newOp = t.getBestInRoundOperator(type);
-                if (newOp.getDeltaCost() < bestOp.getDeltaCost()) {
+                if (newOp.getDeltaDistance() < bestOp.getDeltaDistance()) {
                    bestOp = newOp;
                 }
             }
@@ -355,7 +355,10 @@ public class Solution {
 
     public boolean doInRoundMovement(InRoundOperator infos) {
         if (infos.doMovementIfPossible()) {
-            this.totalCost += infos.getDeltaCost();
+            if (infos.getInstallationRound() != null)
+                this.totalCost += infos.getDeltaDistance()*infos.getDistanceCost();
+            else if (infos.getInstallationRound() != null)
+                this.totalCost += infos.getDeltaDistance()*infos.getDistanceCost();
             return true;
         }
         else
