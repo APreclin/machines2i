@@ -20,6 +20,7 @@ import instance.reseau.Technician;
 import instance.reseau.Truck;
 import io.exception.FileExistException;
 import io.exception.FormatFileException;
+import io.exception.OpenFileException;
 import io.exception.ReaderException;
 
 /**
@@ -54,6 +55,20 @@ public class InstanceReader {
         }
 
         this.instanceFile = file;
+    }
+
+    public InstanceReader(String inputPath) throws ReaderException {
+        this.locations = new LinkedHashMap<Integer, Location>();
+        this.machines = new LinkedHashMap<Integer, Machine>();
+
+        if (inputPath == null) {
+            throw new OpenFileException();
+        }
+        if (!inputPath.endsWith(".txt")) {
+            throw new FormatFileException("txt", "txt");
+        }
+        String instanceName = inputPath;
+        this.instanceFile = new File(instanceName);
     }
 
     /**

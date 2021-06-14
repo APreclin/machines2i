@@ -12,7 +12,7 @@ public class Solution1 implements Solveur {
     @Override
     public Solution solve(Instance instance) {
         Solution sol = new Solution(instance);
-        for (Request r : instance.getRequests().values()) { 
+        for (Request r : instance.getRequests().values()) {
             if (!sol.addRequestExistingDeliveryRoundSolution1(r))
                 sol.addRequestNewDeliveryRoundSolution1(r);
             if (!sol.addRequestExistingInstallationRoundSolution1(r))
@@ -30,7 +30,7 @@ public class Solution1 implements Solveur {
 
     @Override
     public String getNom() {
-        return "Solution Triviale ";
+        return "Solution 1 ";
     }
 
     public static void main(String[] args) {

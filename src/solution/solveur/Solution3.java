@@ -15,14 +15,13 @@ public class Solution3 implements Solveur {
     public Solution solve(Instance instance) {
         Solution sol = new Solution(instance);
         // Algorithme de la Solution1
-        for (Request r : instance.getRequests().values()) { 
+        for (Request r : instance.getRequests().values()) {
             if (!sol.addRequestExistingDeliveryRoundSolution1(r))
                 sol.addRequestNewDeliveryRoundSolution1(r);
             if (!sol.addRequestExistingInstallationRoundSolution1(r))
                 sol.addRequestNewInstallationRoundSolution1(r);
         }
 
-        
         // Algorithme de déplacements des requêtes dans chaque tournée
         boolean improve = true;
         while (improve) {
@@ -34,8 +33,8 @@ public class Solution3 implements Solveur {
                         improve = true;
                 }
             }
-        }        
-        
+        }
+
         sol.calculPenalties();
         sol.getMaxTruckDays();
 
@@ -48,7 +47,7 @@ public class Solution3 implements Solveur {
 
     @Override
     public String getNom() {
-        return "Solution Triviale ";
+        return "Solution 3 ";
     }
 
     public static void main(String[] args) {
