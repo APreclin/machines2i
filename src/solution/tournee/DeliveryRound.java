@@ -1,8 +1,7 @@
 package solution.tournee;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
-
 import instance.Instance;
 import instance.reseau.Location;
 import instance.reseau.Request;
@@ -16,14 +15,14 @@ public class DeliveryRound extends Round {
     private int currentDistance;
     private Day deliveryDay;
 
-    private LinkedList<Integer> returnToDepot; // Contient à quel moment le camion repasse par le dépôt
+    private LinkedHashMap<Integer, Integer> returnToDepot; // Contient à quel moment le camion repasse par le dépôt
 
     public DeliveryRound() {
         super();
         depot = new Location();
         this.currentCharge = 0;
         this.currentDistance = 0;
-        this.returnToDepot = new LinkedList<Integer>();
+        this.returnToDepot = new LinkedHashMap<Integer, Integer>();
     }
 
     public DeliveryRound(Truck truck, Location depot, Day deliveryDay) {
@@ -33,7 +32,7 @@ public class DeliveryRound extends Round {
         this.currentDistance = 0;
         this.truck = truck;
         this.deliveryDay = deliveryDay;
-        this.returnToDepot = new LinkedList<Integer>();
+        this.returnToDepot = new LinkedHashMap<Integer, Integer>();
     }
 
     /*
@@ -47,7 +46,7 @@ public class DeliveryRound extends Round {
         this.deliveryDay = deliveryDay;
         this.truck = truck;
         this.depot = instanceToCopy.getDepot();
-        this.returnToDepot = new LinkedList<Integer>();
+        this.returnToDepot = new LinkedHashMap<Integer, Integer>();
     }
 
     public Day getDeliverDay() {
@@ -70,8 +69,8 @@ public class DeliveryRound extends Round {
         return this.depot;
     }
 
-    public LinkedList<Integer> getReturnToDepot() {
-        return new LinkedList<>(returnToDepot);
+    public LinkedHashMap<Integer, Integer> getReturnToDepot() {
+        return new LinkedHashMap<>(returnToDepot);
     }
 
     /**
@@ -171,7 +170,7 @@ public class DeliveryRound extends Round {
         if (totalSize > truckCapacity && continueDelivery(request)) {
             int locationToDepotRoundTrip = requestLocationToDepot * 2;
 
-            this.returnToDepot.add(this.requests.size()); // ex: on revient au dépôt après "3" request
+            this.returnToDepot.put(this.requests.size(), this.currentCharge);
             this.requests.add(request);
             this.currentCharge = requestSize;
             this.currentDistance += locationToDepotRoundTrip;
