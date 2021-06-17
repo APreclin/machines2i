@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.json.simple.JSONObject;
@@ -113,7 +114,7 @@ public class SolutionWriter {
 
                             // On récupère après combien de requests on retourne au dépôt
                             int j = 1;
-                            List<Integer> returnToDepot = deliveryRound.getReturnToDepot();
+                            LinkedHashMap<Integer, Integer> returnToDepot = deliveryRound.getReturnToDepot();
 
                             JSONArray requests = new JSONArray();
                             for (Request request : deliveryRound.getRequests()) {
@@ -122,7 +123,7 @@ public class SolutionWriter {
 
                                 // Si après cette request on est retourné au dépôt, on l'indique
                                 if (returnToDepot != null) {
-                                    if (returnToDepot.contains(j)) {
+                                    if (returnToDepot.containsKey(j)) {
                                         bw.write("0");
                                         bw.write(" ");
                                     }
