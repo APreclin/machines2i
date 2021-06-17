@@ -230,6 +230,10 @@ public class InstallationRound extends Round implements Comparable<InstallationR
         return bestOp;
     }
 
+    /**
+     * On réalise le mouvement et on met toutes la variable à jour après avoir
+     * réalisé les déplacements
+     */
     public boolean doMove(InRoundMove infos) {
         LinkedList<Request> requestsSave = this.getRequests();
         int positionI = infos.getPositionI();
@@ -258,6 +262,12 @@ public class InstallationRound extends Round implements Comparable<InstallationR
         return false;
     }
 
+    /**
+     * On réalise l'echange de 2 requêtes puis on met à jour tous les paramètres
+     * 
+     * @param infos
+     * @return
+     */
     public boolean doExchange(InRoundExchange infos) {
         LinkedList<Request> requestsSave = this.getRequests();
         int positionI = infos.getPositionI();
@@ -283,12 +293,18 @@ public class InstallationRound extends Round implements Comparable<InstallationR
         return false;
     }
 
+    /**
+     * On vérifie que le coût total calculé est bien le bon
+     */
     public boolean check() {
         if (calcTotalCost() != totalCost)
             return false;
         return true;
     }
 
+    /**
+     * On calcul le coût total de la tournée
+     */
     private int calcTotalCost() {
         int totalRealDistance = 0;
         if (requests.size() == 0)

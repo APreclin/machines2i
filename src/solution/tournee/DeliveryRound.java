@@ -294,6 +294,13 @@ public class DeliveryRound extends Round {
         return true;
     }
 
+    /**
+     * On vérifie s'il est possible de retourner faire une requête après être
+     * repassé par le dépôt
+     * 
+     * @param request
+     * @return
+     */
     public boolean continueDelivery(Request request) {
 
         int nbMachines = request.getNbMachines();
@@ -341,6 +348,10 @@ public class DeliveryRound extends Round {
         return bestOp;
     }
 
+    /**
+     * On réalise le mouvement et on met toutes la variable à jour après avoir
+     * réalisé les déplacements
+     */
     public boolean doMove(InRoundMove infos) {
         LinkedList<Request> requestsSave = this.getRequests();
         int positionI = infos.getPositionI();
@@ -371,6 +382,12 @@ public class DeliveryRound extends Round {
         return false;
     }
 
+    /**
+     * On réalise l'echange de 2 requêtes puis on met à jour tous les paramètres
+     * 
+     * @param infos
+     * @return
+     */
     public boolean doExchange(InRoundExchange infos) {
         LinkedList<Request> requestsSave = this.getRequests();
         int positionI = infos.getPositionI();
@@ -411,12 +428,18 @@ public class DeliveryRound extends Round {
         return false;
     }
 
+    /**
+     * On vérifie que le coût total calculé est bien le bon
+     */
     public boolean check() {
         if (calcTotalCost() != totalCost)
             return false;
         return true;
     }
 
+    /**
+     * On calcul le coût total de la tournée
+     */
     private int calcTotalCost() {
         int totalRealDistance = 0;
         if (requests.size() == 0)
@@ -435,6 +458,14 @@ public class DeliveryRound extends Round {
         return totalRealDistance * truck.getDistanceCost();
     }
 
+    /**
+     * On vérifie qu'il est possible d'insérer une nouvelle requête dans le segment
+     * de cette tournée
+     * 
+     * @param position
+     * @param r
+     * @return
+     */
     public boolean checkInsertCapacities(int position, Request r) {
         if (!returnToDepot.isEmpty()) {
             int charge = Integer.MAX_VALUE;
@@ -444,15 +475,13 @@ public class DeliveryRound extends Round {
                 } catch (NullPointerException e) {
                     position++;
                 }
-            } while(charge == Integer.MAX_VALUE);
+            } while (charge == Integer.MAX_VALUE);
             int machinesSize = r.getNbMachines() * r.getMachine().getSize();
             if (machinesSize + charge <= this.truck.getCapacity()) {
                 return true;
-            }
-            else
+            } else
                 return false;
-        }
-        else {
+        } else {
             int machinesSize = r.getNbMachines() * r.getMachine().getSize();
             if (currentCharge + machinesSize <= truck.getCapacity())
                 return true;
@@ -461,35 +490,49 @@ public class DeliveryRound extends Round {
         }
     }
 
+    /**
+     * On met à jour la charge du camion en ajoutant une nouvelle requête lorsqu'il
+     * retournera au dépôt après ce segement de tournée
+     * 
+     * @param position
+     * @param r
+     */
     public void updateCapacitiesAfterInsert(int position, Request r) {
         if (!returnToDepot.isEmpty()) {
             int charge = Integer.MAX_VALUE;
             do {
                 try {
                     charge = returnToDepot.get(position);
-                } catch (IndexOutOfBoundsException e) {
+                } catch (NullPointerException e) {
                     position++;
                 }
-            } while(charge == Integer.MAX_VALUE);
+            } while (charge == Integer.MAX_VALUE);
             int machinesSize = r.getNbMachines() * r.getMachine().getSize();
             returnToDepot.remove(position);
-            returnToDepot.put(position+1, charge-machinesSize);
+            returnToDepot.put(position + 1, charge - machinesSize);
         }
     }
 
+    /**
+     * On met à jour la charge du camion en supprimant une requête lorsqu'il
+     * retournera au dépôt après ce segement de tournée
+     * 
+     * @param position
+     * @param r
+     */
     public void updateCapacitiesAfterRemove(int position, Request r) {
         if (!returnToDepot.isEmpty()) {
             int charge = Integer.MAX_VALUE;
             do {
                 try {
                     charge = returnToDepot.get(position);
-                } catch (IndexOutOfBoundsException e) {
+                } catch (NullPointerException e) {
                     position++;
                 }
-            } while(charge == Integer.MAX_VALUE);
+            } while (charge == Integer.MAX_VALUE);
             int machinesSize = r.getNbMachines() * r.getMachine().getSize();
             returnToDepot.remove(position);
-            returnToDepot.put(position-1, charge+machinesSize);
+            returnToDepot.put(position - 1, charge + machinesSize);
         }
     }
 
