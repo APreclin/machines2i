@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -36,7 +37,8 @@ public class SolutionWriter {
     public void writeSolution() {
         try {
 
-            File file = new File("solutions/" + instance.getName() + "_sol.txt");
+            String solutionName = "solutions/" + instance.getDataset() + "_" + instance.getName() + ".sol";
+            File file = new File(solutionName + ".txt");
             File fileJson = new File("solutions/" + instance.getName() + "_sol.json");
 
             if (!file.exists())
@@ -112,10 +114,24 @@ public class SolutionWriter {
                             depot.put("y", deliveryRound.getDepot().getY());
                             deliveryRoundObject.put("depot", depot);
 
+                            // On récupère après combien de requests on retourne au dépôt
+                            int j = 1;
+                            LinkedHashMap<Integer, Integer> returnToDepot = deliveryRound.getReturnToDepot();
+
                             JSONArray requests = new JSONArray();
                             for (Request request : deliveryRound.getRequests()) {
                                 bw.write(String.valueOf(request.getId()));
                                 bw.write(" ");
+
+                                // Si après cette request on est retourné au dépôt, on l'indique
+                                if (returnToDepot != null) {
+                                    if (returnToDepot.containsKey(j)) {
+                                        bw.write("0");
+                                        bw.write(" ");
+                                    }
+
+                                    j++;
+                                }
 
                                 JSONObject requestObject = new JSONObject();
                                 requestObject.put("id", request.getId());

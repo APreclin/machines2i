@@ -81,7 +81,7 @@ public class TestAllSolveur {
     private void addSolveurs() {
         solveurs.add(new SolutionTriviale());
         solveurs.add(new Solution1());
-        // solveurs.add(new Solution2());
+        solveurs.add(new Solution2());
         solveurs.add(new Solution3());
     }
 

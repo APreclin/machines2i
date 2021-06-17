@@ -333,6 +333,42 @@ public class Solution {
     // *********************************************************************************
 
     // *********************************************************************************
+    // ************ FONCTIONS UTILISEES POUR LA SOLUTION2
+    // **********************
+    // *********************************************************************************
+
+    /**
+     * Adds requestToAdd to an existing DeliveryRound if deliveryRounds is not null
+     * 
+     * @param requestToAdd
+     * @return whether the requestToAdd was added or not
+     */
+    public boolean addRequestExistingDeliveryRoundSolution2(Request requestToAdd) {
+        if (days.isEmpty())
+            return false;
+
+        for (Day d : days.values()) {
+            if (d.getDeliveryRounds().isEmpty())
+                return false;
+            for (DeliveryRound t : d.getDeliveryRounds()) {
+                int oldCost = t.getTotalCost();
+                int oldDistance = t.getCurrentDistance();
+                if (t.addRequestSolution2(requestToAdd)) {
+                    totalCost += t.getTotalCost() - oldCost; // maj du cout (rempalcement de l'ancien)
+                    truckDistance += t.getCurrentDistance() - oldDistance;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // *********************************************************************************
+    // ************ FIN DES FONCTIONS UTILISEES POUR LA SOLUTION2
+    // **********************
+    // *********************************************************************************
+
+    // *********************************************************************************
     // **************** FONCTIONS UTILISEES POUR LA SOLUTION3
     // **************************
     // *********************************************************************************

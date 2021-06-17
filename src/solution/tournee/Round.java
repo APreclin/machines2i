@@ -14,6 +14,8 @@ public abstract class Round {
 
     public abstract boolean addRequest(Request request);
 
+    public abstract boolean addRequestSolution2(Request request);
+
     protected Round() {
         requests = new LinkedList<Request>();
         this.totalCost = 0;
@@ -35,7 +37,7 @@ public abstract class Round {
     public Request getRequestByPosition(int position) {
         if (isPositionValid(position))
             return requests.get(position);
-        else 
+        else
             return null;
     }
 
@@ -45,14 +47,14 @@ public abstract class Round {
 
     public abstract Location getNext(int position);
 
-    public boolean isPositionValid (int position) {
+    public boolean isPositionValid(int position) {
         if (position >= 0 && position < requests.size())
             return true;
         else
             return false;
     }
 
-    public boolean isInsertionPositionValid (int position) {
+    public boolean isInsertionPositionValid(int position) {
         if (position >= 0 && position <= requests.size())
             return true;
         else
@@ -62,7 +64,8 @@ public abstract class Round {
     public abstract boolean checkAddingRequest(Request request);
 
     public int deltaDistanceInsertion(int position, Request requestToAdd, boolean watchCapacity) {
-        if (requestToAdd == null) return Integer.MAX_VALUE;
+        if (requestToAdd == null)
+            return Integer.MAX_VALUE;
         Location current = getCurrent(position);
         Location prec = getPrec(position);
         if (current == null || prec == null)
@@ -84,15 +87,15 @@ public abstract class Round {
         Location requestPrec = getPrec(position);
         Location ClientNext = getNext(position);
         Location ClientCurr = getCurrent(position);
-        if (requestPrec == null|| ClientCurr == null || ClientNext == null)
+        if (requestPrec == null || ClientCurr == null || ClientNext == null)
             return Integer.MAX_VALUE;
-        
+
         int cout1 = requestPrec.getDistanceTo(ClientNext);
         int cout2 = requestPrec.getDistanceTo(ClientCurr);
         int cout3 = ClientCurr.getDistanceTo(ClientNext);
         if (cout1 == Integer.MAX_VALUE || cout2 == Integer.MAX_VALUE || cout3 == Integer.MAX_VALUE)
             return Integer.MAX_VALUE;
-        return cout1 - ( cout2 + cout3 );
+        return cout1 - (cout2 + cout3);
     }
 
     public int deltaDistanceMove(int positionI, int positionJ) {
@@ -100,24 +103,28 @@ public abstract class Round {
             return Integer.MAX_VALUE;
         int coutInsertion = deltaDistanceInsertion(positionJ, requests.get(positionI), false);
         int coutSuppression = deltaDistanceSuppression(positionI);
-        if (coutInsertion == Integer.MAX_VALUE || coutSuppression == Integer.MAX_VALUE || positionI == positionJ || Math.abs(positionI - positionJ) == 1)
+        if (coutInsertion == Integer.MAX_VALUE || coutSuppression == Integer.MAX_VALUE || positionI == positionJ
+                || Math.abs(positionI - positionJ) == 1)
             return Integer.MAX_VALUE;
         else
-            return deltaDistanceInsertion(positionJ, requests.get(positionI), false) + deltaDistanceSuppression(positionI);
+            return deltaDistanceInsertion(positionJ, requests.get(positionI), false)
+                    + deltaDistanceSuppression(positionI);
     }
 
     private int deltaDistanceConsecutivExchange(int positionI) {
         Location requestI = this.getRequestByPosition(positionI).getLocation();
         Location requestBefore = this.getPrec(positionI);
-        Location requestJ = this.getRequestByPosition(positionI+1).getLocation();
-        Location requestAfter = this.getNext(positionI+1);
+        Location requestJ = this.getRequestByPosition(positionI + 1).getLocation();
+        Location requestAfter = this.getNext(positionI + 1);
 
         if (requestI == null || requestBefore == null || requestJ == null || requestAfter == null)
             return Integer.MAX_VALUE;
 
-        int cout = requestBefore.getDistanceTo(requestJ) + requestJ.getDistanceTo(requestI) - requestBefore.getDistanceTo(requestI);
-        cout += requestI.getDistanceTo(requestAfter) - (requestI.getDistanceTo(requestJ) + requestJ.getDistanceTo(requestAfter));
-        
+        int cout = requestBefore.getDistanceTo(requestJ) + requestJ.getDistanceTo(requestI)
+                - requestBefore.getDistanceTo(requestI);
+        cout += requestI.getDistanceTo(requestAfter)
+                - (requestI.getDistanceTo(requestJ) + requestJ.getDistanceTo(requestAfter));
+
         return cout;
     }
 
@@ -128,18 +135,19 @@ public abstract class Round {
 
         if (requestBefore == null || ancientRequest == null || requestAfter == null || request == null)
             return Integer.MAX_VALUE;
-            
 
         /*
-        if (watchCapacity && (demandeTotale + request.getDemande() - this.getRequestByPosition(position).getDemande()) > capacite)
-                return Integer.MAX_VALUE;
-        */
+         * if (watchCapacity && (demandeTotale + request.getDemande() -
+         * this.getRequestByPosition(position).getDemande()) > capacite) return
+         * Integer.MAX_VALUE;
+         */
 
-        int cout = requestBefore.getDistanceTo(request.getLocation()) + request.getLocation().getDistanceTo(requestAfter);
+        int cout = requestBefore.getDistanceTo(request.getLocation())
+                + request.getLocation().getDistanceTo(requestAfter);
         cout -= requestBefore.getDistanceTo(ancientRequest) + ancientRequest.getDistanceTo(requestAfter);
         return cout;
     }
-    
+
     public int deltaDistanceExchange(int positionI, int positionJ) {
         if (!this.isPositionValid(positionI) || !this.isPositionValid(positionJ))
             return Integer.MAX_VALUE;
@@ -148,7 +156,8 @@ public abstract class Round {
         if (Math.abs(positionI - positionJ) == 1)
             return deltaDistanceConsecutivExchange(positionI);
         else
-            return deltaDistanceReplace(positionJ, requests.get(positionI), false) + deltaDistanceReplace(positionI, requests.get(positionJ), false);
+            return deltaDistanceReplace(positionJ, requests.get(positionI), false)
+                    + deltaDistanceReplace(positionI, requests.get(positionJ), false);
     }
 
     public abstract InRoundOperator getBestInRoundOperator(InRoundOperatorType type);
