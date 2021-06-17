@@ -441,7 +441,7 @@ public class DeliveryRound extends Round {
             do {
                 try {
                     charge = returnToDepot.get(position);
-                } catch (IndexOutOfBoundsException e) {
+                } catch (NullPointerException e) {
                     position++;
                 }
             } while(charge == Integer.MAX_VALUE);
@@ -472,7 +472,8 @@ public class DeliveryRound extends Round {
                 }
             } while(charge == Integer.MAX_VALUE);
             int machinesSize = r.getNbMachines() * r.getMachine().getSize();
-            returnToDepot.put(position, charge-machinesSize);
+            returnToDepot.remove(position);
+            returnToDepot.put(position+1, charge-machinesSize);
         }
     }
 
@@ -487,7 +488,8 @@ public class DeliveryRound extends Round {
                 }
             } while(charge == Integer.MAX_VALUE);
             int machinesSize = r.getNbMachines() * r.getMachine().getSize();
-            returnToDepot.put(position, charge+machinesSize);
+            returnToDepot.remove(position);
+            returnToDepot.put(position-1, charge+machinesSize);
         }
     }
 
