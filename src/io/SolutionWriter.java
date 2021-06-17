@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -35,9 +36,9 @@ public class SolutionWriter {
 
     public void writeSolution() {
         try {
-            String solutionName = "solutions/" + instance.getDataset() + "_" + instance.getName() + "_sol";
-            File file = new File(solutionName + ".txt");
-            File fileJson = new File(solutionName + ".json");
+
+            File file = new File("solutions/" + instance.getName() + "_sol.txt");
+            File fileJson = new File("solutions/" + instance.getName() + "_sol.json");
 
             if (!file.exists())
                 file.createNewFile();
@@ -56,6 +57,8 @@ public class SolutionWriter {
             bw.write("NUMBER_OF_TRUCKS_USED = " + solution.getNbTrucksUsed() + "\n");
             bw.write("TECHNICIAN_DISTANCE = " + solution.getTechnicianDistance() + "\n");
             bw.write("NUMBER_OF_TECHNICIAN_DAYS = " + solution.getNbTechniciansDays() + "\n");
+            // TODO : corriger le nombre de techniciens utilisés pour qu'il ne soit pas
+            // celui des jours/techniciens
             bw.write("NUMBER_OF_TECHNICIANS_USED = " + solution.getNbTechniciansUsed() + "\n");
             bw.write("IDLE_MACHINE_COSTS = " + solution.getIdleMachineCosts() + "\n");
             bw.write("TOTAL_COST = " + solution.getTotalCost() + "\n");
@@ -108,12 +111,26 @@ public class SolutionWriter {
                             JSONObject depot = new JSONObject();
                             depot.put("x", deliveryRound.getDepot().getX());
                             depot.put("y", deliveryRound.getDepot().getY());
-                            deliveryRoundObject.put("origin", depot);
+                            deliveryRoundObject.put("depot", depot);
+
+                            // On récupère après combien de requests on retourne au dépôt
+                            int j = 1;
+                            LinkedHashMap<Integer, Integer> returnToDepot = deliveryRound.getReturnToDepot();
 
                             JSONArray requests = new JSONArray();
                             for (Request request : deliveryRound.getRequests()) {
                                 bw.write(String.valueOf(request.getId()));
                                 bw.write(" ");
+
+                                // Si après cette request on est retourné au dépôt, on l'indique
+                                if (returnToDepot != null) {
+                                    if (returnToDepot.containsKey(j)) {
+                                        bw.write("0");
+                                        bw.write(" ");
+                                    }
+
+                                    j++;
+                                }
 
                                 JSONObject requestObject = new JSONObject();
                                 requestObject.put("id", request.getId());
@@ -148,7 +165,7 @@ public class SolutionWriter {
                             JSONObject home = new JSONObject();
                             home.put("x", installationRound.getTechnician().getHome().getX());
                             home.put("y", installationRound.getTechnician().getHome().getY());
-                            installationRoundObject.put("origin", home);
+                            installationRoundObject.put("home", home);
 
                             JSONArray requests = new JSONArray();
 
