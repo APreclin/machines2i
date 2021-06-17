@@ -35,9 +35,9 @@ public class SolutionWriter {
 
     public void writeSolution() {
         try {
-
-            File file = new File("solutions/"+instance.getName() + "_sol.txt");
-            File fileJson = new File("solutions/"+instance.getName() + "_sol.json");
+            String solutionName = "solutions/" + instance.getDataset() + "_" + instance.getName() + "_sol";
+            File file = new File(solutionName + ".txt");
+            File fileJson = new File(solutionName + ".json");
 
             if (!file.exists())
                 file.createNewFile();
@@ -108,7 +108,7 @@ public class SolutionWriter {
                             JSONObject depot = new JSONObject();
                             depot.put("x", deliveryRound.getDepot().getX());
                             depot.put("y", deliveryRound.getDepot().getY());
-                            deliveryRoundObject.put("depot", depot);
+                            deliveryRoundObject.put("origin", depot);
 
                             JSONArray requests = new JSONArray();
                             for (Request request : deliveryRound.getRequests()) {
@@ -148,7 +148,7 @@ public class SolutionWriter {
                             JSONObject home = new JSONObject();
                             home.put("x", installationRound.getTechnician().getHome().getX());
                             home.put("y", installationRound.getTechnician().getHome().getY());
-                            installationRoundObject.put("home", home);
+                            installationRoundObject.put("origin", home);
 
                             JSONArray requests = new JSONArray();
 
