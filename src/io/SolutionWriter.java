@@ -185,7 +185,6 @@ public class SolutionWriter {
             }
 
             obj.put("days", days);
-            System.out.println(obj.toJSONString());
             fwJson.write(obj.toJSONString());
             fwJson.flush();
             fwJson.close();
