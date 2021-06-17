@@ -354,6 +354,8 @@ public class DeliveryRound extends Round {
                 this.requests.remove(positionI);
                 this.requests.add(positionJ, clientToMove);
             }
+            updateCapacitiesAfterInsert(infos.getPositionJ(), infos.getRequestI());
+            updateCapacitiesAfterRemove(infos.getPositionI(), infos.getRequestI());
             this.totalCost += infos.getDeltaDistance() * this.truck.getDistanceCost();
             this.currentDistance += infos.getDeltaDistance();
 
@@ -391,6 +393,10 @@ public class DeliveryRound extends Round {
 
             this.totalCost += infos.getDeltaDistance() * truck.getDistanceCost();
             this.currentDistance += infos.getDeltaDistance();
+            updateCapacitiesAfterInsert(infos.getPositionJ(), infos.getRequestI());
+            updateCapacitiesAfterRemove(infos.getPositionI(), infos.getRequestI());
+            updateCapacitiesAfterInsert(infos.getPositionI(), infos.getRequestJ());
+            updateCapacitiesAfterRemove(infos.getPositionJ(), infos.getRequestJ());
 
             if (this.check()) {
                 return true;
@@ -427,6 +433,62 @@ public class DeliveryRound extends Round {
             totalRealDistance += requests.getLast().getLocation().getDistanceTo(depot);
 
         return totalRealDistance * truck.getDistanceCost();
+    }
+
+    public boolean checkInsertCapacities(int position, Request r) {
+        if (!returnToDepot.isEmpty()) {
+            int charge = Integer.MAX_VALUE;
+            do {
+                try {
+                    charge = returnToDepot.get(position);
+                } catch (IndexOutOfBoundsException e) {
+                    position++;
+                }
+            } while(charge == Integer.MAX_VALUE);
+            int machinesSize = r.getNbMachines() * r.getMachine().getSize();
+            if (machinesSize + charge <= this.truck.getCapacity()) {
+                return true;
+            }
+            else
+                return false;
+        }
+        else {
+            int machinesSize = r.getNbMachines() * r.getMachine().getSize();
+            if (currentCharge + machinesSize <= truck.getCapacity())
+                return true;
+            else
+                return false;
+        }
+    }
+
+    public void updateCapacitiesAfterInsert(int position, Request r) {
+        if (!returnToDepot.isEmpty()) {
+            int charge = Integer.MAX_VALUE;
+            do {
+                try {
+                    charge = returnToDepot.get(position);
+                } catch (IndexOutOfBoundsException e) {
+                    position++;
+                }
+            } while(charge == Integer.MAX_VALUE);
+            int machinesSize = r.getNbMachines() * r.getMachine().getSize();
+            returnToDepot.put(position, charge-machinesSize);
+        }
+    }
+
+    public void updateCapacitiesAfterRemove(int position, Request r) {
+        if (!returnToDepot.isEmpty()) {
+            int charge = Integer.MAX_VALUE;
+            do {
+                try {
+                    charge = returnToDepot.get(position);
+                } catch (IndexOutOfBoundsException e) {
+                    position++;
+                }
+            } while(charge == Integer.MAX_VALUE);
+            int machinesSize = r.getNbMachines() * r.getMachine().getSize();
+            returnToDepot.put(position, charge+machinesSize);
+        }
     }
 
     // ********************************************************************************************

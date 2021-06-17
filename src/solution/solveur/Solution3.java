@@ -16,7 +16,7 @@ public class Solution3 implements Solveur {
         Solution sol = new Solution(instance);
         // Algorithme de la Solution1
         for (Request r : instance.getRequests().values()) {
-            if (!sol.addRequestExistingDeliveryRoundSolution1(r))
+            if (!sol.addRequestExistingDeliveryRoundSolution2(r))
                 sol.addRequestNewDeliveryRoundSolution1(r);
             if (!sol.addRequestExistingInstallationRoundSolution1(r))
                 sol.addRequestNewInstallationRoundSolution1(r);

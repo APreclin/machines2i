@@ -47,4 +47,11 @@ public class InRoundMove extends InRoundOperator {
             return deliveryRound.doMove(this);
         return false;
     }
+
+    @Override
+    protected boolean checkDeliveryRoundCapacities() {
+        if (deliveryRound != null)
+            return (deliveryRound.checkInsertCapacities(positionJ, requestI));
+        return false;
+    }
 }

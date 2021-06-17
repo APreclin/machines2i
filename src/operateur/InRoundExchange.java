@@ -49,4 +49,12 @@ public class InRoundExchange extends InRoundOperator{
             return deliveryRound.doExchange(this);
         return false;
     }
+
+    @Override
+    protected boolean checkDeliveryRoundCapacities() {
+        if (deliveryRound != null)
+            if (deliveryRound.checkInsertCapacities(positionJ, requestI))
+                return deliveryRound.checkInsertCapacities(positionI, requestJ);
+        return false;
+    }
 }

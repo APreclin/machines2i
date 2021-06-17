@@ -127,8 +127,13 @@ public abstract class InRoundOperator {
 
     protected abstract boolean doMouvement();
 
+    protected abstract boolean checkDeliveryRoundCapacities();
+
     public boolean isMovementPossible() {
-        if (this.deltaDistance < Integer.MAX_VALUE)
+        if (deliveryRound != null) {
+            return checkDeliveryRoundCapacities();
+        }
+        else if (this.deltaDistance < Integer.MAX_VALUE)
             return true;
         else
             return false;
